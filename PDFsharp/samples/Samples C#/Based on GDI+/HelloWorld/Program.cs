@@ -31,6 +31,7 @@ using System;
 using System.Diagnostics;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 using static PdfSharp.Drawing.XUnit;
 
 namespace HelloWorld
@@ -42,12 +43,54 @@ namespace HelloWorld
     {
         static void Main()
         {
-            // Create a new PDF document
+            M1();
+            //M2();
+        }
+
+        private static void M2()
+        {
+// Get a fresh copy of the sample PDF file
+            string filename =
+                @"..\..\InputFiles\Page1.pdf";
+
+            // Open the file
+            PdfDocument inputDocument = PdfReader.Open(filename, PdfDocumentOpenMode.Import);
+            PdfDocument inputDocument2 = PdfReader.Open(
+                @"..\..\InputFiles\Page3.pdf",
+                PdfDocumentOpenMode.Import);
+
+            // Create new document
+            PdfDocument outputDocument = new PdfDocument();
+            outputDocument.Version = inputDocument.Version;
+            outputDocument.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
+
+            outputDocument.Info.Title = inputDocument.Info.Title;
+            outputDocument.Info.Creator = inputDocument.Info.Creator;
+
+            for (int idx = 0; idx < inputDocument.PageCount; idx++)
+                outputDocument.AddPage(inputDocument.Pages[idx]);
+
+            var page = outputDocument.AddPage(inputDocument2.Pages[0]);
+
+            var font = new XFont("Times New Roman", 12, XFontStyle.Regular,
+                new XPdfFontOptions(PdfFontEncoding.Unicode));
+
+            CreatePage(page, font, "Название книги");
+
+            var allPdf = $"All{Guid.NewGuid():N}.pdf";
+            outputDocument.Save(
+                allPdf);
+            Process.Start(allPdf);
+        }
+
+        private static void M1()
+        {
+// Create a new PDF document
             PdfDocument document = new PdfDocument();
             document.Info.Title = "Created with PDFsharp";
             document.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
 
-            var font = new XFont("Times New Roman", 12, XFontStyle.Regular, 
+            var font = new XFont("Times New Roman", 12, XFontStyle.Regular,
                 new XPdfFontOptions(PdfFontEncoding.Unicode));
 
             CreatePage(document.AddPage(), font, "Название книги");
@@ -65,7 +108,7 @@ namespace HelloWorld
             using (var graphics = XGraphics.FromPdfPage(page))
             {
                 var pageMarginX = FromMillimeter(20);
-                var pageMarginY = FromMillimeter(20);
+                var pageMarginY = FromMillimeter(2*20);
                 var paddingX = FromMillimeter(5);
                 var paddingY = FromMillimeter(1);
 
