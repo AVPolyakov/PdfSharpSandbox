@@ -45,6 +45,7 @@ namespace HelloWorld
             // Create a new PDF document
             PdfDocument document = new PdfDocument();
             document.Info.Title = "Created with PDFsharp";
+            document.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
 
             var font = new XFont("Times New Roman", 12, XFontStyle.Regular, 
                 new XPdfFontOptions(PdfFontEncoding.Unicode));
