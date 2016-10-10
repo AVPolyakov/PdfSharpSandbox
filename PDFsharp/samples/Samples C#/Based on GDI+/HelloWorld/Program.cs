@@ -108,73 +108,62 @@ namespace HelloWorld
             using (var graphics = XGraphics.FromPdfPage(page))
             {
                 var pageMarginX = FromMillimeter(20);
-                var pageMarginY = FromMillimeter(2*20);
+                var pageMarginY = FromMillimeter(20);
                 var paddingX = FromMillimeter(5);
                 var paddingY = FromMillimeter(1);
 
-                {
-                    var y = pageMarginY + lineWidth/2;
-                    graphics.DrawLine(new XPen(XColors.Black, lineWidth),
-                        new XPoint(pageMarginX, y),
-                        new XPoint(page.Width - pageMarginX, y));
-                }
+                HorizontalLine(graphics, pageMarginX, pageMarginY, page.Width - 2*pageMarginX);
 
-                var rowY = pageMarginY + lineWidth;
-                var textY = rowY + paddingY;
-                var rowHeight = paddingY + font.GetHeight(graphics) + paddingY;
+                var textY = pageMarginY + lineWidth + paddingY;
+                var rowHeight = paddingY + font.GetHeight(graphics) + paddingY + 2*lineWidth;
 
-                DrawVerticalLine(graphics, pageMarginX, rowY, rowHeight);
+                VerticalLine(graphics, pageMarginX, pageMarginY, rowHeight);
 
                 var idX = pageMarginX + lineWidth + paddingX;
                 const string id = "Код";
                 graphics.DrawString(id, font, XBrushes.Black,
-                    new XPoint(idX, textY),
-                    XStringFormats.TopLeft);
+                    new XPoint(idX, textY), XStringFormats.TopLeft);
 
-                DrawVerticalLine(graphics,
+                VerticalLine(graphics,
                     idX + graphics.MeasureString(id, font).Width + paddingX,
-                    rowY, rowHeight);
+                    pageMarginY, rowHeight);
 
                 const string автор = "Автор книги";
                 var авторX = page.Width
                              - (graphics.MeasureString(автор, font).Width + paddingX + lineWidth + pageMarginX);
 
-                graphics.DrawString(названиеКниги, font, XBrushes.Black,
-                    new XRect(new XPoint(
+                graphics.DrawString(названиеКниги, font, XBrushes.Black, new XRect(
+                        new XPoint(
                             idX + graphics.MeasureString(id, font).Width + paddingX + lineWidth,
                             textY),
                         new XPoint(авторX - paddingX - lineWidth, textY)),
-                    new XStringFormat {
-                        Alignment = XStringAlignment.Center,
-                        LineAlignment = XLineAlignment.Near
-                    });
+                    XStringFormats.TopCenter);
 
-                DrawVerticalLine(graphics, авторX - paddingX - lineWidth, rowY, rowHeight);
+                VerticalLine(graphics, авторX - paddingX - lineWidth, pageMarginY, rowHeight);
 
                 graphics.DrawString(автор, font, XBrushes.Black,
-                    new XPoint(
-                        авторX,
-                        textY),
-                    XStringFormats.TopLeft);
+                    new XPoint(авторX, textY), XStringFormats.TopLeft);
 
-                DrawVerticalLine(graphics, page.Width - pageMarginX - lineWidth, rowY, rowHeight);
+                VerticalLine(graphics, page.Width - pageMarginX - lineWidth, pageMarginY, rowHeight);
 
-                {
-                    var y = rowY + rowHeight + lineWidth/2;
-                    graphics.DrawLine(new XPen(XColors.Black, lineWidth),
-                        new XPoint(pageMarginX, y),
-                        new XPoint(page.Width - pageMarginX, y));
-                }
+                HorizontalLine(graphics, pageMarginX, pageMarginY + rowHeight - lineWidth, page.Width - 2*pageMarginX);
             }
         }
 
-        private static void DrawVerticalLine(XGraphics graphics, double x, double y, double rowHeight)
+        private static void HorizontalLine(XGraphics graphics, double x, double y, double width)
         {
-            graphics.DrawLine(new XPen(XColors.Black, lineWidth),
-                new XPoint(x + lineWidth/2, y),
-                new XPoint(x + lineWidth/2, y + rowHeight));
+            graphics.DrawRectangle(new XPen(XColors.Black, lineWidth/2), new XRect(
+                new XPoint(x + lineWidth/4, y + lineWidth/4),
+                new XPoint(x + width - lineWidth/4, y + lineWidth/2 + lineWidth/4)));
         }
 
-        private const double lineWidth = 1d;
+        private static void VerticalLine(XGraphics graphics, double x, double y, double height)
+        {
+            graphics.DrawRectangle(new XPen(XColors.Black, lineWidth/2), new XRect(
+                new XPoint(x + lineWidth/4, y + lineWidth/4),
+                new XPoint(x + lineWidth/2 + lineWidth/4, y + height - lineWidth/4)));
+        }
+
+        private static readonly double lineWidth = FromMillimeter(0.5);
     }
 }
