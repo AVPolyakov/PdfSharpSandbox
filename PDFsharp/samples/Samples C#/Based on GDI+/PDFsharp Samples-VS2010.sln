@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphics", "Graphics\Graphics.csproj", "{644AE77B-7914-4B2C-A57C-20D60C9180E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{BD7CC1B4-485C-4C32-B268-58D4CEB6B31E}"
@@ -44,6 +46,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfSharp", "..\..\..\code\PdfSharp\PdfSharp.csproj", "{5384CE57-1F94-4D22-860D-2E9C1AC12DDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookmarks", "Bookmarks\Bookmarks.csproj", "{56F49D15-4FEB-420E-A62C-871E8E0E63AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableLayout", "TableLayout\TableLayout.csproj", "{05E890DE-939F-4E72-A971-2EA897E9B503}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,6 +143,10 @@ Global
 		{56F49D15-4FEB-420E-A62C-871E8E0E63AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56F49D15-4FEB-420E-A62C-871E8E0E63AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56F49D15-4FEB-420E-A62C-871E8E0E63AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05E890DE-939F-4E72-A971-2EA897E9B503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E890DE-939F-4E72-A971-2EA897E9B503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E890DE-939F-4E72-A971-2EA897E9B503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E890DE-939F-4E72-A971-2EA897E9B503}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
