@@ -43,9 +43,7 @@ namespace TableLayout
 	        var bottomBorderFunc = BottomBorder();
 	        var maxLeftBorder = Rows.Max(row => leftBorderFunc(new CellInfo(row.Index, 0)).ValueOr(0));
 	        var maxTopBorder = Columns.Max(column => topBorderFunc(new CellInfo(0, column.Index)).ValueOr(0));
-	        var maxBottomBorders = Rows.ToDictionary(row => row.Index, 
-	            row => Columns.Max(column => bottomBorderFunc(new CellInfo(row, column)).ValueOr(0)));
-	        var maxHeights = MaxHeights(graphics, maxBottomBorders, rightBorderFunc);
+	        var maxHeights = MaxHeights(graphics, rightBorderFunc, bottomBorderFunc);
 	        {
                 var x = x0 + maxLeftBorder;
 	            foreach (var column in Columns)
@@ -74,7 +72,7 @@ namespace TableLayout
 	                {
 	                    var borderX = x0 + maxLeftBorder - leftBorder.Value/2;
 	                    graphics.DrawLine(new XPen(XColors.Black, leftBorder.Value),
-	                        borderX, y, borderX, y + maxHeights[row.Index] + maxBottomBorders[row.Index]);
+	                        borderX, y, borderX, y + maxHeights[row.Index]);
 	                }
 	            }
 	            var x = x0 + maxLeftBorder;
@@ -88,12 +86,12 @@ namespace TableLayout
 	                {
 	                    var borderX = x + column.Width - rightBorder.Value/2;
 	                    graphics.DrawLine(new XPen(XColors.Black, rightBorder.Value),
-	                        borderX, y, borderX, y + maxHeights[row.Index] + maxBottomBorders[row.Index]);
+	                        borderX, y, borderX, y + maxHeights[row.Index]);
 	                }
 	                var bottomBorder = bottomBorderFunc(new CellInfo(row, column));
 	                if (bottomBorder.HasValue)
 	                {
-	                    var borderY = y + maxHeights[row.Index] + bottomBorder.Value/2;
+	                    var borderY = y + maxHeights[row.Index] - bottomBorder.Value/2;
 	                    double leftBorder;
 	                    if (column.Index == 0)
 	                        leftBorder = Max(leftBorderFunc(new CellInfo(row.Index, 0)),
@@ -108,10 +106,10 @@ namespace TableLayout
 	                if (highlightCells)
 	                    graphics.DrawRectangle(HighlightBrush(row, column), new XRect(x, y,
 	                        column.Width - rightBorderFunc(new CellInfo(row, column)).ValueOr(0),
-	                        maxHeights[row.Index]));
+	                        maxHeights[row.Index] - bottomBorder.ValueOr(0)));
 	                x += column.Width;
 	            }
-	            y += maxHeights[row.Index] + maxBottomBorders[row.Index];
+	            y += maxHeights[row.Index];
 	        }
 		}
 
@@ -128,7 +126,8 @@ namespace TableLayout
                     .Max(i => rightBorderFunc(new CellInfo(i, columnIndex)).ValueOr(0)),
                 () => rightBorderFunc(new CellInfo(row.Index, columnIndex)).ValueOr(0));
 
-        private Dictionary<int, double> MaxHeights(XGraphics graphics, Dictionary<int, double> maxBottomBorders, Func<CellInfo, Option<double>> rightBorderFunc)
+        private Dictionary<int, double> MaxHeights(XGraphics graphics, Func<CellInfo, Option<double>> rightBorderFunc, 
+            Func<CellInfo, Option<double>> bottomBorderFunc)
 	    {
 	        var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<string, Option<int>, Row>>();
 	        foreach (var row in Rows)
@@ -155,9 +154,12 @@ namespace TableLayout
 	                    var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, 
                             ContentWidth(tuple.Item3, column, rightBorderFunc));
 	                    var height = tuple.Item2.Match(
-	                        value => textHeight - Range(1, value - 1)
-	                            .Sum(i => result[row.Index - i] + maxBottomBorders.Get(row.Index - i).ValueOr(0)),
-	                        () => textHeight);
+	                        value => textHeight - Range(1, value - 1).Sum(i => result[row.Index - i]),
+	                        () => textHeight)
+	                        + colspans.Get(new CellInfo(row, column)).Match(
+	                            colspan => Range(column.Index, colspan)
+	                                .Max(i => bottomBorderFunc(new CellInfo(row.Index, i)).ValueOr(0)),
+	                            () => bottomBorderFunc(new CellInfo(row, column)).ValueOr(0));
 	                    if (maxHeight < height)
 	                        maxHeight = height;
 	                }
