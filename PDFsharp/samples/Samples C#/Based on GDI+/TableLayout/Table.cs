@@ -51,29 +51,26 @@ namespace TableLayout
 	                var topBorder = topBorderFunc(new CellInfo(0, column.Index));
 	                if (topBorder.HasValue)
 	                {
-	                    double leftBorder;
-	                    if (column.Index == 0)
-	                        leftBorder = leftBorderFunc(new CellInfo(0, 0)).ValueOr(0);
-	                    else
-	                        leftBorder = rightBorderFunc(new CellInfo(0, column.Index - 1)).ValueOr(0);
+	                    var borderY = y0 + maxTopBorder - topBorder.Value/2;
+	                    var leftBorder = column.Index == 0
+	                        ? leftBorderFunc(new CellInfo(0, 0)).ValueOr(0)
+	                        : rightBorderFunc(new CellInfo(0, column.Index - 1)).ValueOr(0);
 	                    graphics.DrawLine(new XPen(XColors.Black, topBorder.Value),
-	                        x - leftBorder, y0 + maxTopBorder - topBorder.Value/2,
-	                        x + column.Width, y0 + maxTopBorder - topBorder.Value/2);
+	                        x - leftBorder, borderY,
+	                        x + column.Width, borderY);
 	                }
-                    x += column.Width;
+	                x += column.Width;
 	            }
 	        }
 	        var y = y0 + maxTopBorder;
 	        foreach (var row in Rows)
 	        {
+	            var leftBorder = leftBorderFunc(new CellInfo(row.Index, 0));
+	            if (leftBorder.HasValue)
 	            {
-	                var leftBorder = leftBorderFunc(new CellInfo(row.Index, 0));
-	                if (leftBorder.HasValue)
-	                {
-	                    var borderX = x0 + maxLeftBorder - leftBorder.Value/2;
-	                    graphics.DrawLine(new XPen(XColors.Black, leftBorder.Value),
-	                        borderX, y, borderX, y + maxHeights[row.Index]);
-	                }
+	                var borderX = x0 + maxLeftBorder - leftBorder.Value/2;
+	                graphics.DrawLine(new XPen(XColors.Black, leftBorder.Value),
+	                    borderX, y, borderX, y + maxHeights[row.Index]);
 	            }
 	            var x = x0 + maxLeftBorder;
 	            foreach (var column in Columns)
@@ -92,16 +89,8 @@ namespace TableLayout
 	                if (bottomBorder.HasValue)
 	                {
 	                    var borderY = y + maxHeights[row.Index] - bottomBorder.Value/2;
-	                    double leftBorder;
-	                    if (column.Index == 0)
-	                        leftBorder = Max(leftBorderFunc(new CellInfo(row.Index, 0)),
-	                            leftBorderFunc(new CellInfo(row.Index + 1, 0)));
-	                    else
-	                        leftBorder = Max(rightBorderFunc(new CellInfo(row.Index, column.Index - 1)),
-	                            rightBorderFunc(new CellInfo(row.Index + 1, column.Index - 1)));
 	                    graphics.DrawLine(new XPen(XColors.Black, bottomBorder.Value),
-	                        x - leftBorder,
-	                        borderY, x + column.Width, borderY);
+	                        x, borderY, x + column.Width, borderY);
 	                }
 	                if (highlightCells)
 	                    graphics.DrawRectangle(HighlightBrush(row, column), new XRect(x, y,
@@ -111,7 +100,7 @@ namespace TableLayout
 	            }
 	            y += maxHeights[row.Index];
 	        }
-		}
+	    }
 
         private double ContentWidth(Row row, Column column, Func<CellInfo, Option<double>> rightBorderFunc)
             => colspans.Get(new CellInfo(row, column)).Match(
@@ -184,20 +173,20 @@ namespace TableLayout
                         var rowspan = rowspans.Get(new CellInfo(row, column));
                         if (rowspan.HasValue)
                             for (var i = 1; i <= rowspan.Value - 1; i++)
-                                result.Add(new CellInfo(row.Index + i, column.Index + mergeRight), 
+                                result.Add(new CellInfo(row.Index + i, column.Index + mergeRight),
                                     Tuple.Create(rightBorder.Value, new CellInfo(row, column)));
                     }
                     var leftBorder = leftBorders.Get(new CellInfo(row.Index, column.Index + 1));
                     if (leftBorder.HasValue)
                     {
                         var mergeRight = colspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
-                        result.Add(new CellInfo(row.Index, column.Index + mergeRight), 
-                            Tuple.Create(leftBorder.Value, new CellInfo(row, column)));
+                        result.Add(new CellInfo(row.Index, column.Index + mergeRight),
+                            Tuple.Create(leftBorder.Value, new CellInfo(row.Index, column.Index + 1)));
                         var rowspan = rowspans.Get(new CellInfo(row.Index, column.Index + 1));
                         if (rowspan.HasValue)
                             for (var i = 1; i <= rowspan.Value - 1; i++)
-                                result.Add(new CellInfo(row.Index + i, column.Index + mergeRight), 
-                                    Tuple.Create(rightBorder.Value, new CellInfo(row, column)));
+                                result.Add(new CellInfo(row.Index + i, column.Index + mergeRight),
+                                    Tuple.Create(leftBorder.Value, new CellInfo(row.Index, column.Index + 1)));
                     }
                 }
             return cell => result.Get(cell).Select(list => {
@@ -231,12 +220,12 @@ namespace TableLayout
                     {
                         var mergeDown = rowspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
                         result.Add(new CellInfo(row.Index + mergeDown, column.Index), 
-                            Tuple.Create(topBorder.Value, new CellInfo(row, column)));
+                            Tuple.Create(topBorder.Value, new CellInfo(row.Index + 1, column.Index)));
                         var colspan = colspans.Get(new CellInfo(row.Index + 1, column.Index));
                         if (colspan.HasValue)
                             for (var i = 1; i <= colspan.Value - 1; i++)
                                 result.Add(new CellInfo(row.Index + mergeDown, column.Index + i), 
-                                    Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
+                                    Tuple.Create(topBorder.Value, new CellInfo(row.Index + 1, column.Index)));
                     }
                 }
             return cell => result.Get(cell).Select(list => {
@@ -297,14 +286,6 @@ namespace TableLayout
         }
 
         private static string CellsToSttring(IEnumerable<CellInfo> cells) => string.Join(",", cells.Select(_ => $"({_.RowIndex},{_.ColumnIndex})"));
-
-        private static double Max(Option<double> x, Option<double> y)
-	    {
-	        if (x.HasValue)
-	            return y.HasValue ? Math.Max(x.Value, y.Value) : x.Value;
-	        else
-	            return y.HasValue ? y.Value : 0;
-	    }
 
 	    private static XSolidBrush HighlightBrush(Row row, Column column)
 	    {
