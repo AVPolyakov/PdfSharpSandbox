@@ -8,7 +8,7 @@ namespace TableLayout
 {
 	public static class Util
 	{
-		public static readonly XFont Font = new XFont("Times New Roman", 12, XFontStyle.Regular,
+		public static readonly XFont Font = new XFont("Times New Roman", 10, XFontStyle.Regular,
 			new XPdfFontOptions(PdfFontEncoding.Unicode));
 
 	    public static XUnit Px(double value) => XUnit.FromCentimeter(value/100d);

@@ -70,7 +70,7 @@ namespace TableLayout
 	                {
 	                    var borderX = x0 + maxLeftBorder - leftBorder/2;
 	                    graphics.DrawLine(new XPen(XColors.Black, leftBorder),
-	                        borderX, y, borderX, y + maxHeights[row.Index]);
+	                        borderX, y, borderX, y + maxHeights[row.Index] + maxBottomBorders[row.Index]);
 	                }
 	            }
 	            var x = x0 + maxLeftBorder;
@@ -84,7 +84,7 @@ namespace TableLayout
 	                {
 	                    var borderX = x + column.Width - rightBorder.Value/2;
 	                    graphics.DrawLine(new XPen(XColors.Black, rightBorder.Value),
-	                        borderX, y, borderX, y + maxHeights[row.Index]);
+	                        borderX, y, borderX, y + maxHeights[row.Index] + maxBottomBorders[row.Index]);
 	                }
 	                var bottomBorder = BottomBorder(new CellInfo(row, column));
 	                if (bottomBorder.HasValue)

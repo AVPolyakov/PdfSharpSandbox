@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using PdfSharp.Drawing;
-using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
 using static PdfSharp.Drawing.XUnit;
+using static TableLayout.Util;
 
 namespace TableLayout
 {
 	class Program
 	{
-	    private static readonly double borderWidth = Util.Px(20);
-
 	    static void Main()
 		{
             {
@@ -60,173 +57,104 @@ namespace TableLayout
 			}
 		}
 
+		public static XUnit PageWidth => FromMillimeter(210);
+
+	    public static XUnit RightMargin => FromCentimeter(1.5);
+
+	    public static XUnit LeftMargin => FromCentimeter(3);
+
+	    public static void MergeRight(Cell cell, Column dateColumn) => cell.MergeRight = dateColumn.Index - cell.ColumnIndex;
+
 		private static void M1(XGraphics graphics, PdfPage page)
 		{
-			M2(graphics);
-		}
-
-		private static void M2(XGraphics graphics)
-		{
-			var table = new Table(Util.Px(200), Util.Px(200), highlightCells: true);
-			var column1 = table.AddColumn(Util.Px(300));
-			var column2 = table.AddColumn(Util.Px(300));
-			var column3 = table.AddColumn(Util.Px(300));
-			var column4 = table.AddColumn(Util.Px(200));
-			var column5 = table.AddColumn(Util.Px(200));
-			var column6 = table.AddColumn(Util.Px(200));
-			{
-				var row = table.AddRow();
-			    {
-			        var cell = row.Cell(column1);
-			        cell.Add("qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe ");
-			    }
-			    {
-			        var cell = row.Cell(column2);
-			        cell.BottomBorder = borderWidth;
-			        cell.Add("qwe2");
-			    }
-			    row.Cell(column3).Add("qwe5");
-			}
-			{
-				var row = table.AddRow();
-			    {
-			        var cell = row.Cell(column1);
-			        cell.Add("qwe3");
-			    }
-			    {
-			        var cell = row.Cell(column2);
-			        cell.Add("qwe4");
-                    cell.TopBorder = borderWidth;
-                    cell.LeftBorder = borderWidth * 2;
-                    cell.RightBorder = borderWidth * 2;
-                }
-			    {
-			        var cell = row.Cell(column3);
-			        cell.Rowspan = 2;
-			        cell.Colspan = 3;
-			        cell.Add("qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe2 qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe2");
-			    }
-			}
-			{
-				var row = table.AddRow();
-			    {
-			        var cell = row.Cell(column1);
-			        cell.Add("qwe2");
-			    }
-			    {
-			        var cell = row.Cell(column2);
-                    cell.Add("qwe q q");
-			    }
-                row.Cell(column5).RightBorder = borderWidth;
-			}
-			{
-				var row = table.AddRow();
-			    {
-			        var cell = row.Cell(column1);
-			        cell.Add("qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe qwe ");
-			    }
-			    row.Cell(column2).Add("qwe2");
-				row.Cell(column3).Add("qwe5");
-			}
-		    //foreach (var row in table.Rows)
-		    //{
-		    //    row.Cell(column1).LeftBorder = borderWidth;
-		    //}
-		    //foreach (var column in table.Columns)
-		    //{
-		    //    table.Rows[0].Cell(column).TopBorder = borderWidth;
-		    //}
-		    //foreach (var row in table.Rows)
-		    //{
-		    //    foreach (var column in table.Columns)
-		    //    {
-		    //        var cell = row.Cell(column);
-		    //        cell.RightBorder = borderWidth;
-		    //        cell.BottomBorder = borderWidth;
-		    //    }
-		    //}
+		    var table = new Table(LeftMargin, Px(200), highlightCells: false);
+		    var ИНН1 = table.AddColumn(Px(202));
+		    var ИНН2 = table.AddColumn(Px(257));
+		    var КПП = table.AddColumn(Px(454));
+		    var сумма = table.AddColumn(Px(144));
+		    var суммаValue1 = table.AddColumn(Px(194));
+		    var суммаValue2 = table.AddColumn(Px(181));
+		    var суммаValue3 = table.AddColumn(PageWidth - LeftMargin - RightMargin
+                - table.Columns.Sum(_ => _.Width));
+		    {
+		        var row = table.AddRow();
+		        {
+		            var cell = row.Cell(ИНН1);
+		            MergeRight(cell, ИНН2);
+		            cell.TopBorder = cell.BottomBorder = BorderWidth;
+		            cell.Add("ИНН");
+		        }
+		        {
+		            var cell = row.Cell(ИНН2);
+		            cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+		        }
+		        {
+		            var cell = row.Cell(КПП);
+		            cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+		            cell.Add("КПП");
+		        }
+		        {
+		            var cell = row.Cell(сумма);
+		            cell.MergeDown = 1;
+		            cell.TopBorder = cell.RightBorder = BorderWidth;
+		            cell.Add("Сумма Temp");
+		        }
+		        {
+		            var cell = row.Cell(суммаValue1);
+		            MergeRight(cell, суммаValue3);
+		            cell.MergeDown = 1;
+		            cell.TopBorder = BorderWidth;
+		            cell.Add("777-33");
+		        }
+		        row.Cell(суммаValue2).TopBorder = BorderWidth;
+		        row.Cell(суммаValue3).TopBorder = BorderWidth;
+		    }
+		    {
+		        var row = table.AddRow();
+		        {
+		            var cell = row.Cell(ИНН1);
+		            MergeRight(cell, КПП);
+		            cell.MergeDown = 1;
+		            cell.Add("Ромашка Ромашка Ромашка Ромашка Ромашка Ромашка");
+		        }
+		        row.Cell(КПП).RightBorder = BorderWidth;
+		        row.Cell(сумма).RightBorder = BorderWidth;
+		    }
+		    {
+		        var row = table.AddRow();
+		        {
+		            var cell = row.Cell(сумма);
+		            cell.MergeDown = 1;
+		            cell.RightBorder = cell.TopBorder = cell.LeftBorder = BorderWidth;
+		            cell.Add("Сч. №");
+		        }
+		        {
+		            var cell = row.Cell(суммаValue1);
+		            MergeRight(cell, суммаValue3);
+		            cell.TopBorder = BorderWidth;
+		        }
+		        row.Cell(суммаValue2).TopBorder = BorderWidth;
+		        row.Cell(суммаValue3).TopBorder = BorderWidth;
+		    }
+		    {
+		        var row = table.AddRow();
+		        {
+		            var cell = row.Cell(ИНН1);
+		            MergeRight(cell, КПП);
+		            cell.BottomBorder = BorderWidth;
+		            cell.Add("Плательщик");
+		        }
+		        row.Cell(ИНН2).BottomBorder = BorderWidth;
+		        row.Cell(КПП).BottomBorder = BorderWidth;
+		        {
+		            var cell = row.Cell(сумма);
+		            cell.RightBorder = cell.LeftBorder = BorderWidth;
+		        }
+		        row.Cell(сумма).BottomBorder = BorderWidth;
+		    }
 		    table.Draw(graphics);
 		}
 
-		private static void M1(XGraphics graphics)
-		{
-			var pageMarginX = FromMillimeter(20);
-			var pageMarginY = FromMillimeter(20);
-			var paddingX = FromMillimeter(5);
-			var paddingY = FromMillimeter(1);
-
-			var text = "qqqqqqq qw qqqqqqq qw qqqqqqq qw qqqqqqq йцуqу";
-			var x0 = Util.Px(100);
-			var y0 = Util.Px(100);
-			var width = Util.Px(336) - x0;
-			var alignment = ParagraphAlignment.Left;
-			graphics.DrawRectangle(XBrushes.Aqua, new XRect(x0, y0, width, 
-				Util.GetTextBoxHeight(graphics, text, width)));
-			Util.DrawTextBox(graphics, text, x0, y0, width, alignment);
-
-			//new XTextFormatter(xGraphics).DrawString(text, Font, XBrushes.Aqua, new XRect(Px(100), Px(100), Px(336) - x0, 500));
-
-
-			Console.WriteLine();
-			//var format = new XStringFormat {LineAlignment = XLineAlignment.BaseLine};
-			//xGraphics.DrawString(text, Font, XBrushes.Black, new XPoint(Px(100), Px(100)), 
-			//	format);
-
-			//var measureString = xGraphics.MeasureString(text, Font, format);
-
-			//var isWhiteSpace = char.IsWhiteSpace(Environment.NewLine.ToCharArray()[0]);
-
-			//HorizontalLine(xGraphics, pageMarginX, pageMarginY, page.Width - 2*pageMarginX);
-
-			//var textY = pageMarginY + lineWidth + paddingY;
-			//var rowHeight = paddingY + Font.GetHeight(xGraphics) + paddingY + 2*lineWidth;
-
-			//VerticalLine(xGraphics, pageMarginX, pageMarginY, rowHeight);
-
-			//var idX = pageMarginX + lineWidth + paddingX;
-			//const string id = "Код";
-			//xGraphics.DrawString(id, Font, XBrushes.Black,
-			//	new XPoint(idX, textY), XStringFormats.TopLeft);
-
-			//VerticalLine(xGraphics,
-			//	idX + xGraphics.MeasureString(id, Font).Width + paddingX,
-			//	pageMarginY, rowHeight);
-
-			//const string автор = "Автор книги";
-			//var авторX = page.Width
-			//	- (xGraphics.MeasureString(автор, Font).Width + paddingX + lineWidth + pageMarginX);
-
-			//xGraphics.DrawString("Название книги", Font, XBrushes.Black, new XRect(
-			//		new XPoint(
-			//			idX + xGraphics.MeasureString(id, Font).Width + paddingX + lineWidth,
-			//			textY),
-			//		new XPoint(авторX - paddingX - lineWidth, textY)),
-			//	XStringFormats.TopCenter);
-
-			//VerticalLine(xGraphics, авторX - paddingX - lineWidth, pageMarginY, rowHeight);
-
-			//xGraphics.DrawString(автор, Font, XBrushes.Black,
-			//	new XPoint(авторX, textY), XStringFormats.TopLeft);
-
-			//VerticalLine(xGraphics, page.Width - pageMarginX - lineWidth, pageMarginY, rowHeight);
-
-			//HorizontalLine(xGraphics, pageMarginX, pageMarginY + rowHeight - lineWidth, page.Width - 2*pageMarginX);
-		}
-
-	    private static void HorizontalLine(XGraphics graphics, double x, double y, double width)
-        {
-            graphics.DrawRectangle(new XPen(XColors.Black, lineWidth/2), new XRect(
-                new XPoint(x + lineWidth/4, y + lineWidth/4),
-                new XPoint(x + width - lineWidth/4, y + lineWidth/2 + lineWidth/4)));
-        }
-
-        private static void VerticalLine(XGraphics graphics, double x, double y, double height)
-        {
-            graphics.DrawRectangle(new XPen(XColors.Black, lineWidth/2), new XRect(
-                new XPoint(x + lineWidth/4, y + lineWidth/4),
-                new XPoint(x + lineWidth/2 + lineWidth/4, y + height - lineWidth/4)));
-        }
-
-	    public static readonly double lineWidth = XUnit.FromMillimeter(0.5);
+	    public const double BorderWidth = 0.5d;
 	}
 }

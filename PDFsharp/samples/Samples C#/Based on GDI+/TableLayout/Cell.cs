@@ -36,6 +36,16 @@ namespace TableLayout
             set { Table.BottomBorder(this, value); }
         }
 
+        public int MergeRight
+        {
+            set { Colspan = value + 1; }
+        }
+
+        public int MergeDown
+        {
+            set { Rowspan = value + 1; }
+        }
+
         public Cell(Table table, int rowIndex, int columnIndex)
         {
             Table = table;
