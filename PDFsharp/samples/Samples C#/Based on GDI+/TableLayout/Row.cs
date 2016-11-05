@@ -11,6 +11,8 @@ namespace TableLayout
             Index = index;
         }
 
-        public Cell Cell(Column column) => Table.Cell(Index, column.Index);
+        public Cell this[Column column] => this[column.Index];
+
+        public Cell this[int columnIndex] => Table.Cell(Index, columnIndex);
     }
 }

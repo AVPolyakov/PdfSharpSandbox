@@ -37,26 +37,30 @@ namespace TableLayout
 
 	    public void Draw(XGraphics graphics)
 	    {
-	        var maxLeftBorder = Rows.Max(row => leftBorders.Get(new CellInfo(row.Index, 0)).ValueOr(0));
-	        var maxTopBorder = Columns.Max(column => topBorders.Get(new CellInfo(0, column.Index)).ValueOr(0));
+	        var leftBorderFunc = LeftBorder();
+	        var rightBorderFunc = RightBorder();
+	        var topBorderFunc = TopBorder();
+	        var bottomBorderFunc = BottomBorder();
+	        var maxLeftBorder = Rows.Max(row => leftBorderFunc(new CellInfo(row.Index, 0)).ValueOr(0));
+	        var maxTopBorder = Columns.Max(column => topBorderFunc(new CellInfo(0, column.Index)).ValueOr(0));
 	        var maxBottomBorders = Rows.ToDictionary(row => row.Index, 
-	            row => Columns.Max(column => BottomBorder(new CellInfo(row, column)).ValueOr(0)));
-	        var maxHeights = MaxHeights(graphics, maxBottomBorders);
+	            row => Columns.Max(column => bottomBorderFunc(new CellInfo(row, column)).ValueOr(0)));
+	        var maxHeights = MaxHeights(graphics, maxBottomBorders, rightBorderFunc);
 	        {
                 var x = x0 + maxLeftBorder;
 	            foreach (var column in Columns)
 	            {
-	                double topBorder;
-	                if (topBorders.TryGetValue(new CellInfo(0, column.Index), out topBorder))
+	                var topBorder = topBorderFunc(new CellInfo(0, column.Index));
+	                if (topBorder.HasValue)
 	                {
 	                    double leftBorder;
 	                    if (column.Index == 0)
-	                        leftBorder = leftBorders.Get(new CellInfo(0, 0)).ValueOr(0);
+	                        leftBorder = leftBorderFunc(new CellInfo(0, 0)).ValueOr(0);
 	                    else
-	                        leftBorder = RightBorder(new CellInfo(0, column.Index - 1)).ValueOr(0);
-	                    graphics.DrawLine(new XPen(XColors.Black, topBorder),
-	                        x - leftBorder, y0 + maxTopBorder - topBorder/2,
-	                        x + column.Width, y0 + maxTopBorder - topBorder/2);
+	                        leftBorder = rightBorderFunc(new CellInfo(0, column.Index - 1)).ValueOr(0);
+	                    graphics.DrawLine(new XPen(XColors.Black, topBorder.Value),
+	                        x - leftBorder, y0 + maxTopBorder - topBorder.Value/2,
+	                        x + column.Width, y0 + maxTopBorder - topBorder.Value/2);
 	                }
                     x += column.Width;
 	            }
@@ -65,11 +69,11 @@ namespace TableLayout
 	        foreach (var row in Rows)
 	        {
 	            {
-	                double leftBorder;
-	                if (leftBorders.TryGetValue(new CellInfo(row.Index, 0), out leftBorder))
+	                var leftBorder = leftBorderFunc(new CellInfo(row.Index, 0));
+	                if (leftBorder.HasValue)
 	                {
-	                    var borderX = x0 + maxLeftBorder - leftBorder/2;
-	                    graphics.DrawLine(new XPen(XColors.Black, leftBorder),
+	                    var borderX = x0 + maxLeftBorder - leftBorder.Value/2;
+	                    graphics.DrawLine(new XPen(XColors.Black, leftBorder.Value),
 	                        borderX, y, borderX, y + maxHeights[row.Index] + maxBottomBorders[row.Index]);
 	                }
 	            }
@@ -78,32 +82,32 @@ namespace TableLayout
 	            {
 	                string text;
 	                if (texts.TryGetValue(new CellInfo(row, column), out text))
-	                    Util.DrawTextBox(graphics, text, x, y, ContentWidth(row, column), ParagraphAlignment.Left);
-	                var rightBorder = RightBorder(new CellInfo(row, column));
+	                    Util.DrawTextBox(graphics, text, x, y, ContentWidth(row, column, rightBorderFunc), ParagraphAlignment.Left);
+	                var rightBorder = rightBorderFunc(new CellInfo(row, column));
 	                if (rightBorder.HasValue)
 	                {
 	                    var borderX = x + column.Width - rightBorder.Value/2;
 	                    graphics.DrawLine(new XPen(XColors.Black, rightBorder.Value),
 	                        borderX, y, borderX, y + maxHeights[row.Index] + maxBottomBorders[row.Index]);
 	                }
-	                var bottomBorder = BottomBorder(new CellInfo(row, column));
+	                var bottomBorder = bottomBorderFunc(new CellInfo(row, column));
 	                if (bottomBorder.HasValue)
 	                {
 	                    var borderY = y + maxHeights[row.Index] + bottomBorder.Value/2;
 	                    double leftBorder;
 	                    if (column.Index == 0)
-	                        leftBorder = Max(leftBorders.Get(new CellInfo(row.Index, 0)),
-	                            leftBorders.Get(new CellInfo(row.Index + 1, 0)));
+	                        leftBorder = Max(leftBorderFunc(new CellInfo(row.Index, 0)),
+	                            leftBorderFunc(new CellInfo(row.Index + 1, 0)));
 	                    else
-	                        leftBorder = Max(RightBorder(new CellInfo(row.Index, column.Index - 1)),
-	                            RightBorder(new CellInfo(row.Index + 1, column.Index - 1)));
+	                        leftBorder = Max(rightBorderFunc(new CellInfo(row.Index, column.Index - 1)),
+	                            rightBorderFunc(new CellInfo(row.Index + 1, column.Index - 1)));
 	                    graphics.DrawLine(new XPen(XColors.Black, bottomBorder.Value),
 	                        x - leftBorder,
 	                        borderY, x + column.Width, borderY);
 	                }
 	                if (highlightCells)
 	                    graphics.DrawRectangle(HighlightBrush(row, column), new XRect(x, y,
-	                        column.Width - RightBorder(new CellInfo(row, column)).ValueOr(0),
+	                        column.Width - rightBorderFunc(new CellInfo(row, column)).ValueOr(0),
 	                        maxHeights[row.Index]));
 	                x += column.Width;
 	            }
@@ -111,20 +115,20 @@ namespace TableLayout
 	        }
 		}
 
-        private double ContentWidth(Row row, Column column)
+        private double ContentWidth(Row row, Column column, Func<CellInfo, Option<double>> rightBorderFunc)
             => colspans.Get(new CellInfo(row, column)).Match(
                 colspan => column.Width
                            + Range(column.Index + 1, colspan - 1).Sum(i => Columns[i].Width)
-                           - BorderWidth(row, column, column.Index + colspan - 1),
-                () => column.Width - BorderWidth(row, column, column.Index));
+                           - BorderWidth(row, column, column.Index + colspan - 1, rightBorderFunc),
+                () => column.Width - BorderWidth(row, column, column.Index, rightBorderFunc));
 
-        private double BorderWidth(Row row, Column column, int columnIndex)
+        private double BorderWidth(Row row, Column column, int columnIndex, Func<CellInfo, Option<double>> rightBorderFunc)
             => rowspans.Get(new CellInfo(row, column)).Match(
                 rowspan => Range(row.Index, rowspan)
-                    .Max(i => RightBorder(new CellInfo(i, columnIndex)).ValueOr(0)),
-                () => RightBorder(new CellInfo(row.Index, columnIndex)).ValueOr(0));
+                    .Max(i => rightBorderFunc(new CellInfo(i, columnIndex)).ValueOr(0)),
+                () => rightBorderFunc(new CellInfo(row.Index, columnIndex)).ValueOr(0));
 
-        private Dictionary<int, double> MaxHeights(XGraphics graphics, Dictionary<int, double> maxBottomBorders)
+        private Dictionary<int, double> MaxHeights(XGraphics graphics, Dictionary<int, double> maxBottomBorders, Func<CellInfo, Option<double>> rightBorderFunc)
 	    {
 	        var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<string, Option<int>, Row>>();
 	        foreach (var row in Rows)
@@ -149,7 +153,7 @@ namespace TableLayout
 	                if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
 	                {
 	                    var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, 
-                            ContentWidth(tuple.Item3, column));
+                            ContentWidth(tuple.Item3, column, rightBorderFunc));
 	                    var height = tuple.Item2.Match(
 	                        value => textHeight - Range(1, value - 1)
 	                            .Sum(i => result[row.Index - i] + maxBottomBorders.Get(row.Index - i).ValueOr(0)),
@@ -163,43 +167,136 @@ namespace TableLayout
 	        return result;
 	    }
 
-        private Option<double> RightBorder(CellInfo cell)
+        private Func<CellInfo, Option<double>> RightBorder()
         {
-            var value1 = rightBorders.Get(cell);
-            var value2 = leftBorders.Get(new CellInfo(cell.RowIndex, cell.ColumnIndex + 1));
-            if (value1.HasValue)
-                if (value2.HasValue)
-                    throw new Exception($"The right border is ambiguous Cell=({cell.RowIndex},{cell.ColumnIndex}).");
+            var result = new Dictionary<CellInfo, List<Tuple<double, CellInfo>>>();
+            foreach (var row in Rows)
+                foreach (var column in Columns)
+                {
+                    var rightBorder = rightBorders.Get(new CellInfo(row, column));
+                    if (rightBorder.HasValue)
+                    {
+                        var mergeRight = colspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        result.Add(new CellInfo(row.Index, column.Index + mergeRight),
+                            Tuple.Create(rightBorder.Value, new CellInfo(row, column)));
+                        var rowspan = rowspans.Get(new CellInfo(row, column));
+                        if (rowspan.HasValue)
+                            for (var i = 1; i <= rowspan.Value - 1; i++)
+                                result.Add(new CellInfo(row.Index + i, column.Index + mergeRight), 
+                                    Tuple.Create(rightBorder.Value, new CellInfo(row, column)));
+                    }
+                    var leftBorder = leftBorders.Get(new CellInfo(row.Index, column.Index + 1));
+                    if (leftBorder.HasValue)
+                    {
+                        var mergeRight = colspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        result.Add(new CellInfo(row.Index, column.Index + mergeRight), 
+                            Tuple.Create(leftBorder.Value, new CellInfo(row, column)));
+                        var rowspan = rowspans.Get(new CellInfo(row.Index, column.Index + 1));
+                        if (rowspan.HasValue)
+                            for (var i = 1; i <= rowspan.Value - 1; i++)
+                                result.Add(new CellInfo(row.Index + i, column.Index + mergeRight), 
+                                    Tuple.Create(rightBorder.Value, new CellInfo(row, column)));
+                    }
+                }
+            return cell => result.Get(cell).Select(list => {
+                if (list.Count > 1)
+                    throw new Exception($"The right border is ambiguous Cells={CellsToSttring(list.Select(_ => _.Item2))}");
                 else
-                    return value1.Value;
-            else
-            {
-                if (value2.HasValue)
-                    return value2.Value;
-                else
-                    return new Option<double>();
-            }
+                    return list[0].Item1;
+            });
         }
 
-        private Option<double> BottomBorder(CellInfo cell)
+        private Func<CellInfo, Option<double>> BottomBorder()
         {
-            var value1 = bottomBorders.Get(cell);
-            var value2 = topBorders.Get(new CellInfo(cell.RowIndex + 1, cell.ColumnIndex));
-            if (value1.HasValue)
-                if (value2.HasValue)
-                    throw new Exception($"The bottom border is ambiguous Cell=({cell.RowIndex},{cell.ColumnIndex}).");
+            var result = new Dictionary<CellInfo, List<Tuple<double, CellInfo>>>();
+            foreach (var row in Rows)
+                foreach (var column in Columns)
+                {
+                    var bottomBorder = bottomBorders.Get(new CellInfo(row, column));
+                    if (bottomBorder.HasValue)
+                    {
+                        var mergeDown = rowspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        result.Add(new CellInfo(row.Index + mergeDown, column.Index), 
+                            Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
+                        var colspan = colspans.Get(new CellInfo(row, column));
+                        if (colspan.HasValue)
+                            for (var i = 1; i <= colspan.Value - 1; i++)
+                                result.Add(new CellInfo(row.Index + mergeDown, column.Index + i), 
+                                    Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
+                    }
+                    var topBorder = topBorders.Get(new CellInfo(row.Index + 1, column.Index));
+                    if (topBorder.HasValue)
+                    {
+                        var mergeDown = rowspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        result.Add(new CellInfo(row.Index + mergeDown, column.Index), 
+                            Tuple.Create(topBorder.Value, new CellInfo(row, column)));
+                        var colspan = colspans.Get(new CellInfo(row.Index + 1, column.Index));
+                        if (colspan.HasValue)
+                            for (var i = 1; i <= colspan.Value - 1; i++)
+                                result.Add(new CellInfo(row.Index + mergeDown, column.Index + i), 
+                                    Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
+                    }
+                }
+            return cell => result.Get(cell).Select(list => {
+                if (list.Count > 1)
+                    throw new Exception($"The bottom border is ambiguous Cells={CellsToSttring(list.Select(_ => _.Item2))}");
                 else
-                    return value1.Value;
-            else
-            {
-                if (value2.HasValue)
-                    return value2.Value;
-                else
-                    return new Option<double>();
-            }
+                    return list[0].Item1;
+            });
         }
 
-	    private static double Max(Option<double> x, Option<double> y)
+        private Func<CellInfo, Option<double>> LeftBorder()
+        {
+            var result = new Dictionary<CellInfo, List<Tuple<double, CellInfo>>>();
+            foreach (var row in Rows)
+            {
+                var leftBorder = leftBorders.Get(new CellInfo(row.Index, 0));
+                if (leftBorder.HasValue)
+                {
+                    result.Add(new CellInfo(row.Index, 0), Tuple.Create(leftBorder.Value, new CellInfo(row.Index, 0)));
+                    var rowspan = rowspans.Get(new CellInfo(row.Index, 0));
+                    if (rowspan.HasValue)
+                        for (var i = 1; i <= rowspan.Value - 1; i++)
+                            result.Add(new CellInfo(row.Index + i, 0), 
+                                Tuple.Create(leftBorder.Value, new CellInfo(row.Index, 0)));
+                }
+            }
+            return cell => result.Get(cell).Select(list => {
+                if (list.Count > 1)
+                    throw new Exception($"The left border is ambiguous Cells={CellsToSttring(list.Select(_ => _.Item2))}");
+                else
+                    return list[0].Item1;
+            });
+        }
+
+        private Func<CellInfo, Option<double>> TopBorder()
+        {
+            var result = new Dictionary<CellInfo, List<Tuple<double, CellInfo>>>();
+            foreach (var column in Columns)
+            {
+                var bottomBorder = topBorders.Get(new CellInfo(0, column.Index));
+                if (bottomBorder.HasValue)
+                {
+                    result.Add(new CellInfo(0, column.Index), 
+                        Tuple.Create(bottomBorder.Value, new CellInfo(0, column.Index)));
+                    var colspan = colspans.Get(new CellInfo(0, column.Index));
+                    if (colspan.HasValue)
+                        for (var i = 1; i <= colspan.Value - 1; i++)
+                            result.Add(new CellInfo(0, column.Index + i), 
+                                Tuple.Create(bottomBorder.Value, new CellInfo(0, column.Index)));
+                }
+            }
+            return cell => result.Get(cell).Select(list => {
+                if (list.Count > 1)
+                    throw new Exception($"The top border is ambiguous Cells={CellsToSttring(list.Select(_ => _.Item2))}");
+                else
+                    return list[0].Item1;
+            });
+        }
+
+        private static string CellsToSttring(IEnumerable<CellInfo> cells) => string.Join(",", cells.Select(_ => $"({_.RowIndex},{_.ColumnIndex})"));
+
+        private static double Max(Option<double> x, Option<double> y)
 	    {
 	        if (x.HasValue)
 	            return y.HasValue ? Math.Max(x.Value, y.Value) : x.Value;

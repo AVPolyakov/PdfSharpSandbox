@@ -119,5 +119,14 @@ namespace TableLayout
 
 	    public static double GetSpaceWidth(XGraphics graphics) 
             => graphics.MeasureString("x x", Font).Width - graphics.MeasureString("xx", Font).Width;
+
+        public static void Add<TKey, TValue>(this Dictionary<TKey, List<TValue>> it, TKey key, TValue value)
+        {
+            List<TValue> list;
+            if (it.TryGetValue(key, out list))
+                list.Add(value);
+            else
+                it.Add(key, new List<TValue> {value});
+        }
 	}
 }

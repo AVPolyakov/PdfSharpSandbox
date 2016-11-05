@@ -67,90 +67,70 @@ namespace TableLayout
 
 		private static void M1(XGraphics graphics, PdfPage page)
 		{
-		    var table = new Table(LeftMargin, Px(200), highlightCells: false);
+		    var table = new Table(LeftMargin, Px(200), highlightCells: true);
 		    var ИНН1 = table.AddColumn(Px(202));
 		    var ИНН2 = table.AddColumn(Px(257));
 		    var КПП = table.AddColumn(Px(454));
 		    var сумма = table.AddColumn(Px(144));
 		    var суммаValue1 = table.AddColumn(Px(194));
-		    var суммаValue2 = table.AddColumn(Px(181));
+		    //var суммаValue2 = table.AddColumn(Px(181));
 		    var суммаValue3 = table.AddColumn(PageWidth - LeftMargin - RightMargin
                 - table.Columns.Sum(_ => _.Width));
 		    {
 		        var row = table.AddRow();
 		        {
-		            var cell = row.Cell(ИНН1);
+		            var cell = row[ИНН1];
 		            MergeRight(cell, ИНН2);
-		            cell.TopBorder = cell.BottomBorder = BorderWidth;
+		            cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
 		            cell.Add("ИНН");
 		        }
 		        {
-		            var cell = row.Cell(ИНН2);
-		            cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
-		        }
-		        {
-		            var cell = row.Cell(КПП);
+		            var cell = row[КПП];
 		            cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
 		            cell.Add("КПП");
 		        }
 		        {
-		            var cell = row.Cell(сумма);
+		            var cell = row[сумма];
 		            cell.MergeDown = 1;
-		            cell.TopBorder = cell.RightBorder = BorderWidth;
+		            cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
 		            cell.Add("Сумма Temp");
 		        }
 		        {
-		            var cell = row.Cell(суммаValue1);
+		            var cell = row[суммаValue1];
 		            MergeRight(cell, суммаValue3);
 		            cell.MergeDown = 1;
-		            cell.TopBorder = BorderWidth;
+		            cell.BottomBorder = cell.TopBorder = BorderWidth;
 		            cell.Add("777-33");
 		        }
-		        row.Cell(суммаValue2).TopBorder = BorderWidth;
-		        row.Cell(суммаValue3).TopBorder = BorderWidth;
 		    }
 		    {
 		        var row = table.AddRow();
 		        {
-		            var cell = row.Cell(ИНН1);
+		            var cell = row[ИНН1];
 		            MergeRight(cell, КПП);
 		            cell.MergeDown = 1;
-		            cell.Add("Ромашка Ромашка Ромашка Ромашка Ромашка Ромашка");
+		            cell.Add("Ромашка Ромашка Ромашка Ромашка Ромашка Ромашка Ромашка Ромашка");
+		            cell.RightBorder = BorderWidth;
 		        }
-		        row.Cell(КПП).RightBorder = BorderWidth;
-		        row.Cell(сумма).RightBorder = BorderWidth;
 		    }
 		    {
 		        var row = table.AddRow();
 		        {
-		            var cell = row.Cell(сумма);
+		            var cell = row[сумма];
 		            cell.MergeDown = 1;
-		            cell.RightBorder = cell.TopBorder = cell.LeftBorder = BorderWidth;
+		            cell.RightBorder = BorderWidth;
 		            cell.Add("Сч. №");
 		        }
-		        {
-		            var cell = row.Cell(суммаValue1);
-		            MergeRight(cell, суммаValue3);
-		            cell.TopBorder = BorderWidth;
-		        }
-		        row.Cell(суммаValue2).TopBorder = BorderWidth;
-		        row.Cell(суммаValue3).TopBorder = BorderWidth;
 		    }
 		    {
 		        var row = table.AddRow();
 		        {
-		            var cell = row.Cell(ИНН1);
+		            var cell = row[ИНН1];
 		            MergeRight(cell, КПП);
-		            cell.BottomBorder = BorderWidth;
+		            cell.RightBorder = cell.BottomBorder = BorderWidth;
 		            cell.Add("Плательщик");
 		        }
-		        row.Cell(ИНН2).BottomBorder = BorderWidth;
-		        row.Cell(КПП).BottomBorder = BorderWidth;
-		        {
-		            var cell = row.Cell(сумма);
-		            cell.RightBorder = cell.LeftBorder = BorderWidth;
-		        }
-		        row.Cell(сумма).BottomBorder = BorderWidth;
+		        row[сумма].BottomBorder = BorderWidth;
 		    }
 		    table.Draw(graphics);
 		}
