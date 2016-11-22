@@ -115,10 +115,10 @@ namespace MigraDoc.DocumentObjectModel.Tables
     {
       get
       {
-        if (IsNull("Index"))
+        if (index.IsNull) // AndrewT: optimization if (IsNull("Index"))
         {
           Columns clms = this.Parent as Columns;
-          SetValue("Index", clms.IndexOf(this));
+					clms.PopulateItemIndexes(); // AndrewT:optimization SetValue("Index", clms.IndexOf(this));
         }
         return index;
       }
