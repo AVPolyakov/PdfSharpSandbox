@@ -45,8 +45,8 @@ namespace HelloWorld
     static void Main()
     {
       // Create a MigraDoc document
-      Document document = CreateDocument();
-      document.UseCmykColor = true;
+      Document document = CreateDocument2();
+      //document.UseCmykColor = true;
 
      // string ddl = MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToString(document);
 
@@ -60,7 +60,7 @@ namespace HelloWorld
       // A flag indicating whether to create a Unicode PDF or a WinAnsi PDF file.
       // This setting applies to all fonts used in the PDF document.
       // This setting has no effect on the RTF renderer.
-      const bool unicode = false;
+      const bool unicode = true;
 
       // An enum indicating whether to embed fonts or not.
       // This setting applies to all font programs used in the document.
@@ -83,7 +83,7 @@ namespace HelloWorld
       pdfRenderer.RenderDocument();
 
       // Save the document...
-      const string filename = "HelloWorld.pdf";
+      var filename = $"HelloWorld{Guid.NewGuid().ToString("N")}.pdf";
       pdfRenderer.PdfDocument.Save(filename);
       // ...and start a viewer.
       Process.Start(filename);
@@ -109,6 +109,24 @@ namespace HelloWorld
       //paragraph.AddFormattedText("Hello, World!  öäüÖÄÜß~§≤≥≈≠", TextFormat.Italic);
       paragraph.AddFormattedText("Hello, World!", TextFormat.Bold);
 
+      return document;
+    }
+
+    static Document CreateDocument2()
+    {
+      var document = new Document();
+      var section = document.AddSection();
+      var table = section.AddTable();
+      table.Borders.Width = 0.75;
+      var column = table.AddColumn(55);
+      var row = table.AddRow();
+      column.LeftPadding = column.RightPadding = Unit.FromMillimeter(1);
+      var paragraph = new Paragraph();
+      paragraph.Format.Font.Name = "Times New Roman";
+      paragraph.Format.Font.Size = 8;
+      paragraph.AddText(@"123 123 12345678901234567890123456789 sdfsadf sdfsdfg");
+      paragraph.Format.Shading.Color = Colors.Aqua;
+      row[column.Index].Add(paragraph);
       return document;
     }
   }

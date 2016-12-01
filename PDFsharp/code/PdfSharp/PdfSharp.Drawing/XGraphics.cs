@@ -3320,6 +3320,30 @@ namespace PdfSharp.Drawing
     // ----- MeasureString ------------------------------------------------------------------------
 
     /// <summary>
+    /// 
+    /// </summary>
+    public XSize MeasureString(string text, XFont font, XStringFormat stringFormat, double desWidth, out int numFittingCharacters)
+    {
+      var size = MeasureString(text, font, stringFormat);
+      if (size.Width <= desWidth || text.Length <= 1)
+      {
+        numFittingCharacters = text.Length;
+        return size;
+      }
+      var length = text.Length - 1;
+      while (true)
+      {
+        var xSize = MeasureString(text.Substring(0, length), font, stringFormat);
+        if (xSize.Width <= desWidth || length <= 1)
+        {
+          numFittingCharacters = length;
+          return xSize;
+        }
+        length--;
+      }
+    }
+
+    /// <summary>
     /// Measures the specified string when drawn with the specified font.
     /// </summary>
     public XSize MeasureString(string text, XFont font, XStringFormat stringFormat)

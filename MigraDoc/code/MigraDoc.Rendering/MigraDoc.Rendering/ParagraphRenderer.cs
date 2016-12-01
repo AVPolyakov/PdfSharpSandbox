@@ -92,7 +92,14 @@ namespace MigraDoc.Rendering
       /// <summary>
       /// Break formatting and continue in a new area (e.g. a new page).
       /// </summary>
-      NewArea
+      NewArea,
+
+      /// <summary>
+      /// http://forum.pdfsharp.net/viewtopic.php?f=2&t=1467
+      /// Only part of the word fit. Need to split the word at the specified
+      /// location and insert the remaining word after this one.
+      /// </summary>
+      WordWrap
     }
     private Phase phase;
 
@@ -1404,6 +1411,30 @@ namespace MigraDoc.Rendering
               formatInfo.isEnding = false;
             }
             break;
+          case FormatResult.WordWrap:
+          {
+            if (currentLeaf.Current.NumFittingCharacters.HasValue)
+            {
+              var fittingCharacters = currentLeaf.Current.NumFittingCharacters.Value;
+              currentLeaf.Current.NumFittingCharacters = null;
+              var txtObject = currentLeaf.Current as Text;
+              if (txtObject != null)
+              {
+                var fits = txtObject.Content.Substring(0, fittingCharacters);
+                var remaining = txtObject.Content.Substring(fittingCharacters);
+                var parentFormattedText = DocumentRelations.GetParentOfType(currentLeaf.Current, typeof (FormattedText)) as FormattedText;
+                if (parentFormattedText != null)
+                  InsertObject(parentFormattedText.Elements, remaining, txtObject, fits);
+                else
+                {
+                  var parentParagraph = DocumentRelations.GetParentOfType(currentLeaf.Current, typeof (Paragraph)) as Paragraph;
+                  if (parentParagraph != null)
+                    InsertObject(parentParagraph.Elements, remaining, txtObject, fits);
+                }
+              }
+            }
+          }
+            break;
         }
         if (result == FormatResult.NewArea)
         {
@@ -1417,6 +1448,13 @@ namespace MigraDoc.Rendering
 
       formatInfo.imageRenderInfos = this.imageRenderInfos;
       FinishLayoutInfo();
+    }
+
+    private void InsertObject(DocumentObjectCollection paragraphElements, string remaining, Text txtObject, string fits)
+    {
+      var currentWordIndex = paragraphElements.IndexOf(currentLeaf.Current);
+      paragraphElements.InsertObject(currentWordIndex + 1, new Text(remaining));
+      txtObject.Content = fits;
     }
 
     /// <summary>
@@ -1652,6 +1690,8 @@ namespace MigraDoc.Rendering
     FormatResult FormatWord(string word)
     {
       XUnit width = MeasureString(word);
+      if (currentLeaf.Current.NumFittingCharacters.HasValue)
+        return FormatResult.WordWrap;
       return FormatAsWord(width);
     }
 
@@ -1821,7 +1861,18 @@ namespace MigraDoc.Rendering
     XUnit MeasureString(string word)
     {
       XFont xFont = CurrentFont;
-      XUnit width = this.gfx.MeasureString(word, xFont, StringFormat).Width;
+
+      XUnit width;
+      if (formattingArea != null)
+      {
+        int numFittingCharacters;
+        width = this.gfx.MeasureString(word, xFont, StringFormat, formattingArea.Width.Point, out numFittingCharacters).Width;
+        if (numFittingCharacters < word.Length && numFittingCharacters > 0)
+          currentLeaf.Current.NumFittingCharacters = numFittingCharacters;
+      }
+      else
+        width = this.gfx.MeasureString(word, xFont, StringFormat).Width;
+
       Font font = CurrentDomFont;
 
       if (font.Subscript || font.Superscript)

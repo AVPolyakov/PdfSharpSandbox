@@ -225,6 +225,8 @@ namespace MigraDoc.DocumentObjectModel
       get;
     }
 
+    public int? NumFittingCharacters { get; set; }
+
     /// <summary>
     /// Sets the parent of the specified value.
     /// If a parent is already set, an ArgumentException will be thrown.
