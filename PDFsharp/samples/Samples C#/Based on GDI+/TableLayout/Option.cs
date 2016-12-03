@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace TableLayout
 {
@@ -39,6 +41,7 @@ namespace TableLayout
 
         public T ValueOrDefault() => HasValue ? Value : default(T);
 
+        [Pure]
         public T ValueOr(T defaultValue) => HasValue ? value : defaultValue;
 
         public override string ToString()
@@ -75,6 +78,12 @@ namespace TableLayout
         {
             TValue value;
             return it.TryGetValue(key, out value) ? value : new Option<TValue>();
+        }
+
+        public static Option<T> FirstOrNone<T>(this IEnumerable<T> it)
+        {
+            var firstOrDefault = it.Select(_ => new {_}).FirstOrDefault();
+            return firstOrDefault == null ? new Option<T>() : firstOrDefault._;
         }
     }
 }

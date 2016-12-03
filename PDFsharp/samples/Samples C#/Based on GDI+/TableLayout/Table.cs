@@ -2,26 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using static System.Linq.Enumerable;
+using static TableLayout.Program;
 
 namespace TableLayout
 {
     public class Table
 	{
-		private readonly XUnit x0;
-		private readonly XUnit y0;
+        private readonly double x0;
+		private readonly Option<double> y0;
         private readonly bool highlightCells;
         public readonly List<Column> Columns = new List<Column>();
-	    public readonly List<Row> Rows = new List<Row>();
+        private readonly List<Row> Rows = new List<Row>();
 
-	    public Table(XUnit x0, XUnit y0, bool highlightCells = false)
+	    public Table(double x0, Option<double> y0, bool highlightCells = false)
 		{
 			this.x0 = x0;
 			this.y0 = y0;
 	        this.highlightCells = highlightCells;
 		}
 
-		public Column AddColumn(XUnit width)
+        private double Y0 => y0.ValueOr(TopMargin);
+
+        public Column AddColumn(XUnit width)
 		{
 		    var column = new Column(width, Columns.Count);
             Columns.Add(column);
@@ -35,85 +39,208 @@ namespace TableLayout
 	        return row;
 	    }
 
-	    public void Draw(XGraphics graphics)
-	    {
-	        var leftBorderFunc = LeftBorder();
-	        var rightBorderFunc = RightBorder();
-	        var topBorderFunc = TopBorder();
-	        var bottomBorderFunc = BottomBorder();
-	        var maxLeftBorder = Rows.Max(row => leftBorderFunc(new CellInfo(row.Index, 0)).ValueOr(0));
-	        var maxTopBorder = Columns.Max(column => topBorderFunc(new CellInfo(0, column.Index)).ValueOr(0));
-	        var maxHeights = MaxHeights(graphics, rightBorderFunc, bottomBorderFunc);
-	        {
-                var x = x0 + maxLeftBorder;
-	            foreach (var column in Columns)
-	            {
-	                var topBorder = topBorderFunc(new CellInfo(0, column.Index));
-	                if (topBorder.HasValue)
-	                {
-	                    var borderY = y0 + maxTopBorder - topBorder.Value/2;
-	                    var leftBorder = column.Index == 0
-	                        ? leftBorderFunc(new CellInfo(0, 0)).ValueOr(0)
-	                        : rightBorderFunc(new CellInfo(0, column.Index - 1)).ValueOr(0);
-	                    graphics.DrawLine(new XPen(XColors.Black, topBorder.Value),
-	                        x - leftBorder, borderY,
-	                        x + column.Width, borderY);
-	                }
-	                x += column.Width;
-	            }
-	        }
-	        var y = y0 + maxTopBorder;
-	        foreach (var row in Rows)
-	        {
-	            var leftBorder = leftBorderFunc(new CellInfo(row.Index, 0));
-	            if (leftBorder.HasValue)
-	            {
-	                var borderX = x0 + maxLeftBorder - leftBorder.Value/2;
-	                graphics.DrawLine(new XPen(XColors.Black, leftBorder.Value),
-	                    borderX, y, borderX, y + maxHeights[row.Index]);
-	            }
-	            var x = x0 + maxLeftBorder;
-	            foreach (var column in Columns)
-	            {
-	                string text;
-	                if (texts.TryGetValue(new CellInfo(row, column), out text))
-	                    Util.DrawTextBox(graphics, text, x, y, ContentWidth(row, column, rightBorderFunc), ParagraphAlignment.Left);
-	                var rightBorder = rightBorderFunc(new CellInfo(row, column));
-	                if (rightBorder.HasValue)
-	                {
-	                    var borderX = x + column.Width - rightBorder.Value/2;
-	                    graphics.DrawLine(new XPen(XColors.Black, rightBorder.Value),
-	                        borderX, y, borderX, y + maxHeights[row.Index]);
-	                }
-	                var bottomBorder = bottomBorderFunc(new CellInfo(row, column));
-	                if (bottomBorder.HasValue)
-	                {
-	                    var borderY = y + maxHeights[row.Index] - bottomBorder.Value/2;
-	                    graphics.DrawLine(new XPen(XColors.Black, bottomBorder.Value),
-	                        x, borderY, x + column.Width, borderY);
-	                }
-	                if (highlightCells)
-	                    graphics.DrawRectangle(HighlightBrush(row, column), new XRect(x, y,
-	                        column.Width - rightBorderFunc(new CellInfo(row, column)).ValueOr(0),
-	                        maxHeights[row.Index] - bottomBorder.ValueOr(0)));
-	                x += column.Width;
-	            }
-	            y += maxHeights[row.Index];
-	        }
-	    }
+        public void Draw(XGraphics xGraphics, PdfDocument document)
+        {
+            var leftBorderFunc = LeftBorder();
+            var rightBorderFunc = RightBorder();
+            var topBorderFunc = TopBorder();
+            var bottomBorderFunc = BottomBorder();
+            var maxLeftBorder = Rows.Max(row => leftBorderFunc(new CellInfo(row.Index, 0)).ValueOr(0));
+            var maxHeights = MaxHeights(xGraphics, rightBorderFunc, bottomBorderFunc);
+            var firstPage = true;
+            foreach (var rows in SplitByPages(topBorderFunc, bottomBorderFunc, maxHeights))
+            {
+                if (firstPage)
+                    Draw(leftBorderFunc, rightBorderFunc, topBorderFunc, bottomBorderFunc, 
+                        maxLeftBorder, maxHeights, xGraphics, rows, Y0);
+                else
+                    using (var xGraphics2 = XGraphics.FromPdfPage(document.AddPage()))
+                        Draw(leftBorderFunc, rightBorderFunc, topBorderFunc, bottomBorderFunc, 
+                            maxLeftBorder, maxHeights, xGraphics2, rows, TopMargin);
+                firstPage = false;
+            }
+        }
 
-        private double ContentWidth(Row row, Column column, Func<CellInfo, Option<double>> rightBorderFunc)
-            => colspans.Get(new CellInfo(row, column)).Match(
+        private IEnumerable<IEnumerable<int>> SplitByPages(Func<CellInfo, Option<double>> topBorderFunc, Func<CellInfo, Option<double>> bottomBorderFunc,
+            Dictionary<int, double> maxHeights)
+        {
+            var mergedRows = MergedRows();
+            var y = Y0 + Columns.Max(column => topBorderFunc(new CellInfo(0, column.Index)).ValueOr(0));
+            var lastRowOnPreviousPage = new Option<int>();
+            var row = 0;
+            var fistPage = true;
+            while (true)
+                if (PageHeight - BottomMargin - y - maxHeights[row] < 0)
+                {
+                    var firstMergedRow = FirstMergedRow(mergedRows, row);
+                    if (firstMergedRow == 0)
+                    {
+                        if (fistPage && !y0.HasValue)
+                            yield return Empty<int>();
+                        else
+                        {
+                            yield return new[] {0};
+                            lastRowOnPreviousPage = 0;
+                            row = 1;
+                            if (row >= Rows.Count) break;
+                        }
+                    }
+                    else
+                    {
+                        var start = lastRowOnPreviousPage.Match(_ => _ + 1, () => 0);
+                        if (firstMergedRow - start > 0)
+                        {
+                            yield return Range(start, firstMergedRow - start);
+                            lastRowOnPreviousPage = firstMergedRow - 1;
+                            row = firstMergedRow;
+                            if (row >= Rows.Count) break;
+                        }
+                        else
+                        {
+                            var endMergedRow = EndMergedRow(mergedRows, row);
+                            yield return Range(start, endMergedRow - start);
+                            lastRowOnPreviousPage = endMergedRow;
+                            row = endMergedRow + 1;
+                            if (row >= Rows.Count) break;
+                        }
+                    }
+                    fistPage = false;
+                    y = TopMargin + Columns.Max(column => bottomBorderFunc(new CellInfo(row - 1, column.Index)).ValueOr(0));
+                }
+                else
+                {
+                    y += maxHeights[row];
+                    row++;
+                    if (row >= Rows.Count) break;
+                }
+            {
+                var start = lastRowOnPreviousPage.Match(_ => _ + 1, () => 0);
+                if (start < Rows.Count)
+                    yield return Range(start, Rows.Count - start);
+            }
+        }
+
+        private void Draw(Func<CellInfo, Option<double>> leftBorderFunc, Func<CellInfo, Option<double>> rightBorderFunc,
+            Func<CellInfo, Option<double>> topBorderFunc, Func<CellInfo, Option<double>> bottomBorderFunc, double maxLeftBorder,
+            Dictionary<int, double> maxHeights, XGraphics xGraphics, IEnumerable<int> rows, double y0OnPage)
+        {
+            var firstRow = rows.FirstOrNone();
+            if (firstRow.HasValue)
+            {
+                var maxTopBorder = firstRow.Value == 0
+                    ? Columns.Max(column => topBorderFunc(new CellInfo(firstRow.Value, column.Index)).ValueOr(0))
+                    : Columns.Max(column => bottomBorderFunc(new CellInfo(firstRow.Value - 1, column.Index)).ValueOr(0));
+                {
+                    var x = x0 + maxLeftBorder;
+                    foreach (var column in Columns)
+                    {
+                        var topBorder = firstRow.Value == 0
+                            ? topBorderFunc(new CellInfo(firstRow.Value, column.Index))
+                            : bottomBorderFunc(new CellInfo(firstRow.Value - 1, column.Index));
+                        if (topBorder.HasValue)
+                        {
+                            var borderY = y0OnPage + maxTopBorder - topBorder.Value/2;
+                            var leftBorder = column.Index == 0
+                                ? leftBorderFunc(new CellInfo(firstRow.Value, 0)).ValueOr(0)
+                                : rightBorderFunc(new CellInfo(firstRow.Value, column.Index - 1)).ValueOr(0);
+                            xGraphics.DrawLine(new XPen(XColors.Black, topBorder.Value),
+                                x - leftBorder, borderY,
+                                x + column.Width, borderY);
+                        }
+                        x += column.Width;
+                    }
+                }
+                var y = y0OnPage + maxTopBorder;
+                foreach (var row in rows)
+                {
+                    var leftBorder = leftBorderFunc(new CellInfo(row, 0));
+                    if (leftBorder.HasValue)
+                    {
+                        var borderX = x0 + maxLeftBorder - leftBorder.Value/2;
+                        xGraphics.DrawLine(new XPen(XColors.Black, leftBorder.Value),
+                            borderX, y, borderX, y + maxHeights[row]);
+                    }
+                    var x = x0 + maxLeftBorder;
+                    foreach (var column in Columns)
+                    {
+                        string text;
+                        if (texts.TryGetValue(new CellInfo(row, column.Index), out text))
+                            Util.DrawTextBox(xGraphics, text, x, y, ContentWidth(row, column, rightBorderFunc), ParagraphAlignment.Left);
+                        var rightBorder = rightBorderFunc(new CellInfo(row, column.Index));
+                        if (rightBorder.HasValue)
+                        {
+                            var borderX = x + column.Width - rightBorder.Value/2;
+                            xGraphics.DrawLine(new XPen(XColors.Black, rightBorder.Value),
+                                borderX, y, borderX, y + maxHeights[row]);
+                        }
+                        var bottomBorder = bottomBorderFunc(new CellInfo(row, column.Index));
+                        if (bottomBorder.HasValue)
+                        {
+                            var borderY = y + maxHeights[row] - bottomBorder.Value/2;
+                            xGraphics.DrawLine(new XPen(XColors.Black, bottomBorder.Value),
+                                x, borderY, x + column.Width, borderY);
+                        }
+                        if (highlightCells)
+                            xGraphics.DrawRectangle(HighlightBrush(row, column), new XRect(x, y,
+                                column.Width - rightBorderFunc(new CellInfo(row, column.Index)).ValueOr(0),
+                                maxHeights[row] - bottomBorder.ValueOr(0)));
+                        x += column.Width;
+                    }
+                    y += maxHeights[row];
+                }
+            }
+        }
+
+        private int EndMergedRow(HashSet<int> mergedRows, int row)
+        {
+            if (row + 1 >= Rows.Count) return row;
+            var i = row + 1;
+            while (true)
+            {
+                if (!mergedRows.Contains(i))
+                    return i - 1;
+                i++;
+            }
+        }
+
+        private static int FirstMergedRow(HashSet<int> mergedRows, int row)
+        {
+            if (row == 0) return 0;
+            var i = row - 1;
+            while (true)
+            {
+                if (!mergedRows.Contains(i))
+                    return i;
+                i--;
+            }
+        }
+
+        private HashSet<int> MergedRows()
+        {
+            var set = new HashSet<int>();
+            foreach (var row in Rows)
+                foreach (var column in Columns)
+                {
+                    var rowspan = rowspans.Get(new CellInfo(row, column));
+                    if (rowspan.HasValue)
+                        for (var i = row.Index + 1; i < row.Index + rowspan.Value; i++)
+                            set.Add(i);
+                }
+            return set;
+        }
+
+        private double ContentWidth(int row, Column column, Func<CellInfo, Option<double>> rightBorderFunc)
+            => colspans.Get(new CellInfo(row, column.Index)).Match(
                 colspan => column.Width
                            + Range(column.Index + 1, colspan - 1).Sum(i => Columns[i].Width)
                            - BorderWidth(row, column, column.Index + colspan - 1, rightBorderFunc),
                 () => column.Width - BorderWidth(row, column, column.Index, rightBorderFunc));
 
-        private double BorderWidth(Row row, Column column, int columnIndex, Func<CellInfo, Option<double>> rightBorderFunc)
-            => rowspans.Get(new CellInfo(row, column)).Match(
-                rowspan => Range(row.Index, rowspan)
+        private double BorderWidth(int row, Column column, int columnIndex, Func<CellInfo, Option<double>> rightBorderFunc)
+            => rowspans.Get(new CellInfo(row, column.Index)).Match(
+                rowspan => Range(row, rowspan)
                     .Max(i => rightBorderFunc(new CellInfo(i, columnIndex)).ValueOr(0)),
-                () => rightBorderFunc(new CellInfo(row.Index, columnIndex)).ValueOr(0));
+                () => rightBorderFunc(new CellInfo(row, columnIndex)).ValueOr(0));
 
         private Dictionary<int, double> MaxHeights(XGraphics graphics, Func<CellInfo, Option<double>> rightBorderFunc, 
             Func<CellInfo, Option<double>> bottomBorderFunc)
@@ -141,7 +268,7 @@ namespace TableLayout
 	                if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
 	                {
 	                    var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, 
-                            ContentWidth(tuple.Item3, column, rightBorderFunc));
+                            ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
 	                    var height = tuple.Item2.Match(
 	                        value => textHeight - Range(1, value - 1).Sum(i => result[row.Index - i]),
 	                        () => textHeight)
@@ -287,9 +414,9 @@ namespace TableLayout
 
         private static string CellsToSttring(IEnumerable<CellInfo> cells) => string.Join(",", cells.Select(_ => $"({_.RowIndex},{_.ColumnIndex})"));
 
-	    private static XSolidBrush HighlightBrush(Row row, Column column)
+        private static XSolidBrush HighlightBrush(int row, Column column)
 	    {
-	        if ((row.Index + column.Index)%2 == 1)
+	        if ((row + column.Index)%2 == 1)
 	            return new XSolidBrush(XColor.FromArgb(32, 127, 127, 127));
 	        else
 	            return new XSolidBrush(XColor.FromArgb(32, 0, 255, 0));
@@ -297,7 +424,7 @@ namespace TableLayout
 
 	    public Cell Cell(int rowIndex, int columnIndex) => new Cell(this, rowIndex, columnIndex);
 
-	    private readonly Dictionary<CellInfo, string> texts = new Dictionary<CellInfo, string>();
+        private readonly Dictionary<CellInfo, string> texts = new Dictionary<CellInfo, string>();
 
 	    public void Add(Cell cell, string text) => texts.Add(cell, text);
 

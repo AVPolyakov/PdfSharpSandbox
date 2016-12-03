@@ -11,7 +11,7 @@ namespace TableLayout
 		public static readonly XFont Font = new XFont("Times New Roman", 10, XFontStyle.Regular,
 			new XPdfFontOptions(PdfFontEncoding.Unicode));
 
-	    public static XUnit Px(double value) => XUnit.FromCentimeter(value/100d);
+	    public static double Px(double value) => XUnit.FromCentimeter(value/100d);
 
 		public static double DrawTextBox(XGraphics graphics, string text, XUnit x0, XUnit y0, double width,
 			ParagraphAlignment alignment)
