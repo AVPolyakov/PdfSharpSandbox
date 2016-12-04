@@ -7,7 +7,7 @@ namespace TableLayout
 
         public double Height
         {
-            set { Table.RowHeight(this, value); }
+            set { Table.SetRowHeight(this, value); }
         }
 
         public Row(Table table, int index)
@@ -18,6 +18,6 @@ namespace TableLayout
 
         public Cell this[Column column] => this[column.Index];
 
-        public Cell this[int columnIndex] => Table.Cell(Index, columnIndex);
+        public Cell this[int columnIndex] => new Cell(Table, Index, columnIndex);
     }
 }

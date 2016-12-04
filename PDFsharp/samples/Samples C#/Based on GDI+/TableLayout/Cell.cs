@@ -8,32 +8,32 @@ namespace TableLayout
 
         public int Rowspan
         {
-            set { Table.Rowspan(this, value); }
+            set { Table.SetRowspan(this, value); }
         }
 
         public int Colspan
         {
-            set { Table.Colspan(this, value); }
+            set { Table.SetColspan(this, value); }
         }
 
         public double LeftBorder
         {
-            set { Table.LeftBorder(this, value); }
+            set { Table.SetLeftBorder(this, value); }
         }
 
         public double RightBorder
         {
-            set { Table.RightBorder(this, value); }
+            set { Table.SetRightBorder(this, value); }
         }
 
         public double TopBorder
         {
-            set { Table.TopBorder(this, value); }
+            set { Table.SetTopBorder(this, value); }
         }
 
         public double BottomBorder
         {
-            set { Table.BottomBorder(this, value); }
+            set { Table.SetBottomBorder(this, value); }
         }
 
         public int MergeRight
@@ -53,6 +53,9 @@ namespace TableLayout
             RowIndex = rowIndex;
         }
 
-        public void Add(string text) => Table.Add(this, text);
+        public string Text
+        {
+            set { Table.SetText(this, value); }
+        }
     }
 }

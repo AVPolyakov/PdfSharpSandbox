@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using static PdfSharp.Drawing.XUnit;
@@ -35,7 +33,7 @@ namespace TableLayout
 	                using (var xGraphics = XGraphics.FromGraphics(graphics, new XSize(horzPixels, vertPixels)))
 	                {
 	                    xGraphics.ScaleTransform(resolution/72d);
-	                    Table().Draw(xGraphics, document);
+	                    Renderer.Draw(document, xGraphics,new []{Table(), Table2()});
 	                    bitmap.SetResolution(resolution, resolution);
 	                    bitmap.Save(filename, ImageFormat.Png);
 	                }
@@ -50,10 +48,19 @@ namespace TableLayout
 	        using (var document = new PdfDocument())
 	        {
 	            document.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
-	            using (var xGraphics = XGraphics.FromPdfPage(document.AddPage()))
-	            {
-	                Table2().Draw(xGraphics, document);
-	            }
+	            Renderer.Draw(document, new [] {
+	                Table(),
+	                Table(),
+	                Table2(),
+	                Table(),
+	                Table(),
+	                Table(),
+	                Table(),
+	                Table(),
+	                Table2(),
+	                Table(),
+	                Table(),
+	            });
 	            filename = $"HelloWorld_tempfile{Guid.NewGuid():N}.pdf";
 	            document.Save(filename);
 	        }
@@ -62,7 +69,7 @@ namespace TableLayout
 
 	    private static Table Table()
 	    {
-	        var table = new Table(LeftMargin, Px(200), highlightCells: false);
+	        var table = new Table(LeftMargin);
 	        var ИНН1 = table.AddColumn(Px(202));
 	        var ИНН2 = table.AddColumn(Px(257));
 	        var КПП = table.AddColumn(Px(454));
@@ -74,12 +81,12 @@ namespace TableLayout
 	            {
 	                var cell = row[ИНН1];
 	                cell.RightBorder = BorderWidth;
-	                cell.Add("Сумма прописью");
+	                cell.Text = "Сумма прописью";
 	            }
 	            {
 	                var cell = row[ИНН2];
 	                MergeRight(cell, суммаValue);
-	                cell.Add(string.Join(" ", Enumerable.Repeat("Сто рублей", 1)));
+	                cell.Text = string.Join(" ", Enumerable.Repeat("Сто рублей", 1));
 	            }
 	        }
 	        {
@@ -88,24 +95,24 @@ namespace TableLayout
 	                var cell = row[ИНН1];
 	                MergeRight(cell, ИНН2);
 	                cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
-	                cell.Add("ИНН");
+	                cell.Text = "ИНН";
 	            }
 	            {
 	                var cell = row[КПП];
 	                cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
-	                cell.Add("КПП");
+	                cell.Text = "КПП";
 	            }
 	            {
 	                var cell = row[сумма];
 	                cell.MergeDown = 1;
 	                cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
-	                cell.Add("Сумма");
+	                cell.Text = "Сумма";
 	            }
 	            {
 	                var cell = row[суммаValue];
 	                cell.MergeDown = 1;
 	                cell.BottomBorder = cell.TopBorder = BorderWidth;
-	                cell.Add("777-33");
+	                cell.Text = "777-33";
 	            }
 	        }
 	        {
@@ -115,7 +122,7 @@ namespace TableLayout
 	                var cell = row[ИНН1];
 	                MergeRight(cell, КПП);
 	                cell.MergeDown = 1;
-	                cell.Add(string.Join(" ", Enumerable.Repeat("Ромашка", 4*5)));
+	                cell.Text = string.Join(" ", Enumerable.Repeat("Ромашка", 4*5));
 	                cell.RightBorder = BorderWidth;
 	            }
 	        }
@@ -126,7 +133,7 @@ namespace TableLayout
 	                var cell = row[сумма];
 	                cell.MergeDown = 1;
 	                cell.RightBorder = BorderWidth;
-	                cell.Add("Сч. №");
+	                cell.Text = "Сч. №";
 	            }
 	        }
 	        {
@@ -135,7 +142,7 @@ namespace TableLayout
 	                var cell = row[ИНН1];
 	                MergeRight(cell, КПП);
 	                cell.RightBorder = cell.BottomBorder = BorderWidth;
-	                cell.Add("Плательщик");
+	                cell.Text = "Плательщик";
 	            }
 	            row[сумма].BottomBorder = BorderWidth;
 	        }
@@ -144,14 +151,14 @@ namespace TableLayout
 
 	    private static Table Table2()
 	    {
-	        var table = new Table(LeftMargin, Px(200), highlightCells: false);
+	        var table = new Table(LeftMargin);
 	        var c0 = table.AddColumn(Px(202));
 	        var c1 = table.AddColumn(Px(257));
 	        var c2 = table.AddColumn(Px(257));
 	        var c3 = table.AddColumn(Px(257));
-	        var c4 = table.AddColumn(PageWidth - LeftMargin - RightMargin
+	        var c4 = table.AddColumn(PageWidth - LeftMargin - RightMargin - BorderWidth
 	            - table.Columns.Sum(_ => _.Width));
-	        for (var i = 0; i < 100; i++)
+	        for (var i = 0; i < 50; i++)
 	        {
 	            var row = table.AddRow();
 	            {
@@ -159,31 +166,31 @@ namespace TableLayout
 	                cell.BottomBorder = BorderWidth;
 	                cell.LeftBorder = BorderWidth;
 	                cell.RightBorder = BorderWidth;
-	                cell.Add($"№ {i}");
+	                cell.Text = $"№ {i}";
 	            }
 	            {
 	                var cell = row[c1];
 	                cell.BottomBorder = BorderWidth;
 	                cell.RightBorder = BorderWidth;
-	                cell.Add("Колонка 2");
+	                cell.Text = "Колонка 2";
 	            }
 	            {
 	                var cell = row[c2];
 	                cell.BottomBorder = BorderWidth;
 	                cell.RightBorder = BorderWidth;
-	                cell.Add("Колонка 3");
+	                cell.Text = "Колонка 3";
 	            }
 	            {
 	                var cell = row[c3];
 	                cell.BottomBorder = BorderWidth;
 	                cell.RightBorder = BorderWidth;
-	                cell.Add("Колонка 4");
+	                cell.Text = "Колонка 4";
 	            }
 	            {
 	                var cell = row[c4];
 	                cell.BottomBorder = BorderWidth;
 	                cell.RightBorder = BorderWidth;
-	                cell.Add("Колонка 5");
+	                cell.Text = "Колонка 5";
 	            }
 	        }
 	        return table;
@@ -197,7 +204,7 @@ namespace TableLayout
 
 	    public static XUnit LeftMargin => FromCentimeter(3);
 
-        public static XUnit TopMargin => FromCentimeter(1);
+        public static double TopMargin => FromCentimeter(1);
 
         public static XUnit BottomMargin => FromCentimeter(2);
 

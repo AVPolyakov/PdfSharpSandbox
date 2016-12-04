@@ -85,5 +85,11 @@ namespace TableLayout
             var firstOrDefault = it.Select(_ => new {_}).FirstOrDefault();
             return firstOrDefault == null ? new Option<T>() : firstOrDefault._;
         }
+
+        public static Option<T> LastOrNone<T>(this IEnumerable<T> it)
+        {
+            var lastOrDefault = it.Select(_ => new {_}).LastOrDefault();
+            return lastOrDefault == null ? new Option<T>() : lastOrDefault._;
+        }
     }
 }
