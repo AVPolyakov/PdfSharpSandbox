@@ -5,6 +5,11 @@ namespace TableLayout
         public Table Table { get; }
         public int Index { get; }
 
+        public double Height
+        {
+            set { Table.RowHeight(this, value); }
+        }
+
         public Row(Table table, int index)
         {
             Table = table;

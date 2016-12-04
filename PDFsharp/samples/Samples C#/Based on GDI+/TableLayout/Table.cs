@@ -9,35 +9,35 @@ using static TableLayout.Program;
 namespace TableLayout
 {
     public class Table
-	{
+    {
         private readonly double x0;
-		private readonly Option<double> y0;
+        private readonly Option<double> y0;
         private readonly bool highlightCells;
         public readonly List<Column> Columns = new List<Column>();
         private readonly List<Row> Rows = new List<Row>();
 
-	    public Table(double x0, Option<double> y0, bool highlightCells = false)
-		{
-			this.x0 = x0;
-			this.y0 = y0;
-	        this.highlightCells = highlightCells;
-		}
+        public Table(double x0, Option<double> y0, bool highlightCells = false)
+        {
+            this.x0 = x0;
+            this.y0 = y0;
+            this.highlightCells = highlightCells;
+        }
 
         private double Y0 => y0.ValueOr(TopMargin);
 
         public Column AddColumn(XUnit width)
-		{
-		    var column = new Column(width, Columns.Count);
+        {
+            var column = new Column(width, Columns.Count);
             Columns.Add(column);
-		    return column;
-		}
+            return column;
+        }
 
-	    public Row AddRow()
-	    {
-	        var row = new Row(this, Rows.Count);
+        public Row AddRow()
+        {
+            var row = new Row(this, Rows.Count);
             Rows.Add(row);
-	        return row;
-	    }
+            return row;
+        }
 
         public void Draw(XGraphics xGraphics, PdfDocument document)
         {
@@ -51,11 +51,11 @@ namespace TableLayout
             foreach (var rows in SplitByPages(topBorderFunc, bottomBorderFunc, maxHeights))
             {
                 if (firstPage)
-                    Draw(leftBorderFunc, rightBorderFunc, topBorderFunc, bottomBorderFunc, 
+                    Draw(leftBorderFunc, rightBorderFunc, topBorderFunc, bottomBorderFunc,
                         maxLeftBorder, maxHeights, xGraphics, rows, Y0);
                 else
                     using (var xGraphics2 = XGraphics.FromPdfPage(document.AddPage()))
-                        Draw(leftBorderFunc, rightBorderFunc, topBorderFunc, bottomBorderFunc, 
+                        Draw(leftBorderFunc, rightBorderFunc, topBorderFunc, bottomBorderFunc,
                             maxLeftBorder, maxHeights, xGraphics2, rows, TopMargin);
                 firstPage = false;
             }
@@ -232,8 +232,8 @@ namespace TableLayout
         private double ContentWidth(int row, Column column, Func<CellInfo, Option<double>> rightBorderFunc)
             => colspans.Get(new CellInfo(row, column.Index)).Match(
                 colspan => column.Width
-                           + Range(column.Index + 1, colspan - 1).Sum(i => Columns[i].Width)
-                           - BorderWidth(row, column, column.Index + colspan - 1, rightBorderFunc),
+                    + Range(column.Index + 1, colspan - 1).Sum(i => Columns[i].Width)
+                    - BorderWidth(row, column, column.Index + colspan - 1, rightBorderFunc),
                 () => column.Width - BorderWidth(row, column, column.Index, rightBorderFunc));
 
         private double BorderWidth(int row, Column column, int columnIndex, Func<CellInfo, Option<double>> rightBorderFunc)
@@ -242,48 +242,51 @@ namespace TableLayout
                     .Max(i => rightBorderFunc(new CellInfo(i, columnIndex)).ValueOr(0)),
                 () => rightBorderFunc(new CellInfo(row, columnIndex)).ValueOr(0));
 
-        private Dictionary<int, double> MaxHeights(XGraphics graphics, Func<CellInfo, Option<double>> rightBorderFunc, 
+        private Dictionary<int, double> MaxHeights(XGraphics graphics, Func<CellInfo, Option<double>> rightBorderFunc,
             Func<CellInfo, Option<double>> bottomBorderFunc)
-	    {
-	        var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<string, Option<int>, Row>>();
-	        foreach (var row in Rows)
-	            foreach (var column in Columns)
-	            {
-	                string text;
-	                if (texts.TryGetValue(new CellInfo(row, column), out text))
-	                {
-	                    var rowspan = rowspans.Get(new CellInfo(row, column));
-	                    var rowIndex = rowspan.Match(value => row.Index + value - 1, () => row.Index);
-	                    cellContentsByBottomRow.Add(new CellInfo(rowIndex, column.Index), 
+        {
+            var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<string, Option<int>, Row>>();
+            foreach (var row in Rows)
+                foreach (var column in Columns)
+                {
+                    string text;
+                    if (texts.TryGetValue(new CellInfo(row, column), out text))
+                    {
+                        var rowspan = rowspans.Get(new CellInfo(row, column));
+                        var rowIndex = rowspan.Match(value => row.Index + value - 1, () => row.Index);
+                        cellContentsByBottomRow.Add(new CellInfo(rowIndex, column.Index),
                             Tuple.Create(text, rowspan, row));
-	                }
-	            }
-	        var result = new Dictionary<int, double>();
-	        foreach (var row in Rows)
-	        {
-	            var maxHeight = 0d;
-	            foreach (var column in Columns)
-	            {
-	                Tuple<string, Option<int>, Row> tuple;
-	                if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
-	                {
-	                    var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, 
+                    }
+                }
+            var result = new Dictionary<int, double>();
+            foreach (var row in Rows)
+            {
+                var maxHeight = 0d;
+                foreach (var column in Columns)
+                {
+                    Tuple<string, Option<int>, Row> tuple;
+                    if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
+                    {
+                        var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1,
                             ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
-	                    var height = tuple.Item2.Match(
-	                        value => textHeight - Range(1, value - 1).Sum(i => result[row.Index - i]),
-	                        () => textHeight)
-	                        + colspans.Get(new CellInfo(row, column)).Match(
-	                            colspan => Range(column.Index, colspan)
-	                                .Max(i => bottomBorderFunc(new CellInfo(row.Index, i)).ValueOr(0)),
-	                            () => bottomBorderFunc(new CellInfo(row, column)).ValueOr(0));
-	                    if (maxHeight < height)
-	                        maxHeight = height;
-	                }
-	            }
-	            result.Add(row.Index, maxHeight);
-	        }
-	        return result;
-	    }
+                        var rowHeightByContent = tuple.Item2.Match(
+                            value => Math.Max(textHeight - Range(1, value - 1).Sum(i => result[row.Index - i]), 0),
+                            () => textHeight);
+                        var height = rowHeights.Get(row.Index).Match(
+                            _ => Math.Max(rowHeightByContent, _), () => rowHeightByContent);
+                        var heightWithBorder = height
+                            + colspans.Get(new CellInfo(row, column)).Match(
+                                colspan => Range(column.Index, colspan)
+                                    .Max(i => bottomBorderFunc(new CellInfo(row.Index, i)).ValueOr(0)),
+                                () => bottomBorderFunc(new CellInfo(row, column)).ValueOr(0));
+                        if (maxHeight < heightWithBorder)
+                            maxHeight = heightWithBorder;
+                    }
+                }
+                result.Add(row.Index, maxHeight);
+            }
+            return result;
+        }
 
         private Func<CellInfo, Option<double>> RightBorder()
         {
@@ -334,24 +337,24 @@ namespace TableLayout
                     if (bottomBorder.HasValue)
                     {
                         var mergeDown = rowspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
-                        result.Add(new CellInfo(row.Index + mergeDown, column.Index), 
+                        result.Add(new CellInfo(row.Index + mergeDown, column.Index),
                             Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
                         var colspan = colspans.Get(new CellInfo(row, column));
                         if (colspan.HasValue)
                             for (var i = 1; i <= colspan.Value - 1; i++)
-                                result.Add(new CellInfo(row.Index + mergeDown, column.Index + i), 
+                                result.Add(new CellInfo(row.Index + mergeDown, column.Index + i),
                                     Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
                     }
                     var topBorder = topBorders.Get(new CellInfo(row.Index + 1, column.Index));
                     if (topBorder.HasValue)
                     {
                         var mergeDown = rowspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
-                        result.Add(new CellInfo(row.Index + mergeDown, column.Index), 
+                        result.Add(new CellInfo(row.Index + mergeDown, column.Index),
                             Tuple.Create(topBorder.Value, new CellInfo(row.Index + 1, column.Index)));
                         var colspan = colspans.Get(new CellInfo(row.Index + 1, column.Index));
                         if (colspan.HasValue)
                             for (var i = 1; i <= colspan.Value - 1; i++)
-                                result.Add(new CellInfo(row.Index + mergeDown, column.Index + i), 
+                                result.Add(new CellInfo(row.Index + mergeDown, column.Index + i),
                                     Tuple.Create(topBorder.Value, new CellInfo(row.Index + 1, column.Index)));
                     }
                 }
@@ -375,7 +378,7 @@ namespace TableLayout
                     var rowspan = rowspans.Get(new CellInfo(row.Index, 0));
                     if (rowspan.HasValue)
                         for (var i = 1; i <= rowspan.Value - 1; i++)
-                            result.Add(new CellInfo(row.Index + i, 0), 
+                            result.Add(new CellInfo(row.Index + i, 0),
                                 Tuple.Create(leftBorder.Value, new CellInfo(row.Index, 0)));
                 }
             }
@@ -395,12 +398,12 @@ namespace TableLayout
                 var bottomBorder = topBorders.Get(new CellInfo(0, column.Index));
                 if (bottomBorder.HasValue)
                 {
-                    result.Add(new CellInfo(0, column.Index), 
+                    result.Add(new CellInfo(0, column.Index),
                         Tuple.Create(bottomBorder.Value, new CellInfo(0, column.Index)));
                     var colspan = colspans.Get(new CellInfo(0, column.Index));
                     if (colspan.HasValue)
                         for (var i = 1; i <= colspan.Value - 1; i++)
-                            result.Add(new CellInfo(0, column.Index + i), 
+                            result.Add(new CellInfo(0, column.Index + i),
                                 Tuple.Create(bottomBorder.Value, new CellInfo(0, column.Index)));
                 }
             }
@@ -415,41 +418,45 @@ namespace TableLayout
         private static string CellsToSttring(IEnumerable<CellInfo> cells) => string.Join(",", cells.Select(_ => $"({_.RowIndex},{_.ColumnIndex})"));
 
         private static XSolidBrush HighlightBrush(int row, Column column)
-	    {
-	        if ((row + column.Index)%2 == 1)
-	            return new XSolidBrush(XColor.FromArgb(32, 127, 127, 127));
-	        else
-	            return new XSolidBrush(XColor.FromArgb(32, 0, 255, 0));
-	    }
+        {
+            if ((row + column.Index)%2 == 1)
+                return new XSolidBrush(XColor.FromArgb(32, 127, 127, 127));
+            else
+                return new XSolidBrush(XColor.FromArgb(32, 0, 255, 0));
+        }
 
-	    public Cell Cell(int rowIndex, int columnIndex) => new Cell(this, rowIndex, columnIndex);
+        public Cell Cell(int rowIndex, int columnIndex) => new Cell(this, rowIndex, columnIndex);
 
         private readonly Dictionary<CellInfo, string> texts = new Dictionary<CellInfo, string>();
 
-	    public void Add(Cell cell, string text) => texts.Add(cell, text);
+        public void Add(Cell cell, string text) => texts.Add(cell, text);
 
-	    private readonly Dictionary<CellInfo, int> rowspans = new Dictionary<CellInfo, int>();
+        private readonly Dictionary<CellInfo, int> rowspans = new Dictionary<CellInfo, int>();
 
-	    public void Rowspan(Cell cell, int value) => rowspans.Add(cell, value);
+        public void Rowspan(Cell cell, int value) => rowspans.Add(cell, value);
 
-	    private readonly Dictionary<CellInfo, int> colspans = new Dictionary<CellInfo, int>();
+        private readonly Dictionary<CellInfo, int> colspans = new Dictionary<CellInfo, int>();
 
-	    public void Colspan(Cell cell, int value) => colspans.Add(cell, value);
+        public void Colspan(Cell cell, int value) => colspans.Add(cell, value);
 
-	    private readonly Dictionary<CellInfo, double> leftBorders = new Dictionary<CellInfo, double>();
+        private readonly Dictionary<CellInfo, double> leftBorders = new Dictionary<CellInfo, double>();
 
-	    public void LeftBorder(Cell cell, double value) => leftBorders.Add(cell, value);
+        public void LeftBorder(Cell cell, double value) => leftBorders.Add(cell, value);
 
-	    private readonly Dictionary<CellInfo, double> rightBorders = new Dictionary<CellInfo, double>();
+        private readonly Dictionary<CellInfo, double> rightBorders = new Dictionary<CellInfo, double>();
 
-	    public void RightBorder(Cell cell, double value) => rightBorders.Add(cell, value);
+        public void RightBorder(Cell cell, double value) => rightBorders.Add(cell, value);
 
-	    private readonly Dictionary<CellInfo, double> topBorders = new Dictionary<CellInfo, double>();
+        private readonly Dictionary<CellInfo, double> topBorders = new Dictionary<CellInfo, double>();
 
-	    public void TopBorder(Cell cell, double value) => topBorders.Add(cell, value);
+        public void TopBorder(Cell cell, double value) => topBorders.Add(cell, value);
 
-	    private readonly Dictionary<CellInfo, double> bottomBorders = new Dictionary<CellInfo, double>();
+        private readonly Dictionary<CellInfo, double> bottomBorders = new Dictionary<CellInfo, double>();
 
-	    public void BottomBorder(Cell cell, double value) => bottomBorders.Add(cell, value);
-	}
+        public void BottomBorder(Cell cell, double value) => bottomBorders.Add(cell, value);
+
+        private readonly Dictionary<int, double> rowHeights = new Dictionary<int, double>();
+
+        public void RowHeight(Row row, double value) => rowHeights.Add(row.Index, value);
+    }
 }
