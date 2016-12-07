@@ -126,6 +126,7 @@ namespace HelloWorld
       paragraph.Format.Font.Size = 8;
       paragraph.AddText(@"123 123 12345678901234567890123456789 sdfsadf sdfsdfg");
       paragraph.Format.Shading.Color = Colors.Aqua;
+      paragraph.Format.LeftIndent = 10;
       row[column.Index].Add(paragraph);
       return document;
     }
