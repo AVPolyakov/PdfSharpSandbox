@@ -50,16 +50,16 @@ namespace TableLayout
 	            document.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
 	            Renderer.Draw(document, new [] {
 	                Table(),
-	                Table(),
-	                Table2(),
-	                Table(),
-	                Table(),
-	                Table(),
-	                Table(),
-	                Table(),
-	                Table2(),
-	                Table(),
-	                Table(),
+	                //Table(),
+	                //Table2(),
+	                //Table(),
+	                //Table(),
+	                //Table(),
+	                //Table(),
+	                //Table(),
+	                //Table2(),
+	                //Table(),
+	                //Table(),
 	            });
 	            filename = $"HelloWorld_tempfile{Guid.NewGuid():N}.pdf";
 	            document.Save(filename);

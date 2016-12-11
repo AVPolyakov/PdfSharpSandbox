@@ -187,10 +187,7 @@ namespace TableLayout
                         xGraphics.DrawLine(new XPen(XColors.Black, bottomBorder.Value),
                             x, borderY, x + column.Width, borderY);
                     }
-                    if (HighlightCells)
-                        xGraphics.DrawRectangle(HighlightBrush(row, column), new XRect(x, y,
-                            column.Width - info.RightBorderFunc(new CellInfo(row, column.Index)).ValueOr(0),
-                            info.MaxHeights[row] - bottomBorder.ValueOr(0)));
+                    HighlightCells(xGraphics, info, bottomBorder, row, column, x, y);
                     x += column.Width;
                 }
                 y += info.MaxHeights[row];
@@ -233,14 +230,6 @@ namespace TableLayout
                             set.Add(i);
                 }
             return set;
-        }
-
-        private static XSolidBrush HighlightBrush(int row, Column column)
-        {
-            if ((row + column.Index)%2 == 1)
-                return new XSolidBrush(XColor.FromArgb(32, 127, 127, 127));
-            else
-                return new XSolidBrush(XColor.FromArgb(32, 0, 255, 0));
         }
 
         private static double ContentWidth(this Table table, int row, Column column, Func<CellInfo, Option<double>> rightBorderFunc)
@@ -430,8 +419,6 @@ namespace TableLayout
 
         private static string CellsToSttring(IEnumerable<CellInfo> cells) => string.Join(",", cells.Select(_ => $"({_.RowIndex},{_.ColumnIndex})"));
 
-        private static bool HighlightCells => false;
-
         private class TableInfo
         {
             public Table Table { get; }
@@ -456,5 +443,38 @@ namespace TableLayout
                 Y = y;                
             }
         }
+
+        private static void HighlightCells(XGraphics xGraphics, TableInfo info, Option<double> bottomBorder, int row, Column column, double x, double y)
+        {
+            if (!isHighlightCells) return;
+            xGraphics.DrawRectangle(
+                (row + column.Index)%2 == 1
+                    ? new XSolidBrush(XColor.FromArgb(32, 127, 127, 127))
+                    : new XSolidBrush(XColor.FromArgb(32, 0, 255, 0)), new XRect(x, y,
+                        column.Width - info.RightBorderFunc(new CellInfo(row, column.Index)).ValueOr(0),
+                        info.MaxHeights[row] - bottomBorder.ValueOr(0)));
+            if (column.Index == 0)
+                xGraphics.DrawString($"r{row}",
+                    new XFont("Times New Roman", 10, XFontStyle.Regular,
+                        new XPdfFontOptions(PdfFontEncoding.Unicode)),
+                    new XSolidBrush(XColor.FromArgb(128, 255, 0, 0)),
+                    new XRect(x - 100 - 2, y, 100, 100),
+                    new XStringFormat {
+                        Alignment = XStringAlignment.Far,
+                        LineAlignment = XLineAlignment.Near
+                    });
+            if (row == 0)
+                xGraphics.DrawString($"c{column.Index}",
+                    new XFont("Times New Roman", 10, XFontStyle.Regular,
+                        new XPdfFontOptions(PdfFontEncoding.Unicode)),
+                    new XSolidBrush(XColor.FromArgb(128, 255, 0, 0)),
+                    new XRect(x, y - 100, 100, 100),
+                    new XStringFormat {
+                        Alignment = XStringAlignment.Near,
+                        LineAlignment = XLineAlignment.Far
+                    });
+        }
+
+        private static bool isHighlightCells => true;
     }
 }
