@@ -7,7 +7,7 @@ namespace TableLayout
         public double Width { get; }
         public int Index { get; }
 
-        public Column(XUnit width, int index)
+        internal Column(XUnit width, int index)
         {
             Width = width;
             Index = index;

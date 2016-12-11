@@ -170,9 +170,9 @@ namespace TableLayout
                 var x = info.Table.X0 + info.MaxLeftBorder;
                 foreach (var column in info.Table.Columns)
                 {
-                    string text;
-                    if (info.Table.texts.TryGetValue(new CellInfo(row, column.Index), out text))
-                        Util.DrawTextBox(xGraphics, text, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
+                    var text = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Text);
+                    if (text.HasValue)
+                        Util.DrawTextBox(xGraphics, text.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
                     var rightBorder = info.RightBorderFunc(new CellInfo(row, column.Index));
                     if (rightBorder.HasValue)
                     {
@@ -224,7 +224,7 @@ namespace TableLayout
             foreach (var row in table.Rows)
                 foreach (var column in table.Columns)
                 {
-                    var rowspan = table.rowspans.Get(new CellInfo(row, column));
+                    var rowspan = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Rowspan);
                     if (rowspan.HasValue)
                         for (var i = row.Index + 1; i < row.Index + rowspan.Value; i++)
                             set.Add(i);
@@ -233,14 +233,14 @@ namespace TableLayout
         }
 
         private static double ContentWidth(this Table table, int row, Column column, Func<CellInfo, Option<double>> rightBorderFunc)
-            => table.colspans.Get(new CellInfo(row, column.Index)).Match(
+            => table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Colspan).Match(
                 colspan => column.Width
                     + Enumerable.Range(column.Index + 1, colspan - 1).Sum(i => table.Columns[i].Width)
                     - table.BorderWidth(row, column, column.Index + colspan - 1, rightBorderFunc),
                 () => column.Width - table.BorderWidth(row, column, column.Index, rightBorderFunc));
 
         private static double BorderWidth(this Table table, int row, Column column, int columnIndex, Func<CellInfo, Option<double>> rightBorderFunc)
-            => table.rowspans.Get(new CellInfo(row, column.Index)).Match(
+            => table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Rowspan).Match(
                 rowspan => Enumerable.Range(row, rowspan)
                     .Max(i => rightBorderFunc(new CellInfo(i, columnIndex)).ValueOr(0)),
                 () => rightBorderFunc(new CellInfo(row, columnIndex)).ValueOr(0));
@@ -252,13 +252,13 @@ namespace TableLayout
             foreach (var row in table.Rows)
                 foreach (var column in table.Columns)
                 {
-                    string text;
-                    if (table.texts.TryGetValue(new CellInfo(row, column), out text))
+                    var text = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Text);
+                    if (text.HasValue)
                     {
-                        var rowspan = table.rowspans.Get(new CellInfo(row, column));
+                        var rowspan = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Rowspan);
                         var rowIndex = rowspan.Match(value => row.Index + value - 1, () => row.Index);
                         cellContentsByBottomRow.Add(new CellInfo(rowIndex, column.Index),
-                            Tuple.Create(text, rowspan, row));
+                            Tuple.Create(text.Value, rowspan, row));
                     }
                 }
             var result = new Dictionary<int, double>();
@@ -274,10 +274,10 @@ namespace TableLayout
                         var rowHeightByContent = tuple.Item2.Match(
                             value => Math.Max(textHeight - Enumerable.Range(1, value - 1).Sum(i => result[row.Index - i]), 0),
                             () => textHeight);
-                        var height = table.rowHeights.Get(row.Index).Match(
+                        var height = row.Height.Match(
                             _ => Math.Max(rowHeightByContent, _), () => rowHeightByContent);
                         var heightWithBorder = height
-                            + table.colspans.Get(new CellInfo(row, column)).Match(
+                            + table.Find(new CellInfo(row, column)).SelectMany(_ => _.Colspan).Match(
                                 colspan => Enumerable.Range(column.Index, colspan)
                                     .Max(i => bottomBorderFunc(new CellInfo(row.Index, i)).ValueOr(0)),
                                 () => bottomBorderFunc(new CellInfo(row, column)).ValueOr(0));
@@ -296,25 +296,25 @@ namespace TableLayout
             foreach (var row in table.Rows)
                 foreach (var column in table.Columns)
                 {
-                    var rightBorder = table.rightBorders.Get(new CellInfo(row, column));
+                    var rightBorder = table.Find(new CellInfo(row, column)).SelectMany(_ => _.RightBorder);
                     if (rightBorder.HasValue)
                     {
-                        var mergeRight = table.colspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        var mergeRight = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Colspan).Match(_ => _ - 1, () => 0);
                         result.Add(new CellInfo(row.Index, column.Index + mergeRight),
                             Tuple.Create(rightBorder.Value, new CellInfo(row, column)));
-                        var rowspan = table.rowspans.Get(new CellInfo(row, column));
+                        var rowspan = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Rowspan);
                         if (rowspan.HasValue)
                             for (var i = 1; i <= rowspan.Value - 1; i++)
                                 result.Add(new CellInfo(row.Index + i, column.Index + mergeRight),
                                     Tuple.Create(rightBorder.Value, new CellInfo(row, column)));
                     }
-                    var leftBorder = table.leftBorders.Get(new CellInfo(row.Index, column.Index + 1));
+                    var leftBorder = table.Find(new CellInfo(row.Index, column.Index + 1)).SelectMany(_ => _.LeftBorder);
                     if (leftBorder.HasValue)
                     {
-                        var mergeRight = table.colspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        var mergeRight = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Colspan).Match(_ => _ - 1, () => 0);
                         result.Add(new CellInfo(row.Index, column.Index + mergeRight),
                             Tuple.Create(leftBorder.Value, new CellInfo(row.Index, column.Index + 1)));
-                        var rowspan = table.rowspans.Get(new CellInfo(row.Index, column.Index + 1));
+                        var rowspan = table.Find(new CellInfo(row.Index, column.Index + 1)).SelectMany(_ => _.Rowspan);
                         if (rowspan.HasValue)
                             for (var i = 1; i <= rowspan.Value - 1; i++)
                                 result.Add(new CellInfo(row.Index + i, column.Index + mergeRight),
@@ -335,25 +335,25 @@ namespace TableLayout
             foreach (var row in table.Rows)
                 foreach (var column in table.Columns)
                 {
-                    var bottomBorder = table.bottomBorders.Get(new CellInfo(row, column));
+                    var bottomBorder = row[column].BottomBorder;
                     if (bottomBorder.HasValue)
                     {
-                        var mergeDown = table.rowspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        var mergeDown = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Rowspan).Match(_ => _ - 1, () => 0);
                         result.Add(new CellInfo(row.Index + mergeDown, column.Index),
                             Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
-                        var colspan = table.colspans.Get(new CellInfo(row, column));
+                        var colspan = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Colspan);
                         if (colspan.HasValue)
                             for (var i = 1; i <= colspan.Value - 1; i++)
                                 result.Add(new CellInfo(row.Index + mergeDown, column.Index + i),
                                     Tuple.Create(bottomBorder.Value, new CellInfo(row, column)));
                     }
-                    var topBorder = table.topBorders.Get(new CellInfo(row.Index + 1, column.Index));
+                    var topBorder = table.Find(new CellInfo(row.Index + 1, column.Index)).SelectMany(_ => _.TopBorder);
                     if (topBorder.HasValue)
                     {
-                        var mergeDown = table.rowspans.Get(new CellInfo(row, column)).Match(_ => _ - 1, () => 0);
+                        var mergeDown = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Rowspan).Match(_ => _ - 1, () => 0);
                         result.Add(new CellInfo(row.Index + mergeDown, column.Index),
                             Tuple.Create(topBorder.Value, new CellInfo(row.Index + 1, column.Index)));
-                        var colspan = table.colspans.Get(new CellInfo(row.Index + 1, column.Index));
+                        var colspan = table.Find(new CellInfo(row.Index + 1, column.Index)).SelectMany(_ => _.Colspan);
                         if (colspan.HasValue)
                             for (var i = 1; i <= colspan.Value - 1; i++)
                                 result.Add(new CellInfo(row.Index + mergeDown, column.Index + i),
@@ -373,11 +373,11 @@ namespace TableLayout
             var result = new Dictionary<CellInfo, List<Tuple<double, CellInfo>>>();
             foreach (var row in table.Rows)
             {
-                var leftBorder = table.leftBorders.Get(new CellInfo(row.Index, 0));
+                var leftBorder = table.Find(new CellInfo(row.Index, 0)).SelectMany(_ => _.LeftBorder);
                 if (leftBorder.HasValue)
                 {
                     result.Add(new CellInfo(row.Index, 0), Tuple.Create(leftBorder.Value, new CellInfo(row.Index, 0)));
-                    var rowspan = table.rowspans.Get(new CellInfo(row.Index, 0));
+                    var rowspan = table.Find(new CellInfo(row.Index, 0)).SelectMany(_ => _.Rowspan);
                     if (rowspan.HasValue)
                         for (var i = 1; i <= rowspan.Value - 1; i++)
                             result.Add(new CellInfo(row.Index + i, 0),
@@ -397,12 +397,12 @@ namespace TableLayout
             var result = new Dictionary<CellInfo, List<Tuple<double, CellInfo>>>();
             foreach (var column in table.Columns)
             {
-                var bottomBorder = table.topBorders.Get(new CellInfo(0, column.Index));
+                var bottomBorder = table.Find(new CellInfo(0, column.Index)).SelectMany(_ => _.TopBorder);
                 if (bottomBorder.HasValue)
                 {
                     result.Add(new CellInfo(0, column.Index),
                         Tuple.Create(bottomBorder.Value, new CellInfo(0, column.Index)));
-                    var colspan = table.colspans.Get(new CellInfo(0, column.Index));
+                    var colspan = table.Find(new CellInfo(0, column.Index)).SelectMany(_ => _.Colspan);
                     if (colspan.HasValue)
                         for (var i = 1; i <= colspan.Value - 1; i++)
                             result.Add(new CellInfo(0, column.Index + i),

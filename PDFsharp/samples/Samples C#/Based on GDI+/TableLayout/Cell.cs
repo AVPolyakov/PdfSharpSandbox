@@ -6,56 +6,37 @@ namespace TableLayout
         public int RowIndex { get; }
         public int ColumnIndex { get; }
 
-        public int Rowspan
+        public Option<int> Rowspan { get; set; }
+
+        public Option<int> Colspan { get; set; }
+
+        public Option<double> LeftBorder { get; set; }
+
+        public Option<double> RightBorder { get; set; }
+
+        public Option<double> TopBorder { get; set; }
+
+        public Option<double> BottomBorder { get; set; }
+
+        public Option<string> Text { get; set; }
+
+        public Option<int> MergeRight
         {
-            set { Table.SetRowspan(this, value); }
+            get { return Colspan.Select(_ => _ - 1); }
+            set { Colspan = value.Select(_ => _ + 1); }
         }
 
-        public int Colspan
+        public Option<int> MergeDown
         {
-            set { Table.SetColspan(this, value); }
+            get { return Rowspan.Select(_ => _ - 1); }
+            set { Rowspan = value.Select(_ => _ + 1); }
         }
 
-        public double LeftBorder
-        {
-            set { Table.SetLeftBorder(this, value); }
-        }
-
-        public double RightBorder
-        {
-            set { Table.SetRightBorder(this, value); }
-        }
-
-        public double TopBorder
-        {
-            set { Table.SetTopBorder(this, value); }
-        }
-
-        public double BottomBorder
-        {
-            set { Table.SetBottomBorder(this, value); }
-        }
-
-        public int MergeRight
-        {
-            set { Colspan = value + 1; }
-        }
-
-        public int MergeDown
-        {
-            set { Rowspan = value + 1; }
-        }
-
-        public Cell(Table table, int rowIndex, int columnIndex)
+        internal Cell(Table table, int rowIndex, int columnIndex)
         {
             Table = table;
             ColumnIndex = columnIndex;
             RowIndex = rowIndex;
-        }
-
-        public string Text
-        {
-            set { Table.SetText(this, value); }
         }
     }
 }
