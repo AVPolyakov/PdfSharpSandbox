@@ -475,6 +475,6 @@ namespace TableLayout
                     });
         }
 
-        private static bool isHighlightCells => true;
+        private static bool isHighlightCells => false;
     }
 }
