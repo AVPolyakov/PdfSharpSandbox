@@ -13,11 +13,11 @@ namespace TableLayout
 
 	    public static double Px(double value) => XUnit.FromCentimeter(value/100d);
 
-		public static double DrawTextBox(XGraphics graphics, string text, XUnit x0, XUnit y0, double width,
+		public static void DrawTextBox(XGraphics graphics, string text, XUnit x0, XUnit y0, double width,
 			ParagraphAlignment alignment)
 		{
 		    var lineSpace = LineSpace(graphics);
-		    var height = CyAscent(graphics);
+		    var height = Ascent(graphics);
 			foreach (var line in GetLines(graphics, GetWords(text).ToList(), width))
 			{
 				double x;
@@ -42,23 +42,17 @@ namespace TableLayout
 				}
 				height += lineSpace;
 			}
-			return height - lineSpace + CyDescent(graphics);
 		}
 
 		public static double GetTextBoxHeight(XGraphics graphics, string text, double width)
         {
-            var lineSpace = LineSpace(graphics);
-            return CyAscent(graphics) + GetLines(graphics, GetWords(text).ToList(), width)
-                .Sum(line => lineSpace) - lineSpace + CyDescent(graphics);
+            var lineCount = GetLines(graphics, GetWords(text).ToList(), width).Count();
+            return LineSpace(graphics) * lineCount;
         }
 
-	    private static double CyDescent(XGraphics graphics) => LineSpace(graphics)*CellDescent/CellSpace;
-
-	    private static double CyAscent(XGraphics graphics) => LineSpace(graphics)*CellAscent/CellSpace;
+	    private static double Ascent(XGraphics graphics) => LineSpace(graphics)*CellAscent/CellSpace;
 
 	    private static int CellSpace => Font.FontFamily.GetLineSpacing(Font.Style);
-
-	    private static int CellDescent => Font.FontFamily.GetCellDescent(Font.Style);
 
 	    private static int CellAscent => Font.FontFamily.GetCellAscent(Font.Style);
 
