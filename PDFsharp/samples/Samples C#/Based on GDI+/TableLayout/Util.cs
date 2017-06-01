@@ -117,10 +117,14 @@ namespace TableLayout
 			}
 		}
 
-	    public static double GetSpaceWidth(XGraphics graphics) 
-            => graphics.MeasureString("x x", Font).Width - graphics.MeasureString("xx", Font).Width;
+	    public static double GetSpaceWidth(XGraphics graphics)
+	    {
+	        var xStringFormat = XStringFormats.Default;
+	        xStringFormat.FormatFlags |= XStringFormatFlags.MeasureTrailingSpaces;
+	        return graphics.MeasureString(" ", Font, xStringFormat).Width;
+	    }
 
-        public static void Add<TKey, TValue>(this Dictionary<TKey, List<TValue>> it, TKey key, TValue value)
+	    public static void Add<TKey, TValue>(this Dictionary<TKey, List<TValue>> it, TKey key, TValue value)
         {
             List<TValue> list;
             if (it.TryGetValue(key, out list))
