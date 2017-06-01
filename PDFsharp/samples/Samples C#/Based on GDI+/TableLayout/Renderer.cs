@@ -3,19 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using static TableLayout.Program;
+using static TableLayout.Util;
 
 namespace TableLayout
 {
     public static class Renderer
     {
-        public static void Draw(PdfDocument document, IEnumerable<Table> tables)
-        {
-            using (var xGraphics = XGraphics.FromPdfPage(document.AddPage()))
-                Draw(document, xGraphics, tables);
-        }
-
-        public static void Draw(PdfDocument document, XGraphics xGraphics, IEnumerable<Table> tables)
+        public static int Draw(XGraphics xGraphics, IEnumerable<Table> tables, Action<int, Action<XGraphics>> pageAction)
         {
             var firstOnPage = true;
             var y = TopMargin;
@@ -32,7 +26,7 @@ namespace TableLayout
                 y = endY;
                 return new {tableInfo, splitByPages};
             }).ToList();
-            if (list.Count == 0) return;
+            if (list.Count == 0) return 0;
             var pages = new List<List<Tuple<TableInfo, IEnumerable<int>, double>>>();
             foreach (var item in list.SelectMany(item => item.splitByPages
                 .Select((tablePage, tablePageIndex) => new {tablePage, item.tableInfo, tablePageIndex})))
@@ -53,9 +47,11 @@ namespace TableLayout
                     foreach (var tuple in pages[index])
                         Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics);
                 else
-                    using (var xGraphics2 = XGraphics.FromPdfPage(document.AddPage()))
+                    pageAction(index, xGraphics2 => {
                         foreach (var tuple in pages[index])
                             Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics2);
+                    });
+            return pages.Count;
         }
 
         private static List<IEnumerable<int>> SplitToPages(TableInfo tableInfo, bool firstOnPage, out double endY)
@@ -172,7 +168,7 @@ namespace TableLayout
                 {
                     var text = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Text);
                     if (text.HasValue)
-                        Util.DrawTextBox(xGraphics, text.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
+                        DrawTextBox(xGraphics, text.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
                     var rightBorder = info.RightBorderFunc(new CellInfo(row, column.Index));
                     if (rightBorder.HasValue)
                     {
@@ -269,7 +265,7 @@ namespace TableLayout
                     Tuple<string, Option<int>, Row> tuple;
                     if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
                     {
-                        var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, table.ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
+                        var textHeight = GetTextBoxHeight(graphics, tuple.Item1, table.ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
                         var rowHeightByContent = tuple.Item2.Match(
                             value => Math.Max(textHeight - Enumerable.Range(1, value - 1).Sum(i => result[row.Index - i]), 0),
                             () => textHeight);
@@ -452,11 +448,13 @@ namespace TableLayout
                     : new XSolidBrush(XColor.FromArgb(32, 0, 255, 0)), new XRect(x, y,
                         column.Width - info.RightBorderFunc(new CellInfo(row, column.Index)).ValueOr(0),
                         info.MaxHeights[row] - bottomBorder.ValueOr(0)));
+            var xFont = new XFont("Times New Roman", 10, XFontStyle.Regular,
+                new XPdfFontOptions(PdfFontEncoding.Unicode));
+            var xSolidBrush = new XSolidBrush(XColor.FromArgb(128, 255, 0, 0));
             if (column.Index == 0)
                 xGraphics.DrawString($"r{row}",
-                    new XFont("Times New Roman", 10, XFontStyle.Regular,
-                        new XPdfFontOptions(PdfFontEncoding.Unicode)),
-                    new XSolidBrush(XColor.FromArgb(128, 255, 0, 0)),
+                    xFont,
+                    xSolidBrush,
                     new XRect(x - 100 - 2, y, 100, 100),
                     new XStringFormat {
                         Alignment = XStringAlignment.Far,
@@ -464,9 +462,8 @@ namespace TableLayout
                     });
             if (row == 0)
                 xGraphics.DrawString($"c{column.Index}",
-                    new XFont("Times New Roman", 10, XFontStyle.Regular,
-                        new XPdfFontOptions(PdfFontEncoding.Unicode)),
-                    new XSolidBrush(XColor.FromArgb(128, 255, 0, 0)),
+                    xFont,
+                    xSolidBrush,
                     new XRect(x, y - 100, 100, 100),
                     new XStringFormat {
                         Alignment = XStringAlignment.Near,
