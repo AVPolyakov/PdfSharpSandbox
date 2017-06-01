@@ -22,7 +22,7 @@ namespace TableLayout.Tests
 	        {
 	            document.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
 	            using (var xGraphics = XGraphics.FromPdfPage(document.AddPage()))
-	                Renderer.Draw(xGraphics, Tables, (pageIndex, action) =>  {
+	                Renderer.Draw(xGraphics, GetDocument(), (pageIndex, action) =>  {
 	                    using (var xGraphics2 = XGraphics.FromPdfPage(document.AddPage()))
 	                        action(xGraphics2);
 	                });

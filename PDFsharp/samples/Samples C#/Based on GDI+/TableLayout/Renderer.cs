@@ -9,16 +9,12 @@ namespace TableLayout
 {
     public static class Renderer
     {
-        public static int Draw(XGraphics xGraphics, IEnumerable<Table> tables, Action<int, Action<XGraphics>> pageAction)
+        public static int Draw(XGraphics xGraphics, Document document, Action<int, Action<XGraphics>> pageAction)
         {
             var firstOnPage = true;
             var y = TopMargin;
-            var list = tables.Select(table => {
-                var rightBorderFunc = table.RightBorder();
-                var bottomBorderFunc = table.BottomBorder();
-                var tableInfo = new TableInfo(table, table.TopBorder(), bottomBorderFunc,
-                    table.MaxHeights(xGraphics, rightBorderFunc, bottomBorderFunc), y, table.LeftBorder(),
-                    rightBorderFunc);
+            var list = document.Tables.Select(table => {
+                var tableInfo = GetTableInfo(xGraphics, table, y);
                 double endY;
                 var splitByPages = SplitToPages(tableInfo, firstOnPage, out endY);
                 if (splitByPages.Count > 0)
@@ -413,6 +409,15 @@ namespace TableLayout
         }
 
         private static string CellsToSttring(IEnumerable<CellInfo> cells) => string.Join(",", cells.Select(_ => $"({_.RowIndex},{_.ColumnIndex})"));
+
+        private static TableInfo GetTableInfo(XGraphics xGraphics, Table table, double y)
+        {
+            var rightBorderFunc = table.RightBorder();
+            var bottomBorderFunc = table.BottomBorder();
+            return new TableInfo(table, table.TopBorder(), bottomBorderFunc,
+                table.MaxHeights(xGraphics, rightBorderFunc, bottomBorderFunc), y, table.LeftBorder(),
+                rightBorderFunc);
+        }
 
         private class TableInfo
         {

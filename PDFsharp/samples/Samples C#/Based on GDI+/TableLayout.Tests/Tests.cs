@@ -19,19 +19,24 @@ namespace TableLayout.Tests
             Assert("Test1", CreatePng());
         }
 
-        public static Table[] Tables => new [] {
-            Table(),
-            Table(),
-            Table2(),
-            Table(),
-            Table(),
-            Table(),
-            Table(),
-            Table(),
-            Table2(),
-            Table(),
-            Table(),
-        };
+        public static Document GetDocument()
+        {
+            var document = new Document();
+            document.Tables.AddRange(new [] {
+                Table(),
+                Table(),
+                Table2(),
+                Table(),
+                Table(),
+                Table(),
+                Table(),
+                Table(),
+                Table2(),
+                Table(),
+                Table(),
+            });
+            return document;
+        }
 
         private static Table Table()
         {
@@ -172,7 +177,7 @@ namespace TableLayout.Tests
         public static List<byte[]> CreatePng()
         {
             var pages = new List<byte[]> {null};
-            FillBitmap(xGraphics => Renderer.Draw(xGraphics, Tables,
+            FillBitmap(xGraphics => Renderer.Draw(xGraphics, GetDocument(),
                     (pageIndex, action) => FillBitmap(action, bitmap => pages.Add(ToBytes(bitmap)))),
                 bitmap => pages[0] = ToBytes(bitmap));
             return pages;
