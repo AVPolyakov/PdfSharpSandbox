@@ -208,8 +208,7 @@ namespace TableLayout
 
         private static int FirstMergedRow(HashSet<int> mergedRows, int row)
         {
-            if (row == 0) return 0;
-            var i = row - 1;
+            var i = row;
             while (true)
             {
                 if (!mergedRows.Contains(i))

@@ -33,7 +33,7 @@ namespace TableLayout
 	                using (var xGraphics = XGraphics.FromGraphics(graphics, new XSize(horzPixels, vertPixels)))
 	                {
 	                    xGraphics.ScaleTransform(resolution/72d);
-	                    Renderer.Draw(document, xGraphics,new []{Table(), Table2()});
+	                    Renderer.Draw(document, xGraphics, Tables);
 	                    bitmap.SetResolution(resolution, resolution);
 	                    bitmap.Save(filename, ImageFormat.Png);
 	                }
@@ -42,25 +42,27 @@ namespace TableLayout
 	        return filename;
 	    }
 
+	    private static Table[] Tables => new [] {
+	        Table(),
+	        Table(),
+	        Table2(),
+	        Table(),
+	        Table(),
+	        Table(),
+	        Table(),
+	        Table(),
+	        Table2(),
+	        Table(),
+	        Table(),
+	    };
+
 	    private static string M2()
 	    {
 	        string filename;
 	        using (var document = new PdfDocument())
 	        {
 	            document.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
-	            Renderer.Draw(document, new [] {
-	                Table(),
-	                Table(),
-	                Table2(),
-                    Table(),
-                    Table(),
-                    Table(),
-                    Table(),
-                    Table(),
-                    Table2(),
-                    Table(),
-                    Table(),
-                });
+	            Renderer.Draw(document, Tables);
 	            filename = $"HelloWorld_tempfile{Guid.NewGuid():N}.pdf";
 	            document.Save(filename);
 	        }
@@ -158,7 +160,7 @@ namespace TableLayout
 	        var c3 = table.AddColumn(Px(257));
 	        var c4 = table.AddColumn(PageWidth - LeftMargin - RightMargin - BorderWidth
 	            - table.Columns.Sum(_ => _.Width));
-	        for (var i = 0; i < 50; i++)
+	        for (var i = 0; i < 101; i++)
 	        {
 	            var row = table.AddRow();
 	            {
@@ -204,9 +206,9 @@ namespace TableLayout
 
 	    public static XUnit LeftMargin => FromCentimeter(3);
 
-        public static double TopMargin => FromCentimeter(1);
+        public static double TopMargin => FromCentimeter(0);
 
-        public static XUnit BottomMargin => FromCentimeter(2);
+        public static XUnit BottomMargin => FromCentimeter(0);
 
 	    public static void MergeRight(Cell cell, Column dateColumn) => cell.MergeRight = dateColumn.Index - cell.ColumnIndex;
 
