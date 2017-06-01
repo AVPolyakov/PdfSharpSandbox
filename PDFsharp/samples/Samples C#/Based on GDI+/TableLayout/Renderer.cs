@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using static TableLayout.Util;
 
 namespace TableLayout
 {
@@ -12,11 +11,11 @@ namespace TableLayout
         public static int Draw(XGraphics xGraphics, Document document, Action<int, Action<XGraphics>> pageAction)
         {
             var firstOnPage = true;
-            var y = TopMargin;
+            var y = document.TopMargin;
             var list = document.Tables.Select(table => {
                 var tableInfo = GetTableInfo(xGraphics, table, y);
                 double endY;
-                var splitByPages = SplitToPages(tableInfo, firstOnPage, out endY);
+                var splitByPages = SplitToPages(tableInfo, firstOnPage, out endY, document);
                 if (splitByPages.Count > 0)
                     firstOnPage = false;
                 y = endY;
@@ -32,11 +31,11 @@ namespace TableLayout
                             Tuple.Create(item.tableInfo, item.tablePage, item.tableInfo.Y));
                     else
                         pages.Add(new List<Tuple<TableInfo, IEnumerable<int>, double>> {
-                            Tuple.Create(item.tableInfo, item.tablePage, TopMargin)
+                            Tuple.Create(item.tableInfo, item.tablePage, document.TopMargin)
                         });
                 else
                     pages.Add(new List<Tuple<TableInfo, IEnumerable<int>, double>> {
-                        Tuple.Create(item.tableInfo, item.tablePage, TopMargin)
+                        Tuple.Create(item.tableInfo, item.tablePage, document.TopMargin)
                     });
             for (var index = 0; index < pages.Count; index++)
                 if (index == 0)
@@ -50,7 +49,7 @@ namespace TableLayout
             return pages.Count;
         }
 
-        private static List<IEnumerable<int>> SplitToPages(TableInfo tableInfo, bool firstOnPage, out double endY)
+        private static List<IEnumerable<int>> SplitToPages(TableInfo tableInfo, bool firstOnPage, out double endY, Document document)
         {
             if (tableInfo.Table.Rows.Count == 0)
             {
@@ -64,7 +63,7 @@ namespace TableLayout
             var tableFirstPage = true;
             var result = new List<IEnumerable<int>>();
             while (true)
-                if (PageHeight - BottomMargin - y - tableInfo.MaxHeights[row] < 0)
+                if (document.PageHeight - document.BottomMargin - y - tableInfo.MaxHeights[row] < 0)
                 {
                     var firstMergedRow = FirstMergedRow(mergedRows, row);
                     if (firstMergedRow == 0)
@@ -103,7 +102,7 @@ namespace TableLayout
                         }
                     }
                     tableFirstPage = false;
-                    y = TopMargin + (row == 0
+                    y = document.TopMargin + (row == 0
                         ? tableInfo.Table.Columns.Max(column => tableInfo.TopBorderFunc(new CellInfo(row, column.Index)).ValueOr(0))
                         : tableInfo.Table.Columns.Max(column => tableInfo.BottomBorderFunc(new CellInfo(row - 1, column.Index)).ValueOr(0)));
                 }
@@ -164,7 +163,7 @@ namespace TableLayout
                 {
                     var text = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Text);
                     if (text.HasValue)
-                        DrawTextBox(xGraphics, text.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
+                        Util.DrawTextBox(xGraphics, text.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
                     var rightBorder = info.RightBorderFunc(new CellInfo(row, column.Index));
                     if (rightBorder.HasValue)
                     {
@@ -261,7 +260,7 @@ namespace TableLayout
                     Tuple<string, Option<int>, Row> tuple;
                     if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
                     {
-                        var textHeight = GetTextBoxHeight(graphics, tuple.Item1, table.ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
+                        var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, table.ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
                         var rowHeightByContent = tuple.Item2.Match(
                             value => Math.Max(textHeight - Enumerable.Range(1, value - 1).Sum(i => result[row.Index - i]), 0),
                             () => textHeight);

@@ -8,18 +8,6 @@ namespace TableLayout
 {
 	public static class Util
 	{
-	    public static XUnit PageWidth => XUnit.FromMillimeter(210);
-
-	    public static XUnit PageHeight => XUnit.FromMillimeter(297);
-
-	    public static XUnit RightMargin => XUnit.FromCentimeter(1.5);
-
-	    public static XUnit LeftMargin => XUnit.FromCentimeter(3);
-
-	    public static double TopMargin => XUnit.FromCentimeter(0);
-
-	    public static XUnit BottomMargin => XUnit.FromCentimeter(0);
-
 	    public static void MergeRight(Cell cell, Column dateColumn) => cell.MergeRight = dateColumn.Index - cell.ColumnIndex;
 
 	    public const double BorderWidth = 0.5d*1;
