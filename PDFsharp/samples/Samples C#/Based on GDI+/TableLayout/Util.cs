@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using PdfSharp.Drawing;
-using PdfSharp.Pdf;
 
 namespace TableLayout
 {
@@ -12,21 +11,18 @@ namespace TableLayout
 
 	    public const double BorderWidth = 0.5d*1;
 
-		public static readonly XFont Font = new XFont("Times New Roman", 10, XFontStyle.Regular,
-			new XPdfFontOptions(PdfFontEncoding.Unicode));
-
 	    public static double Px(double value) => XUnit.FromCentimeter(value/100d);
 
-		public static void DrawTextBox(XGraphics graphics, string text, XUnit x0, XUnit y0, double width,
+		public static void DrawTextBox(XGraphics graphics, Chunk chunk, XUnit x0, XUnit y0, double width,
 			ParagraphAlignment alignment)
 		{
-		    var lineSpace = LineSpace(graphics);
+		    var lineSpace = LineSpace(graphics, chunk.Font);
 		    var height = (lineSpace +
-		            lineSpace * (Font.FontFamily.GetCellAscent(Font.Style) -
-		                Font.FontFamily.GetCellDescent(Font.Style))
-		            / Font.FontFamily.GetLineSpacing(Font.Style)) /
+		            lineSpace * (chunk.Font.FontFamily.GetCellAscent(chunk.Font.Style) -
+		                chunk.Font.FontFamily.GetCellDescent(chunk.Font.Style))
+		            / chunk.Font.FontFamily.GetLineSpacing(chunk.Font.Style)) /
 		        2;
-			foreach (var line in GetLines(graphics, GetWords(text).ToList(), width))
+			foreach (var line in GetLines(graphics, GetWords(chunk.Text).ToList(), width, chunk.Font))
 			{
 				double x;
 				switch (alignment)
@@ -35,42 +31,42 @@ namespace TableLayout
 						x = x0;
 						break;
 					case ParagraphAlignment.Center:
-						x = x0 + (width - GetWordsWidth(graphics, line, GetSpaceWidth(graphics)))/2;
+						x = x0 + (width - GetWordsWidth(graphics, line, GetSpaceWidth(graphics, chunk.Font), chunk.Font))/2;
 						break;
 					case ParagraphAlignment.Right:
-						x = x0 + width - GetWordsWidth(graphics, line, GetSpaceWidth(graphics));
+						x = x0 + width - GetWordsWidth(graphics, line, GetSpaceWidth(graphics, chunk.Font), chunk.Font);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException(nameof(alignment), alignment, null);
 				}
 				foreach (var word in line)
 				{
-				    graphics.DrawString(word, Font, XBrushes.Black, x, height + y0);
-					x += GetSpaceWidth(graphics) + graphics.MeasureString(word, Font).Width;
+				    graphics.DrawString(word, chunk.Font, XBrushes.Black, x, height + y0);
+					x += GetSpaceWidth(graphics, chunk.Font) + graphics.MeasureString(word, chunk.Font).Width;
 				}
 				height += lineSpace;
 			}
 		}
 
-		public static double GetTextBoxHeight(XGraphics graphics, string text, double width)
+		public static double GetTextBoxHeight(XGraphics graphics, Chunk chunk, double width)
         {
-            var lineCount = GetLines(graphics, GetWords(text).ToList(), width).Count();
-            return LineSpace(graphics) * lineCount;
+            var lineCount = GetLines(graphics, GetWords(chunk.Text).ToList(), width, chunk.Font).Count();
+            return LineSpace(graphics, chunk.Font) * lineCount;
         }
 
-	    private static double LineSpace(XGraphics graphics) => Font.GetHeight(graphics);
+	    private static double LineSpace(XGraphics graphics, XFont font) => font.GetHeight(graphics);
 
-	    private static double GetWordsWidth(XGraphics graphics, List<string> line, double spaceWidth) 
-			=> line.Sum(word => graphics.MeasureString(word, Font).Width) + (line.Count - 1)*spaceWidth;
+	    private static double GetWordsWidth(XGraphics graphics, List<string> line, double spaceWidth, XFont font) 
+			=> line.Sum(word => graphics.MeasureString(word, font).Width) + (line.Count - 1)*spaceWidth;
 
-		private static IEnumerable<List<string>> GetLines(XGraphics xGraphics, List<string> words, XUnit width)
+		private static IEnumerable<List<string>> GetLines(XGraphics xGraphics, List<string> words, XUnit width, XFont font)
 		{
 			var firstLineWordIndex = 0;
-			var currentWidth = xGraphics.MeasureString(words[0], Font).Width;
-		    var spaceWidth = GetSpaceWidth(xGraphics);
+			var currentWidth = xGraphics.MeasureString(words[0], font).Width;
+		    var spaceWidth = GetSpaceWidth(xGraphics, font);
 			for (var index = 1; index < words.Count; index++)
 			{
-				var wordWidth = xGraphics.MeasureString(words[index], Font).Width;
+				var wordWidth = xGraphics.MeasureString(words[index], font).Width;
 			    var newWidth = currentWidth + spaceWidth + wordWidth;
 				if (newWidth >= width)
 				{
@@ -113,11 +109,11 @@ namespace TableLayout
 			}
 		}
 
-	    public static double GetSpaceWidth(XGraphics graphics)
+	    public static double GetSpaceWidth(XGraphics graphics, XFont font)
 	    {
 	        var xStringFormat = XStringFormats.Default;
 	        xStringFormat.FormatFlags |= XStringFormatFlags.MeasureTrailingSpaces;
-	        return graphics.MeasureString(" ", Font, xStringFormat).Width;
+	        return graphics.MeasureString(" ", font, xStringFormat).Width;
 	    }
 
 	    public static void Add<TKey, TValue>(this Dictionary<TKey, List<TValue>> it, TKey key, TValue value)

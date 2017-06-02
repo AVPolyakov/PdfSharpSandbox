@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using Xunit;
 using static TableLayout.Util;
 
@@ -54,6 +55,88 @@ namespace TableLayout.Tests
             Assert(nameof(Test2), CreatePng(pageSettings, tables));
         }
 
+        public static Table Table4(PageSettings pageSettings)
+        {
+            var table = new Table(pageSettings.LeftMargin);
+            var ИНН1 = table.AddColumn(Px(202));
+            var ИНН2 = table.AddColumn(Px(257));
+            var КПП = table.AddColumn(Px(454));
+            var сумма = table.AddColumn(Px(144));
+            var суммаValue = table.AddColumn(pageSettings.PageWidth - pageSettings.LeftMargin - pageSettings.RightMargin
+                - table.Columns.Sum(_ => _.Width));
+            {
+                var row = table.AddRow();
+                {
+                    var cell = row[ИНН1];
+                    cell.RightBorder = BorderWidth;
+                    cell.Chunk = TimesNewRoman10("Сумма прописью");
+                }
+                {
+                    var cell = row[ИНН2];
+                    MergeRight(cell, суммаValue);
+                    cell.Chunk = TimesNewRoman60(string.Join(" ", Enumerable.Repeat("Сто рублей", 1)));
+                }
+            }
+            {
+                var row = table.AddRow();
+                {
+                    var cell = row[ИНН1];
+                    MergeRight(cell, ИНН2);
+                    cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
+                    cell.Chunk = TimesNewRoman10("ИНН");
+                }
+                {
+                    var cell = row[КПП];
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Chunk = TimesNewRoman10("КПП");
+                }
+                {
+                    var cell = row[сумма];
+                    cell.MergeDown = 1;
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Chunk = TimesNewRoman10("Сумма");
+                }
+                {
+                    var cell = row[суммаValue];
+                    cell.MergeDown = 1;
+                    cell.BottomBorder = cell.TopBorder = BorderWidth;
+                    cell.Chunk = TimesNewRoman60("777-33");
+                }
+            }
+            {
+                var row = table.AddRow();
+                row.Height = Px(100);
+                {
+                    var cell = row[ИНН1];
+                    MergeRight(cell, КПП);
+                    cell.MergeDown = 1;
+                    cell.Chunk = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Ромашка", 4*5)));
+                    cell.RightBorder = BorderWidth;
+                }
+            }
+            {
+                var row = table.AddRow();
+                row.Height = Px(100);
+                {
+                    var cell = row[сумма];
+                    cell.MergeDown = 1;
+                    cell.RightBorder = BorderWidth;
+                    cell.Chunk = TimesNewRoman10("Сч. №");
+                }
+            }
+            {
+                var row = table.AddRow();
+                {
+                    var cell = row[ИНН1];
+                    MergeRight(cell, КПП);
+                    cell.RightBorder = cell.BottomBorder = BorderWidth;
+                    cell.Chunk = TimesNewRoman10("Плательщик");
+                }
+                row[сумма].BottomBorder = BorderWidth;
+            }
+            return table;
+        }
+
         public static Table Table(PageSettings pageSettings)
         {
             var table = new Table(pageSettings.LeftMargin);
@@ -68,12 +151,12 @@ namespace TableLayout.Tests
                 {
                     var cell = row[ИНН1];
                     cell.RightBorder = BorderWidth;
-                    cell.Text = "Сумма прописью";
+                    cell.Chunk = TimesNewRoman10("Сумма прописью");
                 }
                 {
                     var cell = row[ИНН2];
                     MergeRight(cell, суммаValue);
-                    cell.Text = string.Join(" ", Enumerable.Repeat("Сто рублей", 1));
+                    cell.Chunk = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Сто рублей", 1)));
                 }
             }
             {
@@ -82,24 +165,24 @@ namespace TableLayout.Tests
                     var cell = row[ИНН1];
                     MergeRight(cell, ИНН2);
                     cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
-                    cell.Text = "ИНН";
+                    cell.Chunk = TimesNewRoman10("ИНН");
                 }
                 {
                     var cell = row[КПП];
                     cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
-                    cell.Text = "КПП";
+                    cell.Chunk = TimesNewRoman10("КПП");
                 }
                 {
                     var cell = row[сумма];
                     cell.MergeDown = 1;
                     cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
-                    cell.Text = "Сумма";
+                    cell.Chunk = TimesNewRoman10("Сумма");
                 }
                 {
                     var cell = row[суммаValue];
                     cell.MergeDown = 1;
                     cell.BottomBorder = cell.TopBorder = BorderWidth;
-                    cell.Text = "777-33";
+                    cell.Chunk = TimesNewRoman10("777-33");
                 }
             }
             {
@@ -109,7 +192,7 @@ namespace TableLayout.Tests
                     var cell = row[ИНН1];
                     MergeRight(cell, КПП);
                     cell.MergeDown = 1;
-                    cell.Text = string.Join(" ", Enumerable.Repeat("Ромашка", 4*5));
+                    cell.Chunk = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Ромашка", 4*5)));
                     cell.RightBorder = BorderWidth;
                 }
             }
@@ -120,7 +203,7 @@ namespace TableLayout.Tests
                     var cell = row[сумма];
                     cell.MergeDown = 1;
                     cell.RightBorder = BorderWidth;
-                    cell.Text = "Сч. №";
+                    cell.Chunk = TimesNewRoman10("Сч. №");
                 }
             }
             {
@@ -129,12 +212,20 @@ namespace TableLayout.Tests
                     var cell = row[ИНН1];
                     MergeRight(cell, КПП);
                     cell.RightBorder = cell.BottomBorder = BorderWidth;
-                    cell.Text = "Плательщик";
+                    cell.Chunk = TimesNewRoman10("Плательщик");
                 }
                 row[сумма].BottomBorder = BorderWidth;
             }
             return table;
         }
+
+        private static Option<Chunk> TimesNewRoman10(string text) =>
+            new Chunk(text, new XFont("Times New Roman", 10, XFontStyle.Regular,
+                new XPdfFontOptions(PdfFontEncoding.Unicode)));
+
+        private static Option<Chunk> TimesNewRoman60(string text) =>
+            new Chunk(text, new XFont("Times New Roman", 60, XFontStyle.Bold,
+                new XPdfFontOptions(PdfFontEncoding.Unicode)));
 
         public static Table Table3(PageSettings pageSettings)
         {
@@ -151,24 +242,24 @@ namespace TableLayout.Tests
                     var cell = row[ИНН1];
                     MergeRight(cell, ИНН2);
                     cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
-                    cell.Text = "ИНН";
+                    cell.Chunk = TimesNewRoman10("ИНН");
                 }
                 {
                     var cell = row[КПП];
                     cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
-                    cell.Text = "КПП";
+                    cell.Chunk = TimesNewRoman10("КПП");
                 }
                 {
                     var cell = row[сумма];
                     cell.MergeDown = 1;
                     cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
-                    cell.Text = "Сумма";
+                    cell.Chunk = TimesNewRoman10("Сумма");
                 }
                 {
                     var cell = row[суммаValue];
                     cell.MergeDown = 1;
                     cell.BottomBorder = cell.TopBorder = BorderWidth;
-                    cell.Text = "777-33";
+                    cell.Chunk = TimesNewRoman10("777-33");
                 }
             }
             {
@@ -178,7 +269,7 @@ namespace TableLayout.Tests
                     var cell = row[ИНН1];
                     MergeRight(cell, КПП);
                     cell.MergeDown = 1;
-                    cell.Text = string.Join(" ", Enumerable.Repeat("Ромашка", 4*25));
+                    cell.Chunk = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Ромашка", 4*25)));
                     cell.RightBorder = BorderWidth;
                 }
             }
@@ -189,7 +280,7 @@ namespace TableLayout.Tests
                     var cell = row[сумма];
                     cell.MergeDown = 1;
                     cell.RightBorder = BorderWidth;
-                    cell.Text = "Сч. №";
+                    cell.Chunk = TimesNewRoman10("Сч. №");
                 }
             }
             {
@@ -198,7 +289,7 @@ namespace TableLayout.Tests
                     var cell = row[ИНН1];
                     MergeRight(cell, КПП);
                     cell.RightBorder = cell.BottomBorder = BorderWidth;
-                    cell.Text = "Плательщик";
+                    cell.Chunk = TimesNewRoman10("Плательщик");
                 }
                 row[сумма].BottomBorder = BorderWidth;
             }
@@ -222,31 +313,31 @@ namespace TableLayout.Tests
                     cell.BottomBorder = BorderWidth;
                     cell.LeftBorder = BorderWidth;
                     cell.RightBorder = BorderWidth;
-                    cell.Text = $"№ {i}";
+                    cell.Chunk = TimesNewRoman10($"№ {i}");
                 }
                 {
                     var cell = row[c1];
                     cell.BottomBorder = BorderWidth;
                     cell.RightBorder = BorderWidth;
-                    cell.Text = "Колонка 2";
+                    cell.Chunk = TimesNewRoman10("Колонка 2");
                 }
                 {
                     var cell = row[c2];
                     cell.BottomBorder = BorderWidth;
                     cell.RightBorder = BorderWidth;
-                    cell.Text = "Колонка 3";
+                    cell.Chunk = TimesNewRoman10("Колонка 3");
                 }
                 {
                     var cell = row[c3];
                     cell.BottomBorder = BorderWidth;
                     cell.RightBorder = BorderWidth;
-                    cell.Text = "Колонка 4";
+                    cell.Chunk = TimesNewRoman10("Колонка 4");
                 }
                 {
                     var cell = row[c4];
                     cell.BottomBorder = BorderWidth;
                     cell.RightBorder = BorderWidth;
-                    cell.Text = "Колонка 5";
+                    cell.Chunk = TimesNewRoman10("Колонка 5");
                 }
             }
             return table;

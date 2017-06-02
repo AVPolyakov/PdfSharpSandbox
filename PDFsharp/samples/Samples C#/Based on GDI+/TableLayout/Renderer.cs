@@ -163,9 +163,9 @@ namespace TableLayout
                 var x = info.Table.X0 + info.MaxLeftBorder;
                 foreach (var column in info.Table.Columns)
                 {
-                    var text = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Text);
-                    if (text.HasValue)
-                        Util.DrawTextBox(xGraphics, text.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
+                    var chunk = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Chunk);
+                    if (chunk.HasValue)
+                        Util.DrawTextBox(xGraphics, chunk.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
                     var rightBorder = info.RightBorderFunc(new CellInfo(row, column.Index));
                     if (rightBorder.HasValue)
                     {
@@ -241,17 +241,17 @@ namespace TableLayout
         private static Dictionary<int, double> MaxHeights(this Table table, XGraphics graphics, Func<CellInfo, Option<double>> rightBorderFunc,
             Func<CellInfo, Option<double>> bottomBorderFunc)
         {
-            var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<string, Option<int>, Row>>();
+            var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<Chunk, Option<int>, Row>>();
             foreach (var row in table.Rows)
                 foreach (var column in table.Columns)
                 {
-                    var text = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Text);
-                    if (text.HasValue)
+                    var chunk = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Chunk);
+                    if (chunk.HasValue)
                     {
                         var rowspan = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Rowspan);
                         var rowIndex = rowspan.Match(value => row.Index + value - 1, () => row.Index);
                         cellContentsByBottomRow.Add(new CellInfo(rowIndex, column.Index),
-                            Tuple.Create(text.Value, rowspan, row));
+                            Tuple.Create(chunk.Value, rowspan, row));
                     }
                 }
             var result = new Dictionary<int, double>();
@@ -260,7 +260,7 @@ namespace TableLayout
                 var maxHeight = 0d;
                 foreach (var column in table.Columns)
                 {
-                    Tuple<string, Option<int>, Row> tuple;
+                    Tuple<Chunk, Option<int>, Row> tuple;
                     if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
                     {
                         var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, table.ContentWidth(tuple.Item3.Index, column, rightBorderFunc));

@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Cell.cs" />
     <Compile Include="CellInfo.cs" />
+    <Compile Include="Chunk.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="PageSettings.cs" />
