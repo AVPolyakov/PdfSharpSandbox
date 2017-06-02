@@ -16,52 +16,52 @@ namespace TableLayout.Tests
         [Fact]
         public void Test1()
         {
-            var document = new Document {
+            var pageSettings = new PageSettings {
                 LeftMargin = XUnit.FromCentimeter(3),
                 RightMargin = XUnit.FromCentimeter(1.5),
                 TopMargin = XUnit.FromCentimeter(0),
                 BottomMargin = XUnit.FromCentimeter(0),
             };
-            document.Tables.AddRange(new [] {
-                Table(document),
-                Table(document),
-                Table2(document),
-                Table(document),
-                Table(document),
-                Table(document),
-                Table(document),
-                Table(document),
-                Table2(document),
-                Table(document),
-                Table(document),
-            });
-            Assert(nameof(Test1), CreatePng(document));
+            var tables = new [] {
+                Table(pageSettings),
+                Table(pageSettings),
+                Table2(pageSettings),
+                Table(pageSettings),
+                Table(pageSettings),
+                Table(pageSettings),
+                Table(pageSettings),
+                Table(pageSettings),
+                Table2(pageSettings),
+                Table(pageSettings),
+                Table(pageSettings),
+            };
+            Assert(nameof(Test1), CreatePng(pageSettings, tables));
         }
 
         [Fact]
         public void Test2()
         {
-            var document = new Document {
+            var pageSettings = new PageSettings {
                 PageHeight = Px(650),
                 LeftMargin = XUnit.FromCentimeter(3),
                 RightMargin = XUnit.FromCentimeter(1.5),
             };
-            document.Tables.AddRange(new [] {
-                Table(document),
-                Table3(document),
-                Table(document),
-            });
-            Assert(nameof(Test2), CreatePng(document));
+            var tables = new [] {
+                Table(pageSettings),
+                Table3(pageSettings),
+                Table(pageSettings),
+            };
+            Assert(nameof(Test2), CreatePng(pageSettings, tables));
         }
 
-        public static Table Table(Document document)
+        public static Table Table(PageSettings pageSettings)
         {
-            var table = new Table(document.LeftMargin);
+            var table = new Table(pageSettings.LeftMargin);
             var ИНН1 = table.AddColumn(Px(202));
             var ИНН2 = table.AddColumn(Px(257));
             var КПП = table.AddColumn(Px(454));
             var сумма = table.AddColumn(Px(144));
-            var суммаValue = table.AddColumn(document.PageWidth - document.LeftMargin - document.RightMargin
+            var суммаValue = table.AddColumn(pageSettings.PageWidth - pageSettings.LeftMargin - pageSettings.RightMargin
                 - table.Columns.Sum(_ => _.Width));
             {
                 var row = table.AddRow();
@@ -136,14 +136,14 @@ namespace TableLayout.Tests
             return table;
         }
 
-        public static Table Table3(Document document)
+        public static Table Table3(PageSettings pageSettings)
         {
-            var table = new Table(document.LeftMargin);
+            var table = new Table(pageSettings.LeftMargin);
             var ИНН1 = table.AddColumn(Px(202));
             var ИНН2 = table.AddColumn(Px(257));
             var КПП = table.AddColumn(Px(454));
             var сумма = table.AddColumn(Px(144));
-            var суммаValue = table.AddColumn(document.PageWidth - document.LeftMargin - document.RightMargin
+            var суммаValue = table.AddColumn(pageSettings.PageWidth - pageSettings.LeftMargin - pageSettings.RightMargin
                 - table.Columns.Sum(_ => _.Width));
             {
                 var row = table.AddRow();
@@ -205,14 +205,14 @@ namespace TableLayout.Tests
             return table;
         }
 
-        public static Table Table2(Document document)
+        public static Table Table2(PageSettings pageSettings)
         {
-            var table = new Table(document.LeftMargin);
+            var table = new Table(pageSettings.LeftMargin);
             var c0 = table.AddColumn(Px(202));
             var c1 = table.AddColumn(Px(257));
             var c2 = table.AddColumn(Px(257));
             var c3 = table.AddColumn(Px(257));
-            var c4 = table.AddColumn(document.PageWidth - document.LeftMargin - document.RightMargin - BorderWidth
+            var c4 = table.AddColumn(pageSettings.PageWidth - pageSettings.LeftMargin - pageSettings.RightMargin - BorderWidth
                 - table.Columns.Sum(_ => _.Width));
             for (var i = 0; i < 101; i++)
             {
@@ -259,21 +259,21 @@ namespace TableLayout.Tests
                     .SequenceEqual(pages[index]));
         }
 
-        public static List<byte[]> CreatePng(Document document)
+        public static List<byte[]> CreatePng(PageSettings pageSettings, IEnumerable<Table> tables)
         {
             var pages = new List<byte[]> {null};
-            FillBitmap(xGraphics => Renderer.Draw(xGraphics, document,
-                    (pageIndex, action) => FillBitmap(action, bitmap => pages.Add(ToBytes(bitmap)), document)),
+            FillBitmap(xGraphics => Renderer.Draw(xGraphics, pageSettings,
+                    (pageIndex, action) => FillBitmap(action, bitmap => pages.Add(ToBytes(bitmap)), pageSettings), tables),
                 bitmap => pages[0] = ToBytes(bitmap),
-                document);
+                pageSettings);
             return pages;
         }
 
-        private static void FillBitmap(Action<XGraphics> action, Action<Bitmap> action2, Document document)
+        private static void FillBitmap(Action<XGraphics> action, Action<Bitmap> action2, PageSettings pageSettings)
         {
             const int resolution = 254;
-            var horzPixels = (int) (new XUnit(document.PageWidth).Inch * resolution);
-            var vertPixels = (int) (new XUnit(document.PageHeight).Inch * resolution);
+            var horzPixels = (int) (new XUnit(pageSettings.PageWidth).Inch * resolution);
+            var vertPixels = (int) (new XUnit(pageSettings.PageHeight).Inch * resolution);
             using (var bitmap = new Bitmap(horzPixels, vertPixels))
             {
                 using (var graphics = Graphics.FromImage(bitmap))

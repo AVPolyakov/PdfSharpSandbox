@@ -8,14 +8,15 @@ namespace TableLayout
 {
     public static class Renderer
     {
-        public static int Draw(XGraphics xGraphics, Document document, Action<int, Action<XGraphics>> pageAction)
+        public static int Draw(XGraphics xGraphics, PageSettings pageSettings, Action<int, Action<XGraphics>> pageAction,
+            IEnumerable<Table> tables)
         {
             var firstOnPage = true;
-            var y = document.TopMargin;
-            var list = document.Tables.Select(table => {
+            var y = pageSettings.TopMargin;
+            var list = tables.Select(table => {
                 var tableInfo = GetTableInfo(xGraphics, table, y);
                 double endY;
-                var splitByPages = SplitToPages(tableInfo, firstOnPage, out endY, document);
+                var splitByPages = SplitToPages(tableInfo, firstOnPage, out endY, pageSettings);
                 if (splitByPages.Count > 0)
                     firstOnPage = false;
                 y = endY;
@@ -31,25 +32,25 @@ namespace TableLayout
                             Tuple.Create(item.tableInfo, item.tablePage, item.tableInfo.Y));
                     else
                         pages.Add(new List<Tuple<TableInfo, IEnumerable<int>, double>> {
-                            Tuple.Create(item.tableInfo, item.tablePage, document.TopMargin)
+                            Tuple.Create(item.tableInfo, item.tablePage, pageSettings.TopMargin)
                         });
                 else
                     pages.Add(new List<Tuple<TableInfo, IEnumerable<int>, double>> {
-                        Tuple.Create(item.tableInfo, item.tablePage, document.TopMargin)
+                        Tuple.Create(item.tableInfo, item.tablePage, pageSettings.TopMargin)
                     });
             for (var index = 0; index < pages.Count; index++)
                 if (index == 0)
                     foreach (var tuple in pages[index])
-                        Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics);
+                        Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics, pageSettings);
                 else
                     pageAction(index, xGraphics2 => {
                         foreach (var tuple in pages[index])
-                            Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics2);
+                            Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics2, pageSettings);
                     });
             return pages.Count;
         }
 
-        private static List<IEnumerable<int>> SplitToPages(TableInfo tableInfo, bool firstOnPage, out double endY, Document document)
+        private static List<IEnumerable<int>> SplitToPages(TableInfo tableInfo, bool firstOnPage, out double endY, PageSettings pageSettings)
         {
             if (tableInfo.Table.Rows.Count == 0)
             {
@@ -65,7 +66,7 @@ namespace TableLayout
             while (true)
             {
                 y += tableInfo.MaxHeights[row];
-                if (document.PageHeight - document.BottomMargin - y < 0)
+                if (pageSettings.PageHeight - pageSettings.BottomMargin - y < 0)
                 {
                     var firstMergedRow = FirstMergedRow(mergedRows, row);
                     var start = lastRowOnPreviousPage.Match(_ => _ + 1, () => 0);
@@ -93,7 +94,7 @@ namespace TableLayout
                         }
                     }
                     tableFirstPage = false;
-                    y = document.TopMargin + (row == 0
+                    y = pageSettings.TopMargin + (row == 0
                         ? tableInfo.Table.Columns.Max(column => tableInfo.TopBorderFunc(new CellInfo(row, column.Index)).ValueOr(0))
                         : tableInfo.Table.Columns.Max(column => tableInfo.BottomBorderFunc(new CellInfo(row - 1, column.Index)).ValueOr(0)));
                 }
@@ -112,7 +113,7 @@ namespace TableLayout
             return result;
         }
 
-        private static void Draw(TableInfo info, IEnumerable<int> rows, double y0, XGraphics xGraphics)
+        private static void Draw(TableInfo info, IEnumerable<int> rows, double y0, XGraphics xGraphics, PageSettings pageSettings)
         {
             var firstRow = rows.FirstOrNone();
             if (!firstRow.HasValue) return;
@@ -169,7 +170,8 @@ namespace TableLayout
                         xGraphics.DrawLine(new XPen(XColors.Black, bottomBorder.Value),
                             x, borderY, x + column.Width, borderY);
                     }
-                    HighlightCells(xGraphics, info, bottomBorder, row, column, x, y);
+                    if (pageSettings.IsHighlightCells)
+                        HighlightCells(xGraphics, info, bottomBorder, row, column, x, y);
                     x += column.Width;
                 }
                 y += info.MaxHeights[row];
@@ -436,7 +438,6 @@ namespace TableLayout
 
         private static void HighlightCells(XGraphics xGraphics, TableInfo info, Option<double> bottomBorder, int row, Column column, double x, double y)
         {
-            if (!isHighlightCells) return;
             xGraphics.DrawRectangle(
                 (row + column.Index)%2 == 1
                     ? new XSolidBrush(XColor.FromArgb(32, 127, 127, 127))
@@ -465,7 +466,5 @@ namespace TableLayout
                         LineAlignment = XLineAlignment.Far
                     });
         }
-
-        private static bool isHighlightCells => false;
     }
 }
