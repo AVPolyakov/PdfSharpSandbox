@@ -5,8 +5,8 @@ namespace TableLayout
 {
     public class Document
     {
-        public double PageWidth => XUnit.FromMillimeter(210);
-        public double PageHeight => XUnit.FromMillimeter(297);
+        public double PageWidth { get; set; } = XUnit.FromMillimeter(210);
+        public double PageHeight { get; set; } = XUnit.FromMillimeter(297);
 
         public double LeftMargin { get; set; } = XUnit.FromCentimeter(1);
         public double RightMargin { get; set; } = XUnit.FromCentimeter(1);

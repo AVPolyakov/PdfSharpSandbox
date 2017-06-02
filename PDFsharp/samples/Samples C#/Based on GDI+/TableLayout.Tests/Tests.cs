@@ -35,7 +35,23 @@ namespace TableLayout.Tests
                 Table(document),
                 Table(document),
             });
-            Assert("Test1", CreatePng(document));
+            Assert(nameof(Test1), CreatePng(document));
+        }
+
+        [Fact]
+        public void Test2()
+        {
+            var document = new Document {
+                PageHeight = Px(650),
+                LeftMargin = XUnit.FromCentimeter(3),
+                RightMargin = XUnit.FromCentimeter(1.5),
+            };
+            document.Tables.AddRange(new [] {
+                Table(document),
+                Table3(document),
+                Table(document),
+            });
+            Assert(nameof(Test2), CreatePng(document));
         }
 
         public static Table Table(Document document)
@@ -94,6 +110,75 @@ namespace TableLayout.Tests
                     MergeRight(cell, КПП);
                     cell.MergeDown = 1;
                     cell.Text = string.Join(" ", Enumerable.Repeat("Ромашка", 4*5));
+                    cell.RightBorder = BorderWidth;
+                }
+            }
+            {
+                var row = table.AddRow();
+                row.Height = Px(100);
+                {
+                    var cell = row[сумма];
+                    cell.MergeDown = 1;
+                    cell.RightBorder = BorderWidth;
+                    cell.Text = "Сч. №";
+                }
+            }
+            {
+                var row = table.AddRow();
+                {
+                    var cell = row[ИНН1];
+                    MergeRight(cell, КПП);
+                    cell.RightBorder = cell.BottomBorder = BorderWidth;
+                    cell.Text = "Плательщик";
+                }
+                row[сумма].BottomBorder = BorderWidth;
+            }
+            return table;
+        }
+
+        public static Table Table3(Document document)
+        {
+            var table = new Table(document.LeftMargin);
+            var ИНН1 = table.AddColumn(Px(202));
+            var ИНН2 = table.AddColumn(Px(257));
+            var КПП = table.AddColumn(Px(454));
+            var сумма = table.AddColumn(Px(144));
+            var суммаValue = table.AddColumn(document.PageWidth - document.LeftMargin - document.RightMargin
+                - table.Columns.Sum(_ => _.Width));
+            {
+                var row = table.AddRow();
+                {
+                    var cell = row[ИНН1];
+                    MergeRight(cell, ИНН2);
+                    cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
+                    cell.Text = "ИНН";
+                }
+                {
+                    var cell = row[КПП];
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Text = "КПП";
+                }
+                {
+                    var cell = row[сумма];
+                    cell.MergeDown = 1;
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Text = "Сумма";
+                }
+                {
+                    var cell = row[суммаValue];
+                    cell.MergeDown = 1;
+                    cell.BottomBorder = cell.TopBorder = BorderWidth;
+                    cell.Text = "777-33";
+                }
+            }
+            {
+                var row = table.AddRow();
+                row.Height = Px(100);
+                {
+                    var cell = row[ИНН1];
+                    MergeRight(cell, КПП);
+                    cell.MergeDown = 1;
+                    cell.Text = string.Join(" ", Enumerable.Repeat("Ромашка", 4*25));
                     cell.RightBorder = BorderWidth;
                 }
             }
@@ -214,7 +299,7 @@ namespace TableLayout.Tests
             }
         }
 
-        public static void SavePages(List<byte[]> pages, string folderName)
+        public static void SavePages(string folderName, List<byte[]> pages)
         {
             for (var index = 0; index < pages.Count; index++)
                 File.WriteAllBytes(

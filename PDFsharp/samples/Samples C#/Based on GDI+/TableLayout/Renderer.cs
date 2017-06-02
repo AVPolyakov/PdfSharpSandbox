@@ -63,34 +63,25 @@ namespace TableLayout
             var tableFirstPage = true;
             var result = new List<IEnumerable<int>>();
             while (true)
-                if (document.PageHeight - document.BottomMargin - y - tableInfo.MaxHeights[row] < 0)
+            {
+                y += tableInfo.MaxHeights[row];
+                if (document.PageHeight - document.BottomMargin - y < 0)
                 {
                     var firstMergedRow = FirstMergedRow(mergedRows, row);
-                    if (firstMergedRow == 0)
+                    var start = lastRowOnPreviousPage.Match(_ => _ + 1, () => 0);
+                    if (firstMergedRow - start > 0)
                     {
-                        if (tableFirstPage && !firstOnPage)
+                        result.Add(Enumerable.Range(start, firstMergedRow - start));
+                        lastRowOnPreviousPage = firstMergedRow - 1;
+                        row = firstMergedRow;
+                    }
+                    else
+                    {
+                        if (firstMergedRow == 0 && tableFirstPage && !firstOnPage)
                         {
                             result.Add(Enumerable.Empty<int>());
                             lastRowOnPreviousPage = new Option<int>();
                             row = 0;
-                        }
-                        else
-                        {
-                            result.Add(new[] {0});
-                            lastRowOnPreviousPage = 0;
-                            row = 1;
-                            if (row >= tableInfo.Table.Rows.Count) break;
-                        }
-                    }
-                    else
-                    {
-                        var start = lastRowOnPreviousPage.Match(_ => _ + 1, () => 0);
-                        if (firstMergedRow - start > 0)
-                        {
-                            result.Add(Enumerable.Range(start, firstMergedRow - start));
-                            lastRowOnPreviousPage = firstMergedRow - 1;
-                            row = firstMergedRow;
-                            if (row >= tableInfo.Table.Rows.Count) break;
                         }
                         else
                         {
@@ -108,10 +99,10 @@ namespace TableLayout
                 }
                 else
                 {
-                    y += tableInfo.MaxHeights[row];
                     row++;
                     if (row >= tableInfo.Table.Rows.Count) break;
                 }
+            }
             {
                 var start = lastRowOnPreviousPage.Match(_ => _ + 1, () => 0);
                 if (start < tableInfo.Table.Rows.Count)
