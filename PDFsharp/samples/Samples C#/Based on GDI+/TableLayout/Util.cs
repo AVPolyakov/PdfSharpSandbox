@@ -21,7 +21,11 @@ namespace TableLayout
 			ParagraphAlignment alignment)
 		{
 		    var lineSpace = LineSpace(graphics);
-		    var height = Ascent(graphics);
+		    var height = (lineSpace +
+		            lineSpace * (Font.FontFamily.GetCellAscent(Font.Style) -
+		                Font.FontFamily.GetCellDescent(Font.Style))
+		            / Font.FontFamily.GetLineSpacing(Font.Style)) /
+		        2;
 			foreach (var line in GetLines(graphics, GetWords(text).ToList(), width))
 			{
 				double x;
@@ -53,12 +57,6 @@ namespace TableLayout
             var lineCount = GetLines(graphics, GetWords(text).ToList(), width).Count();
             return LineSpace(graphics) * lineCount;
         }
-
-	    private static double Ascent(XGraphics graphics) => LineSpace(graphics)*CellAscent/CellSpace;
-
-	    private static int CellSpace => Font.FontFamily.GetLineSpacing(Font.Style);
-
-	    private static int CellAscent => Font.FontFamily.GetCellAscent(Font.Style);
 
 	    private static double LineSpace(XGraphics graphics) => Font.GetHeight(graphics);
 

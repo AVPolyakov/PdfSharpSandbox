@@ -29,7 +29,7 @@ namespace TableLayout.Tests
 	            Table(document),
 	        });
 	        Process.Start(CreatePdf(document));
-	        Process.Start(SavePng(document, 1));
+	        Process.Start(SavePng(document, 0));
 	    }
 
 	    public static string CreatePdf(Document document)
