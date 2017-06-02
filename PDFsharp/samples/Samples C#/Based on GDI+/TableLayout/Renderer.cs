@@ -13,44 +13,54 @@ namespace TableLayout
         {
             var firstOnPage = true;
             var y = pageSettings.TopMargin;
-            var list = tables.Select(table => {
+            var tableParts = tables.Select(table => {
                 var tableInfo = GetTableInfo(xGraphics, table, y);
                 double endY;
-                var splitByPages = SplitToPages(tableInfo, firstOnPage, out endY, pageSettings);
-                if (splitByPages.Count > 0)
+                var rowSets = SplitByPages(tableInfo, firstOnPage, out endY, pageSettings);
+                if (rowSets.Count > 0)
                     firstOnPage = false;
                 y = endY;
-                return new {tableInfo, splitByPages};
+                return rowSets.Select((rows, index) => new TablePart(rows, index, tableInfo));
             }).ToList();
-            if (list.Count == 0) return 0;
-            var pages = new List<List<Tuple<TableInfo, IEnumerable<int>, double>>>();
-            foreach (var item in list.SelectMany(item => item.splitByPages
-                .Select((tablePage, tablePageIndex) => new {tablePage, item.tableInfo, tablePageIndex})))
+            if (tableParts.Count == 0) return 0;
+            var pages = new List<List<TablePart>>();
+            foreach (var part in tableParts.SelectMany(_ => _))
                 if (pages.Count > 0)
-                    if (item.tablePageIndex == 0)
-                        pages[pages.Count - 1].Add(
-                            Tuple.Create(item.tableInfo, item.tablePage, item.tableInfo.Y));
+                    if (part.IsFirst)
+                        pages[pages.Count - 1].Add(part);
                     else
-                        pages.Add(new List<Tuple<TableInfo, IEnumerable<int>, double>> {
-                            Tuple.Create(item.tableInfo, item.tablePage, pageSettings.TopMargin)
-                        });
+                        pages.Add(new List<TablePart> {part});
                 else
-                    pages.Add(new List<Tuple<TableInfo, IEnumerable<int>, double>> {
-                        Tuple.Create(item.tableInfo, item.tablePage, pageSettings.TopMargin)
-                    });
+                    pages.Add(new List<TablePart> {part});
             for (var index = 0; index < pages.Count; index++)
                 if (index == 0)
-                    foreach (var tuple in pages[index])
-                        Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics, pageSettings);
+                    foreach (var part in pages[index])
+                        Draw(part.TableInfo, part.Rows, part.Y(pageSettings), xGraphics, pageSettings);
                 else
                     pageAction(index, xGraphics2 => {
-                        foreach (var tuple in pages[index])
-                            Draw(tuple.Item1, tuple.Item2, tuple.Item3, xGraphics2, pageSettings);
+                        foreach (var part in pages[index])
+                            Draw(part.TableInfo, part.Rows, part.Y(pageSettings), xGraphics2, pageSettings);
                     });
             return pages.Count;
         }
 
-        private static List<IEnumerable<int>> SplitToPages(TableInfo tableInfo, bool firstOnPage, out double endY, PageSettings pageSettings)
+        private class TablePart
+        {
+            public IEnumerable<int> Rows { get; }
+            private int Index { get; }
+            public TableInfo TableInfo { get; }
+            public bool IsFirst => Index == 0;
+            public double Y(PageSettings pageSettings) => IsFirst ? TableInfo.Y : pageSettings.TopMargin;
+
+            public TablePart(IEnumerable<int> rows, int index, TableInfo tableInfo)
+            {
+                Rows = rows;
+                Index = index;
+                TableInfo = tableInfo;
+            }
+        }
+
+        private static List<IEnumerable<int>> SplitByPages(TableInfo tableInfo, bool firstOnPage, out double endY, PageSettings pageSettings)
         {
             if (tableInfo.Table.Rows.Count == 0)
             {
@@ -222,11 +232,11 @@ namespace TableLayout
                     - table.BorderWidth(row, column, column.Index + colspan - 1, rightBorderFunc),
                 () => column.Width - table.BorderWidth(row, column, column.Index, rightBorderFunc));
 
-        private static double BorderWidth(this Table table, int row, Column column, int columnIndex, Func<CellInfo, Option<double>> rightBorderFunc)
+        private static double BorderWidth(this Table table, int row, Column column, int rightColumn, Func<CellInfo, Option<double>> rightBorderFunc)
             => table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Rowspan).Match(
                 rowspan => Enumerable.Range(row, rowspan)
-                    .Max(i => rightBorderFunc(new CellInfo(i, columnIndex)).ValueOr(0)),
-                () => rightBorderFunc(new CellInfo(row, columnIndex)).ValueOr(0));
+                    .Max(i => rightBorderFunc(new CellInfo(i, rightColumn)).ValueOr(0)),
+                () => rightBorderFunc(new CellInfo(row, rightColumn)).ValueOr(0));
 
         private static Dictionary<int, double> MaxHeights(this Table table, XGraphics graphics, Func<CellInfo, Option<double>> rightBorderFunc,
             Func<CellInfo, Option<double>> bottomBorderFunc)
