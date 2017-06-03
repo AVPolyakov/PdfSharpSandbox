@@ -44,22 +44,6 @@ namespace TableLayout
             return pages.Count;
         }
 
-        private class TablePart
-        {
-            public IEnumerable<int> Rows { get; }
-            private int Index { get; }
-            public TableInfo TableInfo { get; }
-            public bool IsFirst => Index == 0;
-            public double Y(PageSettings pageSettings) => IsFirst ? TableInfo.Y : pageSettings.TopMargin;
-
-            public TablePart(IEnumerable<int> rows, int index, TableInfo tableInfo)
-            {
-                Rows = rows;
-                Index = index;
-                TableInfo = tableInfo;
-            }
-        }
-
         private static List<IEnumerable<int>> SplitByPages(TableInfo tableInfo, bool firstOnPage, out double endY, PageSettings pageSettings)
         {
             if (tableInfo.Table.Rows.Count == 0)
@@ -163,9 +147,9 @@ namespace TableLayout
                 var x = info.Table.X0 + info.MaxLeftBorder;
                 foreach (var column in info.Table.Columns)
                 {
-                    var chunk = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Chunk);
-                    if (chunk.HasValue)
-                        Util.DrawTextBox(xGraphics, chunk.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
+                    var paragraph = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Paragraph);
+                    if (paragraph.HasValue)
+                        Util.Draw(xGraphics, paragraph.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
                     var rightBorder = info.RightBorderFunc(new CellInfo(row, column.Index));
                     if (rightBorder.HasValue)
                     {
@@ -241,11 +225,11 @@ namespace TableLayout
         private static Dictionary<int, double> MaxHeights(this Table table, XGraphics graphics, Func<CellInfo, Option<double>> rightBorderFunc,
             Func<CellInfo, Option<double>> bottomBorderFunc)
         {
-            var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<Chunk, Option<int>, Row>>();
+            var cellContentsByBottomRow = new Dictionary<CellInfo, Tuple<Paragraph, Option<int>, Row>>();
             foreach (var row in table.Rows)
                 foreach (var column in table.Columns)
                 {
-                    var chunk = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Chunk);
+                    var chunk = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Paragraph);
                     if (chunk.HasValue)
                     {
                         var rowspan = table.Find(new CellInfo(row, column)).SelectMany(_ => _.Rowspan);
@@ -260,10 +244,10 @@ namespace TableLayout
                 var maxHeight = 0d;
                 foreach (var column in table.Columns)
                 {
-                    Tuple<Chunk, Option<int>, Row> tuple;
+                    Tuple<Paragraph, Option<int>, Row> tuple;
                     if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column), out tuple))
                     {
-                        var textHeight = Util.GetTextBoxHeight(graphics, tuple.Item1, table.ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
+                        var textHeight = Util.GetHeight(graphics, tuple.Item1, table.ContentWidth(tuple.Item3.Index, column, rightBorderFunc));
                         var rowHeightByContent = tuple.Item2.Match(
                             value => Math.Max(textHeight - Enumerable.Range(1, value - 1).Sum(i => result[row.Index - i]), 0),
                             () => textHeight);
@@ -421,6 +405,22 @@ namespace TableLayout
                 rightBorderFunc);
         }
 
+        private class TablePart
+        {
+            public IEnumerable<int> Rows { get; }
+            private int Index { get; }
+            public TableInfo TableInfo { get; }
+            public bool IsFirst => Index == 0;
+            public double Y(PageSettings pageSettings) => IsFirst ? TableInfo.Y : pageSettings.TopMargin;
+
+            public TablePart(IEnumerable<int> rows, int index, TableInfo tableInfo)
+            {
+                Rows = rows;
+                Index = index;
+                TableInfo = tableInfo;
+            }
+        }
+
         private class TableInfo
         {
             public Table Table { get; }
@@ -458,7 +458,7 @@ namespace TableLayout
                 new XPdfFontOptions(PdfFontEncoding.Unicode));
             var xSolidBrush = new XSolidBrush(XColor.FromArgb(128, 255, 0, 0));
             if (column.Index == 0)
-                xGraphics.DrawString($"r{row}",
+                xGraphics.DrawString($"r{row + 1}",
                     xFont,
                     xSolidBrush,
                     new XRect(x - 100 - 2, y, 100, 100),
@@ -467,7 +467,7 @@ namespace TableLayout
                         LineAlignment = XLineAlignment.Near
                     });
             if (row == 0)
-                xGraphics.DrawString($"c{column.Index}",
+                xGraphics.DrawString($"c{column.Index + 1}",
                     xFont,
                     xSolidBrush,
                     new XRect(x, y - 100, 100, 100),

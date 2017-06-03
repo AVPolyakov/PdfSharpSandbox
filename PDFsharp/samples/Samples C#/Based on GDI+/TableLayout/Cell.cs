@@ -18,7 +18,7 @@ namespace TableLayout
 
         public Option<double> BottomBorder { get; set; }
 
-        public Option<Chunk> Chunk { get; set; }
+        public Option<Paragraph> Paragraph { get; set; }
 
         public Option<int> MergeRight
         {
