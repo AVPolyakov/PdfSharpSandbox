@@ -55,6 +55,24 @@ namespace TableLayout.Tests
             Assert(nameof(Test2), CreatePng(pageSettings, tables));
         }
 
+        [Fact]
+        public void Test3()
+        {
+            var pageSettings = new PageSettings {
+                LeftMargin = XUnit.FromCentimeter(3),
+                RightMargin = XUnit.FromCentimeter(1.5),
+                IsHighlightCells = false
+            };
+            var tables = new[] {
+                Table5(pageSettings),
+                Table6(pageSettings),
+                Table4(pageSettings),
+                Table2(pageSettings),
+                Table(pageSettings),
+            };
+            Assert(nameof(Test3), CreatePng(pageSettings, tables));
+        }
+
         public static Table Table4(PageSettings pageSettings)
         {
             var table = new Table(pageSettings.LeftMargin);

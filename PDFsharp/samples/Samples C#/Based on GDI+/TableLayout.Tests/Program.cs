@@ -23,13 +23,6 @@ namespace TableLayout.Tests
 	            Table4(pageSettings),
 	            Table2(pageSettings),
 	            Table(pageSettings),
-	            Table4(pageSettings),
-	            Table4(pageSettings),
-	            Table4(pageSettings),
-	            Table4(pageSettings),
-	            Table2(pageSettings),
-	            Table(pageSettings),
-	            Table4(pageSettings),
 	        };
 	        Process.Start(CreatePdf(pageSettings, tables));
 	        //Process.Start(SavePng(pageSettings, tables, 0));
