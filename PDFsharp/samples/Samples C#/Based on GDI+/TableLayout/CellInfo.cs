@@ -2,19 +2,15 @@ using System;
 
 namespace TableLayout
 {
-    public class CellInfo
+    public struct CellInfo: IEquatable<CellInfo>
     {
-        private readonly Tuple<int, int> tuple;
-        public int RowIndex => tuple.Item1;
-        public int ColumnIndex => tuple.Item2;
+        public int RowIndex { get; }
+        public int ColumnIndex { get; }
 
-        public CellInfo(Tuple<int, int> tuple)
+        public CellInfo(int rowIndex, int columnIndex)
         {
-            this.tuple = tuple;
-        }
-
-        public CellInfo(int rowIndex, int columnIndex) : this(Tuple.Create(rowIndex, columnIndex))
-        {
+            RowIndex = rowIndex;
+            ColumnIndex = columnIndex;
         }
 
         public CellInfo(Row row, Column column) : this(row.Index, column.Index)
@@ -27,13 +23,16 @@ namespace TableLayout
 
         public static implicit operator CellInfo(Cell cell) => new CellInfo(cell);
 
+        public bool Equals(CellInfo other) => Tuple.Equals(other.Tuple);
+
+        public override int GetHashCode() => Tuple.GetHashCode();
+
         public override bool Equals(object obj)
         {
-            var tuple2 = obj as CellInfo;
-            if (tuple2 == null) return false;
-            return tuple.Equals(tuple2.tuple);
+            if (obj is CellInfo cellInfo) return Equals(cellInfo);
+            return false;
         }
 
-        public override int GetHashCode() => tuple.GetHashCode();
+        private (int row, int column) Tuple => (RowIndex, ColumnIndex);
     }
 }
