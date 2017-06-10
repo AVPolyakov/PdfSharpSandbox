@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using static TableLayout.Util;
 
 namespace TableLayout
 {
@@ -150,7 +149,20 @@ namespace TableLayout
                 {
                     var paragraph = info.Table.Find(new CellInfo(row, column.Index)).SelectMany(_ => _.Paragraph);
                     if (paragraph.HasValue)
-                        Util.Draw(xGraphics, paragraph.Value, x, y, info.Table.ContentWidth(row, column, info.RightBorderFunc), ParagraphAlignment.Left);
+                    {
+                        var width = info.Table.ContentWidth(row, column, info.RightBorderFunc);
+                        Util.Draw(xGraphics, paragraph.Value, x, y, width, ParagraphAlignment.Left);
+                        if (pageSettings.IsHighlightCells)
+                        {
+                            var innerHeight = paragraph.Value.GetInnerHeight(xGraphics, info.Table, row, column, info.RightBorderFunc);
+                            var innerWidth = paragraph.Value.GetInnerWidth(width);
+                            if (innerWidth > 0 && innerHeight > 0)
+                                xGraphics.DrawRectangle(new XSolidBrush(XColor.FromArgb(32, 0, 0, 255)), new XRect(
+                                    x + paragraph.Value.LeftMargin.ValueOr(0),
+                                    y + paragraph.Value.TopMargin.ValueOr(0),
+                                    innerWidth, innerHeight));
+                        }
+                    }
                     var rightBorder = info.RightBorderFunc(new CellInfo(row, column.Index));
                     if (rightBorder.HasValue)
                     {
@@ -247,10 +259,11 @@ namespace TableLayout
                     if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column),
                         out (Paragraph paragraph, Option<int> rowspan, Row row) cell))
                     {
-                        var textHeight = GetHeight(graphics, cell.paragraph, table.ContentWidth(cell.row.Index, column, rightBorderFunc));
+                        var paragraphHeight = cell.paragraph.GetInnerHeight(graphics, table, cell.row.Index, column, rightBorderFunc) +
+                            cell.paragraph.TopMargin.ValueOr(0) + cell.paragraph.BottomMargin.ValueOr(0);
                         var rowHeightByContent = cell.rowspan.Match(
-                            value => Math.Max(textHeight - Enumerable.Range(1, value - 1).Sum(i => result[row.Index - i]), 0),
-                            () => textHeight);
+                            _ => Math.Max(paragraphHeight - Enumerable.Range(1, _ - 1).Sum(i => result[row.Index - i]), 0),
+                            () => paragraphHeight);
                         var height = row.Height.Match(
                             _ => Math.Max(rowHeightByContent, _), () => rowHeightByContent);
                         var heightWithBorder = height
@@ -264,6 +277,12 @@ namespace TableLayout
                 result.Add(row.Index, maxHeight);
             }
             return result;
+        }
+
+        private static double GetInnerHeight(this Paragraph paragraph, XGraphics graphics, Table table, int row, Column column,
+            Func<CellInfo, Option<double>> rightBorderFunc)
+        {
+            return Util.GetHeight(graphics, paragraph, table.ContentWidth(row, column, rightBorderFunc));
         }
 
         private static Func<CellInfo, Option<double>> RightBorder(this Table table)

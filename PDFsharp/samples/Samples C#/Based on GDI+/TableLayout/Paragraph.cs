@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using PdfSharp.Drawing;
 
 namespace TableLayout
 {
@@ -7,23 +6,18 @@ namespace TableLayout
     {
         public List<Span> Spans { get; } = new List<Span>();
 
+        public Option<double> LeftMargin { get; set; }
+
+        public Option<double> RightMargin { get; set; }
+
+        public Option<double> TopMargin { get; set; }
+
+        public Option<double> BottomMargin { get; set; }
+
         public Paragraph Add(Span span)
         {
             Spans.Add(span);
             return this;
-        }
-    }
-
-    public class Span
-    {
-        public string Text { get; }
-        public XFont Font { get; }
-        public XBrush Brush { get; set; } = XBrushes.Black;
-
-        public Span(string text, XFont font)
-        {
-            Text = text;
-            Font = font;
         }
     }
 }

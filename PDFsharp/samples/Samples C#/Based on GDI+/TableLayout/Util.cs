@@ -8,7 +8,7 @@ namespace TableLayout
 {
 	public static class Util
 	{
-	    public static void MergeRight(Cell cell, Column dateColumn) => cell.MergeRight = dateColumn.Index - cell.ColumnIndex;
+	    public static void MergeRight(this Cell cell, Column dateColumn) => cell.MergeRight = dateColumn.Index - cell.ColumnIndex;
 
 	    public const double BorderWidth = 0.5d*1;
 
@@ -17,30 +17,32 @@ namespace TableLayout
 		public static void Draw(XGraphics graphics, Paragraph paragraph, XUnit x0, XUnit y0, double width,
 			ParagraphAlignment alignment)
 		{
-		    var y = y0;
+		    var y = y0 + paragraph.TopMargin.ValueOr(0);
 		    foreach (var softLineParts in GetSoftLines(paragraph))
 		    {
 		        var charInfos = GetCharInfos(softLineParts);
-		        var lineInfos = GetLines(graphics, softLineParts, width, charInfos).ToList();
+		        var innerWidth = paragraph.GetInnerWidth(width);
+		        var lineInfos = GetLines(graphics, softLineParts, innerWidth, charInfos).ToList();
 		        foreach (var line in lineInfos)
 		        {
 		            var lineParts = line.GetLineParts(charInfos).ToList();
-		            double x;
+		            double dx;
 		            switch (alignment)
 		            {
 		                case ParagraphAlignment.Left:
-		                    x = x0;
+		                    dx = 0;
 		                    break;
 		                case ParagraphAlignment.Center:
-		                    x = x0 + (width - lineParts.ContentWidth(softLineParts, graphics)) / 2;
+		                    dx = (innerWidth - lineParts.ContentWidth(softLineParts, graphics)) / 2;
 		                    break;
 		                case ParagraphAlignment.Right:
-		                    x = x0 + width - lineParts.ContentWidth(softLineParts, graphics);
+		                    dx = innerWidth - lineParts.ContentWidth(softLineParts, graphics);
 		                    break;
 		                default:
 		                    throw new ArgumentOutOfRangeException(nameof(alignment), alignment, null);
 		            }
 		            var baseLine = lineParts.Spans(softLineParts).Max(span => BaseLine(span, graphics));
+		            var x = x0 + paragraph.LeftMargin.ValueOr(0) + dx;
 		            foreach (var part in lineParts)
 		            {
 		                var text = part.Text(softLineParts);
@@ -52,6 +54,9 @@ namespace TableLayout
 		        }
 		    }
 		}
+
+	    public static double GetInnerWidth(this Paragraph paragraph, double width) 
+            => width - paragraph.LeftMargin.ValueOr(0) - paragraph.RightMargin.ValueOr(0);
 
 	    private static List<List<SoftLinePart>> GetSoftLines(this Paragraph paragraph)
 	    {
@@ -95,7 +100,7 @@ namespace TableLayout
 	    {
 	        return GetSoftLines(paragraph).Sum(softLineParts => {
 	            var charInfos = GetCharInfos(softLineParts);
-	            return GetLines(graphics, softLineParts, width, charInfos)
+	            return GetLines(graphics, softLineParts, paragraph.GetInnerWidth(width), charInfos)
 	                .Sum(line => line.GetLineParts(charInfos).Spans(softLineParts)
 	                    .Max(span => LineSpace(span.Font, graphics)));
 	        });
@@ -152,6 +157,8 @@ namespace TableLayout
 	                    yield return new LineInfo(startIndex, TrimEnd(charInfos.Count - 1, charInfos, softLineParts, startIndex));
 	                    yield break;
 	                }
+	                else if (~binarySearch == startIndex)
+	                    endIndex = startIndex;
 	                else
 	                    endIndex = ~binarySearch - 1;
 	            else

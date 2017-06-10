@@ -15,13 +15,9 @@ namespace TableLayout.Tests
 	        var pageSettings = new PageSettings {
                 LeftMargin = XUnit.FromCentimeter(3),
                 RightMargin = XUnit.FromCentimeter(1.5),
-                IsHighlightCells = false
+                IsHighlightCells = true
 	        };
 	        var tables = new [] {
-	            Table5(pageSettings),
-	            Table6(pageSettings),
-	            Table4(pageSettings),
-	            Table2(pageSettings),
 	            Table(pageSettings),
 	        };
 	        Process.Start(CreatePdf(pageSettings, tables));
