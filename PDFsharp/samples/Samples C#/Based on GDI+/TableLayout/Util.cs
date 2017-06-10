@@ -40,15 +40,15 @@ namespace TableLayout
 		                default:
 		                    throw new ArgumentOutOfRangeException(nameof(alignment), alignment, null);
 		            }
-		            var baseLine = lineParts.Chunks(softLineParts).Max(chunk => BaseLine(chunk, graphics));
+		            var baseLine = lineParts.Spans(softLineParts).Max(span => BaseLine(span, graphics));
 		            foreach (var part in lineParts)
 		            {
 		                var text = part.Text(softLineParts);
-		                var chunk = part.GetSoftLinePart(softLineParts).Chunk;
-		                graphics.DrawString(text, chunk.Font, chunk.Brush, x, y + baseLine);
-		                x += graphics.MeasureString(text, chunk.Font, MeasureTrailingSpacesStringFormat).Width;
+		                var span = part.GetSoftLinePart(softLineParts).Span;
+		                graphics.DrawString(text, span.Font, span.Brush, x, y + baseLine);
+		                x += graphics.MeasureString(text, span.Font, MeasureTrailingSpacesStringFormat).Width;
 		            }
-		            y += lineParts.Chunks(softLineParts).Max(chunk => LineSpace(chunk.Font, graphics));
+		            y += lineParts.Spans(softLineParts).Max(span => LineSpace(span.Font, graphics));
 		        }
 		    }
 		}
@@ -56,18 +56,18 @@ namespace TableLayout
 	    private static List<List<SoftLinePart>> GetSoftLines(this Paragraph paragraph)
 	    {
 	        var result = new List<List<SoftLinePart>>();
-	        foreach (var chunk in paragraph.Chunks)
+	        foreach (var span in paragraph.Spans)
 	        {
-	            var lines = chunk.Text.SplitToLines().ToList();
+	            var lines = span.Text.SplitToLines().ToList();
 	            if (result.Count == 0)
 	                result.Add(new List<SoftLinePart>());
 	            if (lines.Count == 0)
-	                result[result.Count - 1].Add(new SoftLinePart(chunk, chunk.Text));
+	                result[result.Count - 1].Add(new SoftLinePart(span, span.Text));
 	            else
 	            {
-	                result[result.Count - 1].Add(new SoftLinePart(chunk, lines[0]));
+	                result[result.Count - 1].Add(new SoftLinePart(span, lines[0]));
 	                for (var i = 1; i < lines.Count; i++)
-	                    result.Add(new List<SoftLinePart> {new SoftLinePart(chunk, lines[i])});
+	                    result.Add(new List<SoftLinePart> {new SoftLinePart(span, lines[i])});
 	            }
 	        }
 	        return result;
@@ -75,12 +75,12 @@ namespace TableLayout
 
         private class SoftLinePart
         {
-            public Chunk Chunk { get; }
+            public Span Span { get; }
             public string Text { get; }
 
-            public SoftLinePart(Chunk chunk, string text)
+            public SoftLinePart(Span span, string text)
             {
-                Chunk = chunk;
+                Span = span;
                 Text = text;
             }
         }
@@ -88,7 +88,7 @@ namespace TableLayout
 	    private static double ContentWidth(this List<LinePart> lineParts, List<SoftLinePart> softLineParts, XGraphics graphics)
 	    { 
 	        return lineParts.Sum(part => graphics.MeasureString(part.Text(softLineParts),
-	            part.GetSoftLinePart(softLineParts).Chunk.Font, MeasureTrailingSpacesStringFormat).Width);
+	            part.GetSoftLinePart(softLineParts).Span.Font, MeasureTrailingSpacesStringFormat).Width);
 	    }
 
 	    public static double GetHeight(XGraphics graphics, Paragraph paragraph, double width)
@@ -96,16 +96,16 @@ namespace TableLayout
 	        return GetSoftLines(paragraph).Sum(softLineParts => {
 	            var charInfos = GetCharInfos(softLineParts);
 	            return GetLines(graphics, softLineParts, width, charInfos)
-	                .Sum(line => line.GetLineParts(charInfos).Chunks(softLineParts)
-	                    .Max(chunk => LineSpace(chunk.Font, graphics)));
+	                .Sum(line => line.GetLineParts(charInfos).Spans(softLineParts)
+	                    .Max(span => LineSpace(span.Font, graphics)));
 	        });
 	    }
 
-	    private static IEnumerable<Chunk> Chunks(this IEnumerable<LinePart> lineParts, List<SoftLinePart> softLineParts)
+	    private static IEnumerable<Span> Spans(this IEnumerable<LinePart> lineParts, List<SoftLinePart> softLineParts)
 	    {
 	        return lineParts.Any() 
-                ? lineParts.Select(part => part.GetSoftLinePart(softLineParts).Chunk) 
-                : softLineParts.Select(softLinePart => softLinePart.Chunk);
+                ? lineParts.Select(part => part.GetSoftLinePart(softLineParts).Span) 
+                : softLineParts.Select(softLinePart => softLinePart.Span);
 	    }
 
 	    private static List<CharInfo> GetCharInfos(List<SoftLinePart> softLineParts)
@@ -115,13 +115,13 @@ namespace TableLayout
 	                .Select((c, charIndex) => new CharInfo(partIndex, charIndex))).ToList();
 	    }
 
-	    private static double BaseLine(Chunk chunk, XGraphics graphics)
+	    private static double BaseLine(Span span, XGraphics graphics)
 	    {
-	        var lineSpace = LineSpace(chunk.Font, graphics);
+	        var lineSpace = LineSpace(span.Font, graphics);
 	        return (lineSpace +
-	                lineSpace * (chunk.Font.FontFamily.GetCellAscent(chunk.Font.Style) -
-	                    chunk.Font.FontFamily.GetCellDescent(chunk.Font.Style))
-	                / chunk.Font.FontFamily.GetLineSpacing(chunk.Font.Style)) /
+	                lineSpace * (span.Font.FontFamily.GetCellAscent(span.Font.Style) -
+	                    span.Font.FontFamily.GetCellDescent(span.Font.Style))
+	                / span.Font.FontFamily.GetLineSpacing(span.Font.Style)) /
 	            2;
 	    }
 
@@ -133,17 +133,17 @@ namespace TableLayout
 	        while (true)
 	        {
 	            var binarySearch = BinarySearch(startIndex, charInfos.Count - startIndex, i => {
-	                var previousChunksWidth = charInfos[i].PartIndex == charInfos[startIndex].PartIndex
+	                var previousSpansWidth = charInfos[i].PartIndex == charInfos[startIndex].PartIndex
 	                    ? 0
 	                    : runningWidths[softLineParts[charInfos[i].PartIndex - 1]] - previousLineWidth;
-	                if (previousChunksWidth > width) return 1;
+	                if (previousSpansWidth > width) return 1;
 	                var part = softLineParts[charInfos[i].PartIndex];
-	                var chunkStartIndex = charInfos[i].PartIndex == charInfos[startIndex].PartIndex 
+	                var spanStartIndex = charInfos[i].PartIndex == charInfos[startIndex].PartIndex 
 	                    ? charInfos[startIndex].CharIndex 
 	                    : 0;
-	                var text = part.Text.Substring(chunkStartIndex, charInfos[i].CharIndex - chunkStartIndex + 1);
-	                var endWidth = graphics.MeasureString(text, part.Chunk.Font, MeasureTrailingSpacesStringFormat).Width;
-	                return (previousChunksWidth + endWidth).CompareTo(width);
+	                var text = part.Text.Substring(spanStartIndex, charInfos[i].CharIndex - spanStartIndex + 1);
+	                var endWidth = graphics.MeasureString(text, part.Span.Font, MeasureTrailingSpacesStringFormat).Width;
+	                return (previousSpansWidth + endWidth).CompareTo(width);
 	            });
 	            int endIndex;
 	            if (binarySearch < 0)
@@ -167,7 +167,7 @@ namespace TableLayout
 	            var endPart = softLineParts[charInfos[shiftedEndIndex].PartIndex];
 	            previousLineWidth = runningWidths[endPart] -
 	                graphics.MeasureString(endPart.Text.Substring(charInfos[shiftedEndIndex].CharIndex + 1),
-	                    endPart.Chunk.Font, MeasureTrailingSpacesStringFormat).Width;
+	                    endPart.Span.Font, MeasureTrailingSpacesStringFormat).Width;
 	        }
 	    }
 
@@ -215,7 +215,7 @@ namespace TableLayout
 	    {
 	        var runningWidth = 0d;
 	        return parts.Select(part => {
-	            runningWidth += graphics.MeasureString(part.Text, part.Chunk.Font, MeasureTrailingSpacesStringFormat).Width;
+	            runningWidth += graphics.MeasureString(part.Text, part.Span.Font, MeasureTrailingSpacesStringFormat).Width;
 	            return new {part, runningWidth};
 	        }).ToDictionary(_ => _.part, _ => _.runningWidth);
 	    }

@@ -226,7 +226,7 @@ namespace TableLayout.Tests
             {
                 var r1 = table.AddRow();
                 {
-                    r1[c1].Paragraph = new Paragraph().Add(new Chunk(
+                    r1[c1].Paragraph = new Paragraph().Add(new Span(
                         "Choose composition first when creating new classes from existing classes. Only if " +
                         "inheritance is required by your design should it be used. If you use inheritance where " +
                         "composition will work, your designs will become needlessly complicated.",
@@ -236,7 +236,7 @@ namespace TableLayout.Tests
             {
                 var r2 = table.AddRow();
                 {
-                    r2[c1].Paragraph = new Paragraph().Add(new Chunk(
+                    r2[c1].Paragraph = new Paragraph().Add(new Span(
                         "Choose interfaces over abstract classes. If you know something is going to be a base" +
                         "class, your first choice should be to make it an interface, and only if you’re forced to" +
                         "have method definitions or member variables should you change to an abstract class.",
@@ -247,57 +247,57 @@ namespace TableLayout.Tests
                 var r3 = table.AddRow();
                 {
                     r3[c1].Paragraph = new Paragraph()
-                        .Add(new Chunk("Choose ", TimesNewRoman10Font))
-                        .Add(new Chunk("interfaces", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" over ", TimesNewRoman10Font))
-                        .Add(new Chunk("abstract", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" classes. If you know something is going to be a baseclass, your" +
+                        .Add(new Span("Choose ", TimesNewRoman10Font))
+                        .Add(new Span("interfaces", TimesNewRoman10BoldFont))
+                        .Add(new Span(" over ", TimesNewRoman10Font))
+                        .Add(new Span("abstract", TimesNewRoman10BoldFont))
+                        .Add(new Span(" classes. If you know something is going to be a baseclass, your" +
                             " first choice should be to make it an ", TimesNewRoman10Font))
-                        .Add(new Chunk("interface", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(", and only if you’re forced tohave method definitions or member " +
+                        .Add(new Span("interface", TimesNewRoman10BoldFont))
+                        .Add(new Span(", and only if you’re forced tohave method definitions or member " +
                             "variables should you change to an ", TimesNewRoman10Font))
-                        .Add(new Chunk("abstract", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" class.", TimesNewRoman10Font));
+                        .Add(new Span("abstract", TimesNewRoman10BoldFont))
+                        .Add(new Span(" class.", TimesNewRoman10Font));
                 }
             }
             {
                 var r4 = table.AddRow();
                 {
                     r4[c1].Paragraph = new Paragraph()
-                        .Add(new Chunk("Choose ", TimesNewRoman10Font))
-                        .Add(new Chunk("interfaces", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" over ", TimesNewRoman10Font))
-                        .Add(new Chunk("abstract", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" classes. If you ", TimesNewRoman10Font))
-                        .Add(new Chunk("know something", new XFont("Times New Roman", 18, XFontStyle.BoldItalic, pdfOptions)))
-                        .Add(new Chunk(" is going to be a baseclass, your first choice should be to make it an ",
+                        .Add(new Span("Choose ", TimesNewRoman10Font))
+                        .Add(new Span("interfaces", TimesNewRoman10BoldFont))
+                        .Add(new Span(" over ", TimesNewRoman10Font))
+                        .Add(new Span("abstract", TimesNewRoman10BoldFont))
+                        .Add(new Span(" classes. If you ", TimesNewRoman10Font))
+                        .Add(new Span("know something", new XFont("Times New Roman", 18, XFontStyle.BoldItalic, pdfOptions)))
+                        .Add(new Span(" is going to be a baseclass, your first choice should be to make it an ",
                             TimesNewRoman10Font))
-                        .Add(new Chunk("interface", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(", and only if you’re forced tohave method definitions or member " +
+                        .Add(new Span("interface", TimesNewRoman10BoldFont))
+                        .Add(new Span(", and only if you’re forced tohave method definitions or member " +
                             "variables should you change to an ", TimesNewRoman10Font))
-                        .Add(new Chunk("abstract", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" class.", TimesNewRoman10Font));
+                        .Add(new Span("abstract", TimesNewRoman10BoldFont))
+                        .Add(new Span(" class.", TimesNewRoman10Font));
                 }
             }
             {
                 var r5 = table.AddRow();
                 {
                     r5[c1].Paragraph = new Paragraph()
-                        .Add(new Chunk("Choose ", TimesNewRoman10Font))
-                        .Add(new Chunk("interfaces", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" over ", TimesNewRoman10Font))
-                        .Add(new Chunk("abstract", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" classes. If you ", TimesNewRoman10Font))
-                        .Add(new Chunk("know something", new XFont("Times New Roman", 18, XFontStyle.BoldItalic, pdfOptions)) {
+                        .Add(new Span("Choose ", TimesNewRoman10Font))
+                        .Add(new Span("interfaces", TimesNewRoman10BoldFont))
+                        .Add(new Span(" over ", TimesNewRoman10Font))
+                        .Add(new Span("abstract", TimesNewRoman10BoldFont))
+                        .Add(new Span(" classes. If you ", TimesNewRoman10Font))
+                        .Add(new Span("know something", new XFont("Times New Roman", 18, XFontStyle.BoldItalic, pdfOptions)) {
                             Brush = XBrushes.Red
                         })
-                        .Add(new Chunk(" is going to be a baseclass, your first choice should be to make it an ",
+                        .Add(new Span(" is going to be a baseclass, your first choice should be to make it an ",
                             TimesNewRoman10Font))
-                        .Add(new Chunk("interface", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(", and only if you’re forced tohave method definitions or member " +
+                        .Add(new Span("interface", TimesNewRoman10BoldFont))
+                        .Add(new Span(", and only if you’re forced tohave method definitions or member " +
                             "variables should you change to an ", TimesNewRoman10Font))
-                        .Add(new Chunk("abstract", TimesNewRoman10BoldFont))
-                        .Add(new Chunk(" class.", TimesNewRoman10Font));
+                        .Add(new Span("abstract", TimesNewRoman10BoldFont))
+                        .Add(new Span(" class.", TimesNewRoman10Font));
                 }
             }
             return table;
@@ -320,10 +320,10 @@ namespace TableLayout.Tests
                     cell.Paragraph = TimesNewRoman10(@"a
 
 aaaaaaaaa ")
-                        .Add(new Chunk("0123", new XFont("Arial", 12, XFontStyle.Bold, pdfOptions)))
-                        .Add(new Chunk("у", TimesNewRoman10Font))
-                        .Add(new Chunk("567", new XFont("Arial", 12, XFontStyle.Bold, pdfOptions)))
-                        .Add(new Chunk("ЙЙЙ", TimesNewRoman10Font));
+                        .Add(new Span("0123", new XFont("Arial", 12, XFontStyle.Bold, pdfOptions)))
+                        .Add(new Span("у", TimesNewRoman10Font))
+                        .Add(new Span("567", new XFont("Arial", 12, XFontStyle.Bold, pdfOptions)))
+                        .Add(new Span("ЙЙЙ", TimesNewRoman10Font));
                 }
                 {
                     var cell = row[ИНН2];
@@ -394,10 +394,10 @@ aaaaaaaaa ")
         private static readonly XPdfFontOptions pdfOptions = new XPdfFontOptions(PdfFontEncoding.Unicode);
 
         private static Paragraph TimesNewRoman10(string text) =>
-            new Paragraph().Add(new Chunk(text, TimesNewRoman10Font));
+            new Paragraph().Add(new Span(text, TimesNewRoman10Font));
 
         private static Paragraph TimesNewRoman60(string text) =>
-            new Paragraph().Add(new Chunk(text, TimesNewRoman60BoldFont));
+            new Paragraph().Add(new Span(text, TimesNewRoman60BoldFont));
 
         private static readonly XFont TimesNewRoman10Font = new XFont("Times New Roman", 10, XFontStyle.Regular, pdfOptions);
 

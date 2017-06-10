@@ -5,22 +5,22 @@ namespace TableLayout
 {
     public class Paragraph
     {
-        public List<Chunk> Chunks { get; } = new List<Chunk>();
+        public List<Span> Spans { get; } = new List<Span>();
 
-        public Paragraph Add(Chunk chunk)
+        public Paragraph Add(Span span)
         {
-            Chunks.Add(chunk);
+            Spans.Add(span);
             return this;
         }
     }
 
-    public class Chunk
+    public class Span
     {
         public string Text { get; }
         public XFont Font { get; }
         public XBrush Brush { get; set; } = XBrushes.Black;
 
-        public Chunk(string text, XFont font)
+        public Span(string text, XFont font)
         {
             Text = text;
             Font = font;
