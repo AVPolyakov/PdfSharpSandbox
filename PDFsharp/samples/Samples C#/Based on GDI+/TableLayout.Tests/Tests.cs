@@ -549,7 +549,7 @@ aaaaaaaaa ")
         public static List<byte[]> CreatePng(PageSettings pageSettings, IEnumerable<Table> tables)
         {
             var pages = new List<byte[]> {null};
-            FillBitmap(xGraphics => Renderer.Draw(xGraphics, pageSettings,
+            FillBitmap(xGraphics => TableRenderer.Draw(xGraphics, pageSettings,
                     (pageIndex, action) => FillBitmap(action, bitmap => pages.Add(ToBytes(bitmap)), pageSettings), tables),
                 bitmap => pages[0] = ToBytes(bitmap),
                 pageSettings);
@@ -604,5 +604,7 @@ aaaaaaaaa ")
         }
 
         public static string GetPath([CallerFilePath] string path = "") => new FileInfo(path).Directory.FullName;
+
+        public const double BorderWidth = 0.5d*1;
     }
 }

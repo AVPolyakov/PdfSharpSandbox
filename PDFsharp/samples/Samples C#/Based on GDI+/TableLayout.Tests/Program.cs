@@ -31,7 +31,7 @@ namespace TableLayout.Tests
 	        {
 	            pdfDocument.ViewerPreferences.Elements.SetName("/PrintScaling", "/None");
 	            using (var xGraphics = XGraphics.FromPdfPage(pdfDocument.AddPage()))
-	                Renderer.Draw(xGraphics, pageSettings, (pageIndex, action) =>  {
+	                TableRenderer.Draw(xGraphics, pageSettings, (pageIndex, action) =>  {
 	                    using (var xGraphics2 = XGraphics.FromPdfPage(pdfDocument.AddPage()))
 	                        action(xGraphics2);
 	                }, tables);

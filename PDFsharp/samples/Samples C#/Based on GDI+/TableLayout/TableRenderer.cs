@@ -6,7 +6,7 @@ using PdfSharp.Pdf;
 
 namespace TableLayout
 {
-    public static class Renderer
+    public static class TableRenderer
     {
         public static int Draw(XGraphics xGraphics, PageSettings pageSettings, Action<int, Action<XGraphics>> pageAction,
             IEnumerable<Table> tables)
@@ -151,7 +151,7 @@ namespace TableLayout
                     if (paragraph.HasValue)
                     {
                         var width = info.Table.ContentWidth(row, column, info.RightBorderFunc);
-                        Util.Draw(xGraphics, paragraph.Value, x, y, width, ParagraphAlignment.Left);
+                        ParagraphRenderer.Draw(xGraphics, paragraph.Value, x, y, width, ParagraphAlignment.Left);
                         if (pageSettings.IsHighlightCells)
                         {
                             var innerHeight = paragraph.Value.GetInnerHeight(xGraphics, info.Table, row, column, info.RightBorderFunc);
@@ -282,7 +282,7 @@ namespace TableLayout
         private static double GetInnerHeight(this Paragraph paragraph, XGraphics graphics, Table table, int row, Column column,
             Func<CellInfo, Option<double>> rightBorderFunc)
         {
-            return Util.GetHeight(graphics, paragraph, table.ContentWidth(row, column, rightBorderFunc));
+            return ParagraphRenderer.GetHeight(graphics, paragraph, table.ContentWidth(row, column, rightBorderFunc));
         }
 
         private static Func<CellInfo, Option<double>> RightBorder(this Table table)
