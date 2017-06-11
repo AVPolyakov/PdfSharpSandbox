@@ -8,8 +8,7 @@ namespace SharpLayout
 {
     public static class ParagraphRenderer
     {
-        public static void Draw(XGraphics graphics, Paragraph paragraph, XUnit x0, XUnit y0, double width,
-            ParagraphAlignment alignment)
+        public static void Draw(XGraphics graphics, Paragraph paragraph, XUnit x0, XUnit y0, double width, ParagraphAlignment alignment)
         {
             var y = y0 + paragraph.TopMargin.ValueOr(0);
             foreach (var softLineParts in GetSoftLines(paragraph))

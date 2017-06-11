@@ -98,6 +98,7 @@
     <Content Include="TestData\Test3\Page1.png" />
     <Content Include="TestData\Test3\Page2.png" />
     <Content Include="TestData\Test3\Page3.png" />
+    <Content Include="TestData\Test4\Page1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

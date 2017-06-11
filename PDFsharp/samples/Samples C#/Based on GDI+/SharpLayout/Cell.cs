@@ -22,6 +22,8 @@ namespace SharpLayout
 
         public Option<Paragraph> Paragraph { get; set; }
 
+        public VerticalAlignment VerticalAlignment { get; set; } = VerticalAlignment.Top;
+
         public Option<int> MergeRight
         {
             get { return Colspan.Select(_ => _ - 1); }

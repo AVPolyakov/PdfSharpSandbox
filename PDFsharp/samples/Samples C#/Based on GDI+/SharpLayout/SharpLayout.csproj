@@ -63,6 +63,7 @@
     <Compile Include="Span.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="VerticalAlignment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

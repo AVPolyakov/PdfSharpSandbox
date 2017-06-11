@@ -73,12 +73,27 @@ namespace SharpLayout.Tests
             Assert(nameof(Test3), CreatePng(pageSettings, tables));
         }
 
+        [Fact]
+        public void Test4()
+        {
+            var pageSettings = new PageSettings {
+                LeftMargin = XUnit.FromCentimeter(3),
+                RightMargin = XUnit.FromCentimeter(1.5),
+                PageHeight = Px(700),
+                IsHighlightCells = true
+            };
+            var tables = new [] {
+                Table7(pageSettings),
+            };
+            Assert(nameof(Test4), CreatePng(pageSettings, tables));
+        }
+
         public static Table Table(PageSettings pageSettings)
         {
-            var table = new Table(pageSettings.LeftMargin);
+            var table = new Table(pageSettings.LeftMargin); 
             var c1 = table.AddColumn(Px(202));
             var c2 = table.AddColumn(Px(257));
-            var c3 = table.AddColumn(Px(454));
+            var c3 = table.AddColumn(Px(454)); 
             var c4 = table.AddColumn(Px(144));
             var c5 = table.AddColumn(pageSettings.PageWidth - pageSettings.LeftMargin - pageSettings.RightMargin
                 - table.Columns.Sum(_ => _.Width));
@@ -92,6 +107,7 @@ namespace SharpLayout.Tests
                 {
                     var cell = r1[c2];
                     cell.MergeRight(c5);
+                    cell.VerticalAlignment = VerticalAlignment.Center;
                     var paragraph = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Сто рублей", 1)));
                     paragraph.Alignment = ParagraphAlignment.Center;
                     paragraph.LeftMargin = Px(10 * 10 * 5);
@@ -121,7 +137,10 @@ namespace SharpLayout.Tests
                     var cell = r2[c5];
                     cell.MergeDown = 1;
                     cell.BottomBorder = cell.TopBorder = BorderWidth;
-                    cell.Paragraph = TimesNewRoman10("777-33");
+                    cell.VerticalAlignment = VerticalAlignment.Center;
+                    var paragraph = TimesNewRoman10("777-33");
+                    paragraph.Alignment = ParagraphAlignment.Center;
+                    cell.Paragraph = paragraph;
                 }
             }
             {
@@ -131,8 +150,12 @@ namespace SharpLayout.Tests
                     var cell = r3[c1];
                     cell.MergeRight(c3);
                     cell.MergeDown = 1;
+                    cell.VerticalAlignment = VerticalAlignment.Center;
                     var paragraph = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Ромашка", 4*5)));
                     paragraph.Alignment = ParagraphAlignment.Center;
+                    paragraph.TopMargin = Px(10);
+                    paragraph.LeftMargin = Px(60);
+                    paragraph.RightMargin = Px(30);
                     cell.Paragraph = paragraph;
                     cell.RightBorder = BorderWidth;
                 }
@@ -608,6 +631,98 @@ aaaaaaaaa ")
                         .Add(new Span("abstract", TimesNewRoman10BoldFont))
                         .Add(new Span(" class.", TimesNewRoman10Font));
                 }
+            }
+            return table;
+        }
+
+        public static Table Table7(PageSettings pageSettings)
+        {
+            var table = new Table(pageSettings.LeftMargin);
+            var c1 = table.AddColumn(Px(202));
+            var c2 = table.AddColumn(Px(257));
+            var c3 = table.AddColumn(Px(454));
+            var c4 = table.AddColumn(Px(144));
+            var c5 = table.AddColumn(pageSettings.PageWidth - pageSettings.LeftMargin - pageSettings.RightMargin
+                - table.Columns.Sum(_ => _.Width));
+            {
+                var r1 = table.AddRow();
+                {
+                    var cell = r1[c1];
+                    cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Сумма прописью");
+                }
+                {
+                    var cell = r1[c2];
+                    cell.MergeRight(c5);
+                    cell.VerticalAlignment = VerticalAlignment.Center;
+                    var paragraph = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Сто рублей", 1)));
+                    paragraph.Alignment = ParagraphAlignment.Center;
+                    paragraph.LeftMargin = Px(10 * 10 * 5);
+                    cell.Paragraph = paragraph;
+                }
+            }
+            {
+                var r2 = table.AddRow();
+                {
+                    var cell = r2[c1];
+                    cell.MergeRight(c2);
+                    cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("ИНН");
+                }
+                {
+                    var cell = r2[c3];
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("КПП");
+                }
+                {
+                    var cell = r2[c4];
+                    cell.MergeDown = 1;
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Сумма");
+                }
+                {
+                    var cell = r2[c5];
+                    cell.MergeDown = 1;
+                    cell.BottomBorder = cell.TopBorder = BorderWidth;
+                    cell.VerticalAlignment = VerticalAlignment.Center;
+                    var paragraph = TimesNewRoman10("777-33");
+                    paragraph.Alignment = ParagraphAlignment.Center;
+                    cell.Paragraph = paragraph;
+                }
+            }
+            {
+                var r3 = table.AddRow();
+                r3.Height = Px(100);
+                {
+                    var cell = r3[c1];
+                    cell.MergeRight(c3);
+                    cell.MergeDown = 1;
+                    cell.VerticalAlignment = VerticalAlignment.Center;
+                    var paragraph = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Ромашка", 4*5)));
+                    paragraph.Alignment = ParagraphAlignment.Center;
+                    cell.Paragraph = paragraph;
+                    cell.RightBorder = BorderWidth;
+                }
+            }
+            {
+                var r4 = table.AddRow();
+                r4.Height = Px(100);
+                {
+                    var cell = r4[c4];
+                    cell.MergeDown = 1;
+                    cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Сч. №");
+                }
+            }
+            {
+                var r5 = table.AddRow();
+                {
+                    var cell = r5[c1];
+                    cell.MergeRight(c3);
+                    cell.RightBorder = cell.BottomBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Плательщик");
+                }
+                r5[c4].BottomBorder = BorderWidth;
             }
             return table;
         }

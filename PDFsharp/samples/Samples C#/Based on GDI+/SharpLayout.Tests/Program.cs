@@ -15,6 +15,7 @@ namespace SharpLayout.Tests
 	        var pageSettings = new PageSettings {
                 LeftMargin = XUnit.FromCentimeter(3),
                 RightMargin = XUnit.FromCentimeter(1.5),
+                PageHeight = Util.Px(700),
                 IsHighlightCells = true
 	        };
 	        var tables = new [] {
