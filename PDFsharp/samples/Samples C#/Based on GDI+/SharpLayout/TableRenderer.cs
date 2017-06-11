@@ -151,7 +151,7 @@ namespace SharpLayout
                     if (paragraph.HasValue)
                     {
                         var width = info.Table.ContentWidth(row, column, info.RightBorderFunc);
-                        ParagraphRenderer.Draw(xGraphics, paragraph.Value, x, y, width, ParagraphAlignment.Left);
+                        ParagraphRenderer.Draw(xGraphics, paragraph.Value, x, y, width, paragraph.Value.Alignment);
                         if (pageSettings.IsHighlightCells)
                             HighlightParagraph(paragraph.Value, column, row, x, y, width, info, xGraphics);
                     }

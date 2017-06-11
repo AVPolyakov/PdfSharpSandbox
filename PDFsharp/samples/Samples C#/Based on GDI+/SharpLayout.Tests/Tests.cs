@@ -24,17 +24,17 @@ namespace SharpLayout.Tests
                 BottomMargin = XUnit.FromCentimeter(0),
             };
             var tables = new [] {
-                Table(pageSettings),
-                Table(pageSettings),
+                Table1(pageSettings),
+                Table1(pageSettings),
                 Table2(pageSettings),
-                Table(pageSettings),
-                Table(pageSettings),
-                Table(pageSettings),
-                Table(pageSettings),
-                Table(pageSettings),
+                Table1(pageSettings),
+                Table1(pageSettings),
+                Table1(pageSettings),
+                Table1(pageSettings),
+                Table1(pageSettings),
                 Table2(pageSettings),
-                Table(pageSettings),
-                Table(pageSettings),
+                Table1(pageSettings),
+                Table1(pageSettings),
             };
             Assert(nameof(Test1), CreatePng(pageSettings, tables));
         }
@@ -48,9 +48,9 @@ namespace SharpLayout.Tests
                 RightMargin = XUnit.FromCentimeter(1.5),
             };
             var tables = new [] {
-                Table(pageSettings),
+                Table1(pageSettings),
                 Table3(pageSettings),
-                Table(pageSettings),
+                Table1(pageSettings),
             };
             Assert(nameof(Test2), CreatePng(pageSettings, tables));
         }
@@ -68,12 +68,99 @@ namespace SharpLayout.Tests
                 Table6(pageSettings),
                 Table4(pageSettings),
                 Table2(pageSettings),
-                Table(pageSettings),
+                Table1(pageSettings),
             };
             Assert(nameof(Test3), CreatePng(pageSettings, tables));
         }
 
         public static Table Table(PageSettings pageSettings)
+        {
+            var table = new Table(pageSettings.LeftMargin);
+            var c1 = table.AddColumn(Px(202));
+            var c2 = table.AddColumn(Px(257));
+            var c3 = table.AddColumn(Px(454));
+            var c4 = table.AddColumn(Px(144));
+            var c5 = table.AddColumn(pageSettings.PageWidth - pageSettings.LeftMargin - pageSettings.RightMargin
+                - table.Columns.Sum(_ => _.Width));
+            {
+                var r1 = table.AddRow();
+                {
+                    var cell = r1[c1];
+                    cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Сумма прописью");
+                }
+                {
+                    var cell = r1[c2];
+                    cell.MergeRight(c5);
+                    var paragraph = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Сто рублей", 1)));
+                    paragraph.Alignment = ParagraphAlignment.Center;
+                    paragraph.LeftMargin = Px(10 * 10 * 5);
+                    cell.Paragraph = paragraph;
+                }
+            }
+            {
+                var r2 = table.AddRow();
+                {
+                    var cell = r2[c1];
+                    cell.MergeRight(c2);
+                    cell.RightBorder = cell.TopBorder = cell.BottomBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("ИНН");
+                }
+                {
+                    var cell = r2[c3];
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("КПП");
+                }
+                {
+                    var cell = r2[c4];
+                    cell.MergeDown = 1;
+                    cell.TopBorder = cell.BottomBorder = cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Сумма");
+                }
+                {
+                    var cell = r2[c5];
+                    cell.MergeDown = 1;
+                    cell.BottomBorder = cell.TopBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("777-33");
+                }
+            }
+            {
+                var r3 = table.AddRow();
+                r3.Height = Px(100);
+                {
+                    var cell = r3[c1];
+                    cell.MergeRight(c3);
+                    cell.MergeDown = 1;
+                    var paragraph = TimesNewRoman10(string.Join(" ", Enumerable.Repeat("Ромашка", 4*5)));
+                    paragraph.Alignment = ParagraphAlignment.Center;
+                    cell.Paragraph = paragraph;
+                    cell.RightBorder = BorderWidth;
+                }
+            }
+            {
+                var r4 = table.AddRow();
+                r4.Height = Px(100);
+                {
+                    var cell = r4[c4];
+                    cell.MergeDown = 1;
+                    cell.RightBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Сч. №");
+                }
+            }
+            {
+                var r5 = table.AddRow();
+                {
+                    var cell = r5[c1];
+                    cell.MergeRight(c3);
+                    cell.RightBorder = cell.BottomBorder = BorderWidth;
+                    cell.Paragraph = TimesNewRoman10("Плательщик");
+                }
+                r5[c4].BottomBorder = BorderWidth;
+            }
+            return table;
+        }
+
+        public static Table Table1(PageSettings pageSettings)
         {
             var table = new Table(pageSettings.LeftMargin);
             var c1 = table.AddColumn(Px(202));

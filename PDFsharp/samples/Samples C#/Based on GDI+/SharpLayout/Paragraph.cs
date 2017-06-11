@@ -14,6 +14,8 @@ namespace SharpLayout
 
         public Option<double> BottomMargin { get; set; }
 
+        public ParagraphAlignment Alignment { get; set; } = ParagraphAlignment.Left;
+
         public Paragraph Add(Span span)
         {
             Spans.Add(span);
