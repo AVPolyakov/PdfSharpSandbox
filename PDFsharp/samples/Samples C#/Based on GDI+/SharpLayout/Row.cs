@@ -5,7 +5,9 @@ namespace SharpLayout
     public class Row
     {
         public Table Table { get; }
+
         public int Index { get; }
+        
         internal readonly List<Cell> Cells = new List<Cell>();
 
         public Option<double> Height { get; set; }

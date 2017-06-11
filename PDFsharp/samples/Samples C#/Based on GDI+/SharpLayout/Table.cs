@@ -5,7 +5,9 @@ namespace SharpLayout
     public class Table
     {
         internal readonly double X0;
+
         public readonly List<Column> Columns = new List<Column>();
+        
         public readonly List<Row> Rows = new List<Row>();
 
         public Table(double x0)

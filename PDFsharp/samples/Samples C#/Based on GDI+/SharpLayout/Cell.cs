@@ -3,7 +3,9 @@ namespace SharpLayout
     public class Cell
     {
         public Table Table { get; }
+
         public int RowIndex { get; }
+        
         public int ColumnIndex { get; }
 
         public Option<int> Rowspan { get; set; }

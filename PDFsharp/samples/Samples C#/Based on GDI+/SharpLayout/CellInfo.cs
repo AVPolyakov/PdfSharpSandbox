@@ -5,6 +5,7 @@ namespace SharpLayout
     public struct CellInfo: IEquatable<CellInfo>
     {
         public int RowIndex { get; }
+
         public int ColumnIndex { get; }
 
         public CellInfo(int rowIndex, int columnIndex)

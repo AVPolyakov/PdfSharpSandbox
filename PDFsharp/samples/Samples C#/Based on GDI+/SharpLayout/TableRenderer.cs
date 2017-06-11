@@ -153,15 +153,7 @@ namespace SharpLayout
                         var width = info.Table.ContentWidth(row, column, info.RightBorderFunc);
                         ParagraphRenderer.Draw(xGraphics, paragraph.Value, x, y, width, ParagraphAlignment.Left);
                         if (pageSettings.IsHighlightCells)
-                        {
-                            var innerHeight = paragraph.Value.GetInnerHeight(xGraphics, info.Table, row, column, info.RightBorderFunc);
-                            var innerWidth = paragraph.Value.GetInnerWidth(width);
-                            if (innerWidth > 0 && innerHeight > 0)
-                                xGraphics.DrawRectangle(new XSolidBrush(XColor.FromArgb(32, 0, 0, 255)), new XRect(
-                                    x + paragraph.Value.LeftMargin.ValueOr(0),
-                                    y + paragraph.Value.TopMargin.ValueOr(0),
-                                    innerWidth, innerHeight));
-                        }
+                            HighlightParagraph(paragraph.Value, column, row, x, y, width, info, xGraphics);
                     }
                     var rightBorder = info.RightBorderFunc(new CellInfo(row, column.Index));
                     if (rightBorder.HasValue)
@@ -462,6 +454,17 @@ namespace SharpLayout
                 MaxLeftBorder = table.Rows.Max(row => leftBorderFunc(new CellInfo(row.Index, 0)).ValueOr(0));
                 Y = y;                
             }
+        }
+
+        private static void HighlightParagraph(Paragraph paragraph, Column column, int row, double x, double y, double width, TableInfo info, XGraphics xGraphics)
+        {
+            var innerHeight = paragraph.GetInnerHeight(xGraphics, info.Table, row, column, info.RightBorderFunc);
+            var innerWidth = paragraph.GetInnerWidth(width);
+            if (innerWidth > 0 && innerHeight > 0)
+                xGraphics.DrawRectangle(new XSolidBrush(XColor.FromArgb(32, 0, 0, 255)), new XRect(
+                    x + paragraph.LeftMargin.ValueOr(0),
+                    y + paragraph.TopMargin.ValueOr(0),
+                    innerWidth, innerHeight));
         }
 
         private static void HighlightCells(XGraphics xGraphics, TableInfo info, Option<double> bottomBorder, int row, Column column, double x, double y)
