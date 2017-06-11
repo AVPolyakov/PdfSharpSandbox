@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace TableLayout
+namespace SharpLayout
 {
     /// <summary>
     /// https://en.wikipedia.org/wiki/Option_type

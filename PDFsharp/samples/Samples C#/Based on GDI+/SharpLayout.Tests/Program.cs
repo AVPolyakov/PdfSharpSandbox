@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using static TableLayout.Tests.Tests;
+using static SharpLayout.Tests.Tests;
 
-namespace TableLayout.Tests
+namespace SharpLayout.Tests
 {
 	class Program
 	{

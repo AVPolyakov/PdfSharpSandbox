@@ -1,4 +1,4 @@
-namespace TableLayout
+namespace SharpLayout
 {
     public class Cell
     {

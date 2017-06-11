@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace TableLayout
+namespace SharpLayout
 {
     public class Row
     {

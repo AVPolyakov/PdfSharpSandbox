@@ -8,9 +8,9 @@ using System.Runtime.CompilerServices;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using Xunit;
-using static TableLayout.Util;
+using static SharpLayout.Util;
 
-namespace TableLayout.Tests
+namespace SharpLayout.Tests
 {
     public class Tests
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace TableLayout
+namespace SharpLayout
 {
     public struct CellInfo: IEquatable<CellInfo>
     {

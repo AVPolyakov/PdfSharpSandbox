@@ -4,7 +4,7 @@ using System.Linq;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 
-namespace TableLayout
+namespace SharpLayout
 {
     public static class TableRenderer
     {

@@ -8,8 +8,8 @@
     <ProjectGuid>{632E2AEA-C8E9-461E-8953-97C95E4AEBE8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TableLayout.Tests</RootNamespace>
-    <AssemblyName>TableLayout.Tests</AssemblyName>
+    <RootNamespace>SharpLayout.Tests</RootNamespace>
+    <AssemblyName>SharpLayout.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -80,9 +80,9 @@
       <Project>{5384ce57-1f94-4d22-860d-2e9c1ac12ddf}</Project>
       <Name>PdfSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TableLayout\TableLayout.csproj">
+    <ProjectReference Include="..\SharpLayout\SharpLayout.csproj">
       <Project>{05e890de-939f-4e72-a971-2ea897e9b503}</Project>
-      <Name>TableLayout</Name>
+      <Name>SharpLayout</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

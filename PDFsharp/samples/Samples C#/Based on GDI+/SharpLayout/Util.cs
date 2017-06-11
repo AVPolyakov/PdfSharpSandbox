@@ -1,6 +1,6 @@
 ﻿using PdfSharp.Drawing;
 
-namespace TableLayout
+namespace SharpLayout
 {
     public static class Util
     {
