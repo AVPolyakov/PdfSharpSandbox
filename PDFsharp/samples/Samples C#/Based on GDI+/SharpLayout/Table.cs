@@ -15,12 +15,19 @@ namespace SharpLayout
             X0 = x0;
         }
 
-        public Column AddColumn(double width)
+        public Column AddColumn()
         {
-            var column = new Column(width, Columns.Count);
+            var column = new Column(Columns.Count);
             Columns.Add(column);
             foreach (var row in Rows)
                 row.Cells.Add(new Cell(this, row.Index, column.Index));
+            return column;
+        }
+
+        public Column AddColumn(double width)
+        {
+            var column = AddColumn();
+            column.Width = width;
             return column;
         }
 

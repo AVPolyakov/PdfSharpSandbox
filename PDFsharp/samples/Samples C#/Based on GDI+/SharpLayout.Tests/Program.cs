@@ -12,16 +12,8 @@ namespace SharpLayout.Tests
 	{
 	    static void Main()
 	    {
-	        var pageSettings = new PageSettings {
-                LeftMargin = XUnit.FromCentimeter(3),
-                RightMargin = XUnit.FromCentimeter(1.5),
-                PageHeight = Util.Px(700),
-                IsHighlightCells = true
-	        };
-	        var tables = new [] {
-	            Table(pageSettings),
-	        };
-	        Process.Start(CreatePdf(pageSettings, tables));
+	        PaymentOrder.GetContent(out PageSettings pageSettings, out List<Table> tables);
+            Process.Start(CreatePdf(pageSettings, tables));
 	        //Process.Start(SavePng(pageSettings, tables, 0));
 	    }
 

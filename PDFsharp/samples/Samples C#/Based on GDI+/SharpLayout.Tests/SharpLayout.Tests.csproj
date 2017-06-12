@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PaymentOrder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests.cs" />
@@ -87,6 +88,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="TestData\PaymentOrderTest\Page1.png" />
     <Content Include="TestData\Test1\Page1.png" />
     <Content Include="TestData\Test1\Page2.png" />
     <Content Include="TestData\Test1\Page3.png" />

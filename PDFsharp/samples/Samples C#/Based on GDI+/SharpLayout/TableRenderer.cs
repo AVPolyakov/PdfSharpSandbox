@@ -113,7 +113,7 @@ namespace SharpLayout
             if (!firstRow.HasValue) return;
             var maxTopBorder = firstRow.Value == 0
                 ? info.Table.Columns.Max(column => info.TopBorderFunc(new CellInfo(firstRow.Value, column.Index)).ValueOr(0))
-                : info.Table.Columns.Max(column => info.BottomBorderFunc(new CellInfo(firstRow.Value - 1, column.Index)).ValueOr(0));
+                : MaxTopBorder(firstRow.Value - 1, info.Table, info.BottomBorderFunc);
             {
                 var x = info.Table.X0 + info.MaxLeftBorder;
                 foreach (var column in info.Table.Columns)
@@ -156,7 +156,7 @@ namespace SharpLayout
                         var width = info.Table.ContentWidth(row, column, info.RightBorderFunc);
                         var rowspan = cell.Rowspan.ValueOr(1);
                         var cellInnerHeight = Enumerable.Range(0, rowspan).Sum(i => info.MaxHeights[row + i]
-                            - GetBottomBorder(row + rowspan - 1, column.Index, info.Table, info.BottomBorderFunc));
+                            - MaxTopBorder(row + rowspan - 1, info.Table, info.BottomBorderFunc));
                         var paragraphHeight = cell.Paragraph.Value.GetParagraphHeight(row, column, info.Table, xGraphics, info.RightBorderFunc);
                         double dy;
                         switch (cell.VerticalAlignment)
@@ -194,6 +194,11 @@ namespace SharpLayout
                 }
                 y += info.MaxHeights[row];
             }
+        }
+
+        private static double MaxTopBorder(int rowIndex, Table infoTable, Func<CellInfo, Option<double>> bottomBorderFunc)
+        {
+            return infoTable.Columns.Max(column => bottomBorderFunc(new CellInfo(rowIndex, column.Index)).ValueOr(0));
         }
 
         private static int EndMergedRow(Table table, HashSet<int> mergedRows, int row)
@@ -267,19 +272,24 @@ namespace SharpLayout
             {
                 var maxHeight = 0d;
                 foreach (var column in table.Columns)
+                {
+                    double rowHeightByContent;
                     if (cellContentsByBottomRow.TryGetValue(new CellInfo(row, column),
                         out (Paragraph paragraph, Option<int> rowspan, Row row) cell))
                     {
                         var paragraphHeight = cell.paragraph.GetParagraphHeight(cell.row.Index, column, table, graphics, rightBorderFunc);
-                        var rowHeightByContent = cell.rowspan.Match(
+                        rowHeightByContent = cell.rowspan.Match(
                             _ => Math.Max(paragraphHeight - Enumerable.Range(1, _ - 1).Sum(i => result[row.Index - i]), 0),
                             () => paragraphHeight);
-                        var innerHeight = row.Height.Match(
-                            _ => Math.Max(rowHeightByContent, _), () => rowHeightByContent);
-                        var height = innerHeight + GetBottomBorder(row.Index, column.Index, table, bottomBorderFunc);
-                        if (maxHeight < height)
-                            maxHeight = height;
                     }
+                    else
+                        rowHeightByContent = 0;
+                    var innerHeight = row.Height.Match(
+                        _ => Math.Max(rowHeightByContent, _), () => rowHeightByContent);
+                    var height = innerHeight + MaxTopBorder(row.Index, table, bottomBorderFunc);
+                    if (maxHeight < height)
+                        maxHeight = height;
+                }
                 result.Add(row.Index, maxHeight);
             }
             return result;
@@ -290,14 +300,6 @@ namespace SharpLayout
         {
             return paragraph.GetInnerHeight(graphics, table, row, column, rightBorderFunc) +
                 paragraph.TopMargin.ValueOr(0) + paragraph.BottomMargin.ValueOr(0);
-        }
-
-        private static double GetBottomBorder(int row, int column, Table table, Func<CellInfo, Option<double>> bottomBorderFunc)
-        {
-            return table.Find(new CellInfo(row, column)).SelectMany(_ => _.Colspan).Match(
-                colspan => Enumerable.Range(column, colspan)
-                    .Max(i => bottomBorderFunc(new CellInfo(row, i)).ValueOr(0)),
-                () => bottomBorderFunc(new CellInfo(row, column)).ValueOr(0));
         }
 
         private static double GetInnerHeight(this Paragraph paragraph, XGraphics graphics, Table table, int row, Column column,
@@ -480,7 +482,7 @@ namespace SharpLayout
                 TopBorderFunc = topBorderFunc;
                 BottomBorderFunc = bottomBorderFunc;
                 MaxHeights = maxHeights;
-                MaxLeftBorder = table.Rows.Max(row => leftBorderFunc(new CellInfo(row.Index, 0)).ValueOr(0));
+                MaxLeftBorder = table.Rows.Count == 0 ? 0 : table.Rows.Max(row => leftBorderFunc(new CellInfo(row.Index, 0)).ValueOr(0));
                 Y = y;                
             }
         }
@@ -490,20 +492,20 @@ namespace SharpLayout
             var innerHeight = paragraph.GetInnerHeight(xGraphics, info.Table, row, column, info.RightBorderFunc);
             var innerWidth = paragraph.GetInnerWidth(width);
             if (innerWidth > 0 && innerHeight > 0)
-                xGraphics.DrawRectangle(new XSolidBrush(XColor.FromArgb(32, 0, 0, 255)), new XRect(
+                FillRectangle(xGraphics, XColor.FromArgb(32, 0, 0, 255),
                     x + paragraph.LeftMargin.ValueOr(0),
                     y + paragraph.TopMargin.ValueOr(0),
-                    innerWidth, innerHeight));
+                    innerWidth, innerHeight);
         }
 
         private static void HighlightCells(XGraphics xGraphics, TableInfo info, Option<double> bottomBorder, int row, Column column, double x, double y)
         {
-            xGraphics.DrawRectangle(
-                (row + column.Index)%2 == 1
-                    ? new XSolidBrush(XColor.FromArgb(32, 127, 127, 127))
-                    : new XSolidBrush(XColor.FromArgb(32, 0, 255, 0)), new XRect(x, y,
-                        column.Width - info.RightBorderFunc(new CellInfo(row, column.Index)).ValueOr(0),
-                        info.MaxHeights[row] - bottomBorder.ValueOr(0)));
+            var color = (row + column.Index) % 2 == 1
+                ? XColor.FromArgb(32, 127, 127, 127)
+                : XColor.FromArgb(32, 0, 255, 0);
+            var height = info.MaxHeights[row] - bottomBorder.ValueOr(0);
+            var width = column.Width - info.RightBorderFunc(new CellInfo(row, column.Index)).ValueOr(0);
+            FillRectangle(xGraphics, color, x, y, width, height);
             var xFont = new XFont("Times New Roman", 10, XFontStyle.Regular,
                 new XPdfFontOptions(PdfFontEncoding.Unicode));
             var xSolidBrush = new XSolidBrush(XColor.FromArgb(128, 255, 0, 0));
@@ -525,6 +527,13 @@ namespace SharpLayout
                         Alignment = XStringAlignment.Near,
                         LineAlignment = XLineAlignment.Far
                     });
+        }
+
+        private static void FillRectangle(XGraphics xGraphics, XColor color, double x, double y, double width, double height)
+        {
+            var lineY = y + height / 2;
+            //DrawRectangle does not draw the last pixel sometimes
+            xGraphics.DrawLine(new XPen(color, height), x, lineY, x + width, lineY);
         }
     }
 }

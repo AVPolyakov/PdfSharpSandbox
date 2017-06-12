@@ -1,16 +1,13 @@
-using PdfSharp.Drawing;
-
 namespace SharpLayout
 {
     public class Column
     {
-        public double Width { get; }
+        public double Width { get; set; }
 
         public int Index { get; }
 
-        internal Column(XUnit width, int index)
+        internal Column(int index)
         {
-            Width = width;
             Index = index;
         }
     }

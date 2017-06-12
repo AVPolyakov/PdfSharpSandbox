@@ -56,11 +56,11 @@ namespace SharpLayout
             var result = new List<List<SoftLinePart>>();
             foreach (var span in paragraph.Spans)
             {
-                var lines = span.Text.SplitToLines().ToList();
+                var lines = span.TextOrEmpty.SplitToLines().ToList();
                 if (result.Count == 0)
                     result.Add(new List<SoftLinePart>());
                 if (lines.Count == 0)
-                    result[result.Count - 1].Add(new SoftLinePart(span, span.Text));
+                    result[result.Count - 1].Add(new SoftLinePart(span, span.TextOrEmpty));
                 else
                 {
                     result[result.Count - 1].Add(new SoftLinePart(span, lines[0]));

@@ -5,7 +5,9 @@ namespace SharpLayout
     public class Span
     {
         public string Text { get; }
-        
+
+        public string TextOrEmpty => Text ?? "";
+
         public XFont Font { get; }
         
         public XBrush Brush { get; set; } = XBrushes.Black;
