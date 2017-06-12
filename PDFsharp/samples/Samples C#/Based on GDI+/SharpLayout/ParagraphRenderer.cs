@@ -174,17 +174,19 @@ namespace SharpLayout
         private static int TrimEnd(int endIndex, List<CharInfo> chars, List<SoftLinePart> softLineParts, int startIndex)
         {
             var i = endIndex;
-            while (i >= startIndex && char.IsWhiteSpace(chars.Char(i, softLineParts)))
+            while (i >= startIndex && IsLineBreakChar(chars.Char(i, softLineParts)))
                 i--;
             return i;
         }
 
+        private static bool IsLineBreakChar(char c) => char.IsWhiteSpace(c) && c != '\u00A0';
+
         private static int ShiftEndIndex(int endIndex, List<CharInfo> chars, List<SoftLinePart> softLineParts, int startIndex)
         {
-            if (char.IsWhiteSpace(chars.Char(endIndex + 1, softLineParts)))
+            if (IsLineBreakChar(chars.Char(endIndex + 1, softLineParts)))
             {
                 var i = endIndex;
-                while (i < chars.Count && char.IsWhiteSpace(chars.Char(i + 1, softLineParts)))
+                while (i < chars.Count && IsLineBreakChar(chars.Char(i + 1, softLineParts)))
                     i++;
                 return i;
             }
@@ -194,7 +196,7 @@ namespace SharpLayout
                 var i = endIndex;
                 while (i >= startIndex)
                 {
-                    if (char.IsWhiteSpace(chars.Char(i, softLineParts)))
+                    if (IsLineBreakChar(chars.Char(i, softLineParts)))
                     {
                         whiteSpaceIndex = i;
                         break;
