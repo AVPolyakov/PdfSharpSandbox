@@ -95,7 +95,7 @@ namespace MigraDoc.Rendering
       NewArea,
 
       /// <summary>
-      /// http://forum.pdfsharp.net/viewtopic.php?f=2&t=1467
+      /// <![CDATA[ http://forum.pdfsharp.net/viewtopic.php?f=2&t=1467 ]]>
       /// Only part of the word fit. Need to split the word at the specified
       /// location and insert the remaining word after this one.
       /// </summary>
@@ -1868,7 +1868,7 @@ namespace MigraDoc.Rendering
         var rect = formattingArea.GetFittingRect(currentYPosition, CalcCurrentVerticalInfo().height + BottomBorderOffset);
         var width2 = rect.X + rect.Width - RightIndent - LeftIndent + Tolerance;
         int numFittingCharacters;
-        width = this.gfx.MeasureString(word, xFont, StringFormat, width2, out numFittingCharacters).Width;
+        width = MeasureString(gfx, word, xFont, StringFormat, width2, out numFittingCharacters).Width;
         if (numFittingCharacters < word.Length && numFittingCharacters > 0)
           currentLeaf.Current.NumFittingCharacters = numFittingCharacters;
       }
@@ -1881,6 +1881,27 @@ namespace MigraDoc.Rendering
         width *= FontHandler.GetSubSuperScaling(xFont);
 
       return width;
+    }
+
+    private static XSize MeasureString(XGraphics xGraphics, string text, XFont font, XStringFormat stringFormat, double desWidth, out int numFittingCharacters)
+    {
+      var size = xGraphics.MeasureString(text, font, stringFormat);
+      if (size.Width <= desWidth || text.Length <= 1)
+      {
+        numFittingCharacters = text.Length;
+        return size;
+      }
+      var length = text.Length - 1;
+      while (true)
+      {
+        var xSize = xGraphics.MeasureString(text.Substring(0, length), font, stringFormat);
+        if (xSize.Width <= desWidth || length <= 1)
+        {
+          numFittingCharacters = length;
+          return xSize;
+        }
+        length--;
+      }
     }
 
     XUnit GetSpaceWidth(Character character)
