@@ -123,8 +123,9 @@ namespace PdfSharp.Fonts.OpenType
       glyphs.Keys.CopyTo(glyphArray, 0);
       if (!glyphs.ContainsKey(0))
         glyphs.Add(0, null);
-      for (int idx = 0; idx < count; idx++)
-        AddCompositeGlyphs(glyphs, glyphArray[idx]);
+      lock (fontData) //Fix multi-threading bug https://forum.pdfsharp.net/viewtopic.php?f=2&t=2248#p10378        
+        for (int idx = 0; idx < count; idx++)
+          AddCompositeGlyphs(glyphs, glyphArray[idx]);
     }
 
     /// <summary>
