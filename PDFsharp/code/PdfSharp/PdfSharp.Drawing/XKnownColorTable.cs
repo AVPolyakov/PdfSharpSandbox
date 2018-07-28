@@ -37,9 +37,9 @@ using System.Drawing;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   internal class XKnownColorTable
   {

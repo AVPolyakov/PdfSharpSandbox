@@ -33,12 +33,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Pdf.IO;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Represents the cross reference table of a PDF document. It contains all indirect objects of

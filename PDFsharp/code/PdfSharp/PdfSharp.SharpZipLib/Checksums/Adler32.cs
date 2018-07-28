@@ -36,8 +36,9 @@
 // exception statement from your version.
 
 using System;
+using PdfSharp1_32.SharpZipLib.Zip.Compression.Streams;
 
-namespace PdfSharp.SharpZipLib.Checksums
+namespace PdfSharp1_32.SharpZipLib.Checksums
 {
 
   /// <summary>
@@ -84,8 +85,8 @@ namespace PdfSharp.SharpZipLib.Checksums
   ///    checked separately. (Any sequence of zeroes has a Fletcher
   ///    checksum of zero.)"
   /// </summary>
-  /// <see cref="PdfSharp.SharpZipLib.Zip.Compression.Streams.InflaterInputStream"/>
-  /// <see cref="PdfSharp.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream"/>
+  /// <see cref="InflaterInputStream"/>
+  /// <see cref="DeflaterOutputStream"/>
   internal sealed class Adler32 : IChecksum
   {
     /// <summary>

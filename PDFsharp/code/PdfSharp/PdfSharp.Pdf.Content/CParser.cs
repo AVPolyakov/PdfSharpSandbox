@@ -33,11 +33,11 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Content.Objects;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Content.Objects;
 
-namespace PdfSharp.Pdf.Content
+namespace PdfSharp1_32.Pdf.Content
 {
   /// <summary>
   /// Provides the functionality to parse PDF content streams.

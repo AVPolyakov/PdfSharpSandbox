@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Fonts
+namespace PdfSharp1_32.Fonts
 {
   /// <summary>
   /// Testing only

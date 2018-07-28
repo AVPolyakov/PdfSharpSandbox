@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Specifies the page layout to be used by a viewer when the document is opened.

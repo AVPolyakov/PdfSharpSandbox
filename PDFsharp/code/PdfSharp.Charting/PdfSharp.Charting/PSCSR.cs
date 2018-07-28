@@ -28,9 +28,9 @@
 #endregion
 
 using System;
-using PdfSharp.Charting;
+using PdfSharp1_32.Charting;
 
-namespace PdfSharp.Charting
+namespace PdfSharp1_32.Charting
 {
   /// <summary>
   /// The Pdf-Sharp-Charting-String-Resources.

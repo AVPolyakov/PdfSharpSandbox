@@ -41,12 +41,12 @@ using System.Drawing.Imaging;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Drawing.Pdf;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Drawing.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Helper class for Geometry paths.

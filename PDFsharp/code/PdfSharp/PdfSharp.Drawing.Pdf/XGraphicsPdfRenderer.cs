@@ -41,14 +41,14 @@ using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Fonts;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32.Fonts;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Drawing.Pdf
+namespace PdfSharp1_32.Drawing.Pdf
 {
   /// <summary>
   /// Represents a drawing surface for PdfPages.

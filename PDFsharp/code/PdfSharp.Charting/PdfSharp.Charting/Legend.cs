@@ -29,9 +29,9 @@
 
 using System;
 using System.ComponentModel;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Charting
+namespace PdfSharp1_32.Charting
 {
   /// <summary>
   /// Represents a legend of a chart.

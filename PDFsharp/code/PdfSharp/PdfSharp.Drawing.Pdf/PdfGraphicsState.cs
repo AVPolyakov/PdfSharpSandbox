@@ -37,11 +37,11 @@ using System.Drawing.Drawing2D;
 #endif
 #if WPF
 #endif
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Drawing.Pdf
+namespace PdfSharp1_32.Drawing.Pdf
 {
   // TODO: update the following text
   //

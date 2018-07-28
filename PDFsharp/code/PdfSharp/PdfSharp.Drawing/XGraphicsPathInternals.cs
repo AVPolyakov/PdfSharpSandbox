@@ -38,7 +38,7 @@ using System.Windows;
 using System.Windows.Media;
 #endif
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Provides access to the internal data structures of XGraphicsPath.

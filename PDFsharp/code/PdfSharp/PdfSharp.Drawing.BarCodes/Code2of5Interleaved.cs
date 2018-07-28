@@ -29,9 +29,9 @@
 
 using System;
 using System.Diagnostics;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Drawing.BarCodes
+namespace PdfSharp1_32.Drawing.BarCodes
 {
   /// <summary>
   /// Implementation of the Code 2 of 5 bar code.

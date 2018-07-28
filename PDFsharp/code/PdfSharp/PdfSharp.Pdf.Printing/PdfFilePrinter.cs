@@ -31,7 +31,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace PdfSharp.Pdf.Printing
+namespace PdfSharp1_32.Pdf.Printing
 {
   // Some googled inforamtion about command line switches:
   // 

@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Pens for all the pre-defined colors.

@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Charting
+namespace PdfSharp1_32.Charting
 {
   /// <summary>
   /// Specifies with type of chart will be drawn.

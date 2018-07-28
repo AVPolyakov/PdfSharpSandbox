@@ -30,9 +30,9 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Charting.Renderers
+namespace PdfSharp1_32.Charting.Renderers
 {
   /// <summary>
   /// Represents an axis renderer used for charts of type Bar2D.

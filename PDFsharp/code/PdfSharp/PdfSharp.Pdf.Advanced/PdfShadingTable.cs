@@ -33,8 +33,8 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Internal;
 #if false
 namespace PdfSharp.Pdf.Advanced
 {

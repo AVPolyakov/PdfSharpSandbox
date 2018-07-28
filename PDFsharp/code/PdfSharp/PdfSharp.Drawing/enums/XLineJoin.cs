@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Specifies how to join consecutive line or curve segments in a figure or subpath.

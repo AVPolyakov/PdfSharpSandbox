@@ -32,10 +32,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
 using System.Text;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf.IO;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Drawing.Layout
+namespace PdfSharp1_32.Drawing.Layout
 {
   /// <summary>
   /// Represents a very simple text formatter.

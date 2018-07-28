@@ -31,7 +31,7 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Specifies the type of a key's value in a dictionary.

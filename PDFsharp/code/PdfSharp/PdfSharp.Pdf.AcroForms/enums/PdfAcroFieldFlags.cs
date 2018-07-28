@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Pdf.AcroForms
+namespace PdfSharp1_32.Pdf.AcroForms
 {
   /// <summary>
   /// Specifies the flags of AcroForm fields.

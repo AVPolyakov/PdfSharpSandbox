@@ -40,12 +40,12 @@ using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Temporary hack to implement PrivateFontCollection.

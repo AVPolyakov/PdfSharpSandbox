@@ -29,7 +29,7 @@
 
 #pragma warning disable 1591
 
-namespace PdfSharp.Pdf.Content.Objects
+namespace PdfSharp1_32.Pdf.Content.Objects
 {
   /// <summary>
   /// The names of the op-codes. 

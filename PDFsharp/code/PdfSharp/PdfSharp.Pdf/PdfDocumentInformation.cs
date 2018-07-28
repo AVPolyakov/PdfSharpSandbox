@@ -32,10 +32,10 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
-using PdfSharp;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Represents the PDF document information dictionary.

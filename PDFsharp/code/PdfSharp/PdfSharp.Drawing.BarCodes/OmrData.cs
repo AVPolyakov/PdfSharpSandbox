@@ -31,7 +31,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace PdfSharp.Drawing.BarCodes
+namespace PdfSharp1_32.Drawing.BarCodes
 {
 #if _
   /// <summary>

@@ -29,11 +29,11 @@
 
 using System;
 using System.Diagnostics;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf.Filters
+namespace PdfSharp1_32.Pdf.Filters
 {
   /// <summary>
   /// Reserved for future extension.

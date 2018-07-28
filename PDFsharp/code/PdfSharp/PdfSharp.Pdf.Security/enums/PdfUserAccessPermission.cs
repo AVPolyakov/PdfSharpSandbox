@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Pdf.Security
+namespace PdfSharp1_32.Pdf.Security
 {
   /// <summary>
   /// Specifies which operations are permitted when the document is opened with user access.

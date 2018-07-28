@@ -40,16 +40,16 @@ using System.Drawing.Imaging;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Drawing.Pdf;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Filters;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Drawing.Pdf;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Filters;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Represents a so called 'PDF form external object', which is typically an imported page of an external

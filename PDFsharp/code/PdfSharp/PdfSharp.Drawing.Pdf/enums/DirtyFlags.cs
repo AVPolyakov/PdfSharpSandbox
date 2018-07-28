@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Drawing.Pdf
+namespace PdfSharp1_32.Drawing.Pdf
 {
   [Flags]
   enum DirtyFlags

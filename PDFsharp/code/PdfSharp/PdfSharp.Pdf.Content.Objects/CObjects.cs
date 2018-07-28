@@ -34,9 +34,9 @@ using System.Collections;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Pdf.Content.Objects  // TODO: split into single files
+namespace PdfSharp1_32.Pdf.Content.Objects  // TODO: split into single files
 {
   /// <summary>
   /// Base class for all PDF content stream objects.

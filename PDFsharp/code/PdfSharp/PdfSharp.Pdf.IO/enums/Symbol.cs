@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Pdf.IO
+namespace PdfSharp1_32.Pdf.IO
 {
   /// <summary>
   /// Terminal symbols recognized by lexer.

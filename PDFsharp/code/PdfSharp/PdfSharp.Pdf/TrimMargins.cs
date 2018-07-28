@@ -31,9 +31,9 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 using System.Text;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Represents trim margins added to the page.

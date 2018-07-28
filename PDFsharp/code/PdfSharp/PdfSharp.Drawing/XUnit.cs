@@ -31,7 +31,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Represents a value and its unit of measure. The structure converts implicitly from and to

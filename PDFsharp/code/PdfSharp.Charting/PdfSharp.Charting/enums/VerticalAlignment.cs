@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Charting
+namespace PdfSharp1_32.Charting
 {
   /// <summary>
   /// Used to determine the vertical alignment of the axis title.

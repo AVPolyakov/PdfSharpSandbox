@@ -29,10 +29,10 @@
 
 using System;
 using System.Collections;
-using PdfSharp.Drawing;
-using PdfSharp.Charting.Renderers;
+using PdfSharp1_32.Charting.Renderers;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Charting
+namespace PdfSharp1_32.Charting
 {
   /// <summary>
   /// Represents the frame which holds one or more charts.

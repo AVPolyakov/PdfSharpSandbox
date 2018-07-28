@@ -30,7 +30,7 @@
 using System;
 using System.Diagnostics;
 
-namespace PdfSharp.Drawing.BarCodes
+namespace PdfSharp1_32.Drawing.BarCodes
 {
   /// <summary>
   /// Imlpementation of the Code 3 of 9 bar code.

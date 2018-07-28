@@ -37,7 +37,7 @@ using System.Drawing.Imaging;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
 
 
@@ -50,7 +50,7 @@ using PdfSharp.Drawing;
 
 // Even if it looks like a datamatrix code it is just random
 
-namespace PdfSharp.Drawing.BarCodes
+namespace PdfSharp1_32.Drawing.BarCodes
 {
   /// <summary>
   /// Creates the XImage object for a DataMatrix.

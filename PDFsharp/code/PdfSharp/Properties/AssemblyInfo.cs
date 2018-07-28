@@ -40,19 +40,19 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle(PdfSharp.VersionInfo.Title)]
-[assembly: AssemblyVersion(PdfSharp.VersionInfo.Version)]
-[assembly: AssemblyDescription(PdfSharp.VersionInfo.Description)]
-[assembly: AssemblyConfiguration(PdfSharp.VersionInfo.Configuration)]
-[assembly: AssemblyCompany(PdfSharp.VersionInfo.Company)]
+[assembly: AssemblyTitle(PdfSharp1_32.VersionInfo.Title)]
+[assembly: AssemblyVersion(PdfSharp1_32.VersionInfo.Version)]
+[assembly: AssemblyDescription(PdfSharp1_32.VersionInfo.Description)]
+[assembly: AssemblyConfiguration(PdfSharp1_32.VersionInfo.Configuration)]
+[assembly: AssemblyCompany(PdfSharp1_32.VersionInfo.Company)]
 #if DEBUG
-  [assembly: AssemblyProduct(PdfSharp.ProductVersionInfo.Product + " (Debug Build)")]
+  [assembly: AssemblyProduct(PdfSharp1_32.ProductVersionInfo.Product + " (Debug Build)")]
 #else
-  [assembly: AssemblyProduct(PdfSharp.ProductVersionInfo.Product)]
+  [assembly: AssemblyProduct(PdfSharp1_32.ProductVersionInfo.Product)]
 #endif
-[assembly: AssemblyCopyright(PdfSharp.VersionInfo.Copyright)]
-[assembly: AssemblyTrademark(PdfSharp.VersionInfo.Trademark)]
-[assembly: AssemblyCulture(PdfSharp.VersionInfo.Culture)]
+[assembly: AssemblyCopyright(PdfSharp1_32.VersionInfo.Copyright)]
+[assembly: AssemblyTrademark(PdfSharp1_32.VersionInfo.Trademark)]
+[assembly: AssemblyCulture(PdfSharp1_32.VersionInfo.Culture)]
 [assembly: InternalsVisibleTo("PdfSharp.UnitTest, PublicKey=00240000048000009400000006020000002400005253413100040000010001008794e803e566eccc3c9181f52c4f7044e5442cc2ce3cbba9fc11bc4186ba2e446cd31deea20c1a8f499e978417fad2bc74143a4f8398f7cf5c5c0271b0f7fe907c537cff28b9d582da41289d1dae90168a3da2a5ed1115210a18fdae832479d3e639ca4003286ba8b98dc9144615c040ed838981ac816112df3b5a9e7cab4fbb")]
 #if WPF
 [assembly: InternalsVisibleTo("PdfSharp.Xps, PublicKey=00240000048000009400000006020000002400005253413100040000010001008794e803e566eccc3c9181f52c4f7044e5442cc2ce3cbba9fc11bc4186ba2e446cd31deea20c1a8f499e978417fad2bc74143a4f8398f7cf5c5c0271b0f7fe907c537cff28b9d582da41289d1dae90168a3da2a5ed1115210a18fdae832479d3e639ca4003286ba8b98dc9144615c040ed838981ac816112df3b5a9e7cab4fbb")]

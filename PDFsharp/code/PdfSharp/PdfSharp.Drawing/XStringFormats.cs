@@ -36,9 +36,9 @@ using System.Drawing.Drawing2D;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Represents predefined text layouts.

@@ -34,14 +34,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Filters;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Filters;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Value creation flags. Specifies whether and how a value that not exists is created.

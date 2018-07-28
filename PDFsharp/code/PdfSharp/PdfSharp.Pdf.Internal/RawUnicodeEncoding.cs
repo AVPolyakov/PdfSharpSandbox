@@ -30,7 +30,7 @@
 using System;
 using System.Text;
 
-namespace PdfSharp.Pdf.Internal
+namespace PdfSharp1_32.Pdf.Internal
 {
   /// <summary>
   /// An encoder for Unicode strings.

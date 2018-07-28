@@ -39,68 +39,68 @@ namespace MigraDoc.Rendering.Forms
     /// <summary>
     /// Zoom factor 800%.
     /// </summary>
-    Percent800 = PdfSharp.Forms.Zoom.Percent800,
+    Percent800 = PdfSharp1_32.Forms.Zoom.Percent800,
     /// <summary>
     /// Zoom factor 600%.
     /// </summary>
-    Percent600 = PdfSharp.Forms.Zoom.Percent600,
+    Percent600 = PdfSharp1_32.Forms.Zoom.Percent600,
     /// <summary>
     /// Zoom factor 400%.
     /// </summary>
-    Percent400 = PdfSharp.Forms.Zoom.Percent400,
+    Percent400 = PdfSharp1_32.Forms.Zoom.Percent400,
     /// <summary>
     /// Zoom factor 400%.
     /// </summary>
-    Percent200 = PdfSharp.Forms.Zoom.Percent200,
+    Percent200 = PdfSharp1_32.Forms.Zoom.Percent200,
     /// <summary>
     /// Zoom factor 150%.
     /// </summary>
-    Percent150 = PdfSharp.Forms.Zoom.Percent150,
+    Percent150 = PdfSharp1_32.Forms.Zoom.Percent150,
     /// <summary>
     /// Zoom factor 100%.
     /// </summary>
-    Percent100 = PdfSharp.Forms.Zoom.Percent100,
+    Percent100 = PdfSharp1_32.Forms.Zoom.Percent100,
     /// <summary>
     /// Zoom factor 75%.
     /// </summary>
-    Percent75 = PdfSharp.Forms.Zoom.Percent75,
+    Percent75 = PdfSharp1_32.Forms.Zoom.Percent75,
     /// <summary>
     /// Zoom factor 50%.
     /// </summary>
-    Percent50 = PdfSharp.Forms.Zoom.Percent50,
+    Percent50 = PdfSharp1_32.Forms.Zoom.Percent50,
     /// <summary>
     /// Zoom factor 25%.
     /// </summary>
-    Percent25 = PdfSharp.Forms.Zoom.Percent25,
+    Percent25 = PdfSharp1_32.Forms.Zoom.Percent25,
     /// <summary>
     /// Zoom factor 10%.
     /// </summary>
-    Percent10 = PdfSharp.Forms.Zoom.Percent10,
+    Percent10 = PdfSharp1_32.Forms.Zoom.Percent10,
     /// <summary>
     /// Sets the zoom factor so that the document fits horizontally into the window.
     /// </summary>
-    BestFit = PdfSharp.Forms.Zoom.BestFit,
+    BestFit = PdfSharp1_32.Forms.Zoom.BestFit,
     /// <summary>
     /// Sets the zoom factor so that the printable area of the document fits horizontally into the window.
     /// Currently not yet implemented and the same as ZoomBestFit.
     /// </summary>
-    TextFit = PdfSharp.Forms.Zoom.TextFit,
+    TextFit = PdfSharp1_32.Forms.Zoom.TextFit,
     /// <summary>
     /// Sets the zoom factor so that the whole document fits completely into the window.
     /// </summary>
-    FullPage = PdfSharp.Forms.Zoom.FullPage,
+    FullPage = PdfSharp1_32.Forms.Zoom.FullPage,
     /// <summary>
     /// Sets the zoom factor so that the document is displayed in its real physical size (based on the DPI information returned from the OS for the current monitor).
     /// </summary>
-    OriginalSize = PdfSharp.Forms.Zoom.OriginalSize,
+    OriginalSize = PdfSharp1_32.Forms.Zoom.OriginalSize,
     /// <summary>
     /// The smallest possible zoom factor.
     /// </summary>
-    Mininum = PdfSharp.Forms.Zoom.Mininum,
+    Mininum = PdfSharp1_32.Forms.Zoom.Mininum,
     /// <summary>
     /// The largest possible zoom factor.
     /// </summary>
-    Maximum = PdfSharp.Forms.Zoom.Maximum,
+    Maximum = PdfSharp1_32.Forms.Zoom.Maximum,
 #endif
 #if WPF
     /// <summary>

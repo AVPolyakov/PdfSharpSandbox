@@ -38,14 +38,14 @@ using System.Drawing;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Represents a PDF rectangle value, that is internally an array with 4 real values.

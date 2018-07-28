@@ -32,7 +32,7 @@ using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Base class for all dictionaries that map resource names to objects.

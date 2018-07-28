@@ -34,13 +34,13 @@ using System.Collections;
 using System.ComponentModel;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Annotations;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Annotations;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Represents a page in a PDF document.

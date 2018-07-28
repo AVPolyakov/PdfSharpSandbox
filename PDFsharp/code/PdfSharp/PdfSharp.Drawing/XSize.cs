@@ -38,9 +38,9 @@ using System.Drawing;
 #if WPF
 using System.Windows;
 #endif
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Represents a pair of floating-point numbers, typically the width and height of a

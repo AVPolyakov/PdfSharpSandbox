@@ -35,7 +35,7 @@
 // obligated to do so.  If you do not wish to do so, delete this
 // exception statement from your version.
 
-namespace PdfSharp.SharpZipLib.Checksums 
+namespace PdfSharp1_32.SharpZipLib.Checksums 
 {
 	
 	/// <summary>

@@ -34,9 +34,9 @@ using System.Drawing;
 #if WPF
 using System.Windows;
 #endif
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Internal
+namespace PdfSharp1_32.Internal
 {
   /// <summary>
   /// Some static helper functions for calculations.

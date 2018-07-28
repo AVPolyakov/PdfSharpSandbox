@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp
+namespace PdfSharp1_32
 {
   /// <summary>
   /// Version info of this assembly.

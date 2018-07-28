@@ -30,10 +30,10 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Holds PDF specific information of the document.

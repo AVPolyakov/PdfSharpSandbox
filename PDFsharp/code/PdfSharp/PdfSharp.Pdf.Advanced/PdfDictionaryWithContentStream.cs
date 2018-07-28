@@ -39,12 +39,12 @@ using System.Drawing.Imaging;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Drawing;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents a base class for dictionaries with a content stream.

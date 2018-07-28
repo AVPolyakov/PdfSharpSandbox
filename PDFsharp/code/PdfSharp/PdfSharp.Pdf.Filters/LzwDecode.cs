@@ -32,7 +32,7 @@ using System.Diagnostics;
 using System.Text;
 using System.IO;
 
-namespace PdfSharp.Pdf.Filters
+namespace PdfSharp1_32.Pdf.Filters
 {
   /// <summary>
   /// Implements the LzwDecode filter.

@@ -31,11 +31,11 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.AcroForms;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf.AcroForms;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents the catalog dictionary.

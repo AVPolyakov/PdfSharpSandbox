@@ -31,15 +31,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
 using System.Security.Cryptography;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf.Security
+namespace PdfSharp1_32.Pdf.Security
 {
   /// <summary>
   /// Represents the standard PDF security handler.

@@ -30,11 +30,11 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Security;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.IO;
+using PdfSharp1_32.Pdf.Security;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents a PDF trailer dictionary. Even trailers are dictionaries their never have a cross

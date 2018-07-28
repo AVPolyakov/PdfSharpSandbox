@@ -32,7 +32,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Text;
-using PdfSharp.Pdf;
+using PdfSharp1_32.Pdf;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using MigraDoc.RtfRendering;

@@ -39,7 +39,7 @@ using System.Globalization;
 
 #pragma warning disable 1591
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Represents a two-dimensional vector specified by x- and y-coordinates.

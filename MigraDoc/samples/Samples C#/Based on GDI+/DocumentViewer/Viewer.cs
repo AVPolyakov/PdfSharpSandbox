@@ -38,8 +38,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Forms;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Forms;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.IO;
 using MigraDoc.Rendering;
@@ -621,7 +621,7 @@ namespace DocumentViewer
       // Create an image
       int dpi = 150;
       int dx, dy;
-      if (info.Orientation == PdfSharp.PageOrientation.Portrait)
+      if (info.Orientation == PdfSharp1_32.PageOrientation.Portrait)
       {
         dx = (int)(info.Width.Inch * dpi);
         dy = (int)(info.Height.Inch * dpi);
@@ -662,7 +662,7 @@ namespace DocumentViewer
 
       // Create an image
       float dx, dy;
-      if (info.Orientation == PdfSharp.PageOrientation.Portrait)
+      if (info.Orientation == PdfSharp1_32.PageOrientation.Portrait)
       {
         dx = (float)(info.Width.Inch * 72);
         dy = (float)(info.Height.Inch * 72);

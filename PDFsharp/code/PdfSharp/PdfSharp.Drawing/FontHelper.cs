@@ -42,14 +42,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Drawing.Pdf;
-using PdfSharp.Fonts;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Drawing.Pdf;
+using PdfSharp1_32.Fonts;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Pdf.Advanced;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
 #if WPF
   /// <summary>

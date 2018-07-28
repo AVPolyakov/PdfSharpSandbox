@@ -33,7 +33,7 @@ using System.Diagnostics;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using MigraDoc.RtfRendering;
-using PdfSharp.Pdf;
+using PdfSharp1_32.Pdf;
 
 namespace HelloWorld
 {

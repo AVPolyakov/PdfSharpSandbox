@@ -33,7 +33,7 @@ using System.Text;
 using System.Security;
 using System.Security.Permissions;
 
-namespace PdfSharp.Forms
+namespace PdfSharp1_32.Forms
 {
 #if GDI
   /// <summary>

@@ -42,12 +42,12 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Drawing.Pdf;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Drawing.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Helper class for processing image files.

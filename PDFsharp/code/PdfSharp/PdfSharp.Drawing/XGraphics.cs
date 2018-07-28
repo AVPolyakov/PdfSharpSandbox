@@ -41,13 +41,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Drawing.Pdf;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing.Pdf;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
 
 // ReSharper disable RedundantNameQualifier
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Represents a drawing surface (or canvas) for a fixed size page.
@@ -268,7 +268,7 @@ namespace PdfSharp.Drawing
 #if GDI && WPF
       this.targetContext = PdfSharp.Internal.TargetContextHelper.TargetContext;
 #endif
-      this.renderer = new PdfSharp.Drawing.Pdf.XGraphicsPdfRenderer(page, this, options);
+      this.renderer = new XGraphicsPdfRenderer(page, this, options);
       this.pageSizePoints = new XSize(page.Width, page.Height);
       switch (pageUnit)
       {
@@ -382,7 +382,7 @@ namespace PdfSharp.Drawing
         this.gfx = Graphics.FromHwnd(IntPtr.Zero);
       }
       if (form.Owner != null)
-        this.renderer = new PdfSharp.Drawing.Pdf.XGraphicsPdfRenderer(form, this);
+        this.renderer = new XGraphicsPdfRenderer(form, this);
       this.pageSize = form.Size;
       Initialize();
 #endif
@@ -4909,7 +4909,7 @@ namespace PdfSharp.Drawing
     {
       get
       {
-        XGraphicsPdfRenderer renderer = this.renderer as PdfSharp.Drawing.Pdf.XGraphicsPdfRenderer;
+        XGraphicsPdfRenderer renderer = this.renderer as XGraphicsPdfRenderer;
         return renderer != null ? renderer.page : null;
       }
     }

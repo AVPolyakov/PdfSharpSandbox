@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Pdf.Annotations
+namespace PdfSharp1_32.Pdf.Annotations
 {
   /// <summary>
   /// Specifies the pre-defined icon names of text annotations.

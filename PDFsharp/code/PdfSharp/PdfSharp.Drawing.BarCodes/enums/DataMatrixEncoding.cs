@@ -30,7 +30,7 @@
 using System;
 using System.Text;
 
-namespace PdfSharp.Drawing.BarCodes
+namespace PdfSharp1_32.Drawing.BarCodes
 {
   /// <summary>
   /// docDaSt

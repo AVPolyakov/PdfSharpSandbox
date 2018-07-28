@@ -30,14 +30,14 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Internal;
 
 using Fixed = System.Int32;
 using FWord = System.Int16;
 using UFWord = System.UInt16;
 
-namespace PdfSharp.Fonts.OpenType
+namespace PdfSharp1_32.Fonts.OpenType
 {
   /// <summary>
   /// Generic font table. Not yet used

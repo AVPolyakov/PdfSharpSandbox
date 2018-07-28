@@ -39,10 +39,10 @@ using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Fonts
+namespace PdfSharp1_32.Fonts
 {
   /// <summary>
   /// Base class for all font descriptors.

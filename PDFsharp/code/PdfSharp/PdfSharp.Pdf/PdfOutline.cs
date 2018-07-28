@@ -33,12 +33,12 @@ using System.Diagnostics;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Represents an outline item in the outlines tree. An outline is also knows as a bookmark.
@@ -449,7 +449,7 @@ namespace PdfSharp.Pdf
       }
 
       /// <summary>
-      /// Gets the <see cref="PdfSharp.Pdf.PdfOutline"/> at the specified index.
+      /// Gets the <see cref="PdfOutline"/> at the specified index.
       /// </summary>
       public PdfOutline this[int index]
       {

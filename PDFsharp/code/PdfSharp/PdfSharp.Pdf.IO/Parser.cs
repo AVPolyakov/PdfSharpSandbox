@@ -33,11 +33,11 @@ using System.Collections;
 using System.Reflection;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Filters;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Filters;
+using PdfSharp1_32.Pdf.Advanced;
 
-namespace PdfSharp.Pdf.IO
+namespace PdfSharp1_32.Pdf.IO
 {
   /*
      Direct and indireckt objects

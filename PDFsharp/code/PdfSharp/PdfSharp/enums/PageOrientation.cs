@@ -27,12 +27,12 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp
+namespace PdfSharp1_32
 {
   /// <summary>
   /// Base namespace of PDFsharp. Most classes are implemented in nested namespaces like e. g. PdfSharp.Pdf.
   /// </summary>
-  /// <seealso cref="PdfSharp.Pdf"></seealso>
+  /// <seealso cref="PdfSharp1_32.Pdf"></seealso>
   [System.Runtime.CompilerServices.CompilerGenerated]
   internal class NamespaceDoc { }
 

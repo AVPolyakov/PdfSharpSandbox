@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Drawing.Pdf
+namespace PdfSharp1_32.Drawing.Pdf
 {
   /// <summary>
   /// Indicates whether we are within a BT/ET block.

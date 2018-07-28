@@ -40,10 +40,10 @@ using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
 // ReSharper disable RedundantNameQualifier
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Represents a 3-by-3 matrix that represents an affine 2D transformation.

@@ -50,12 +50,12 @@ using System.Windows.Forms;
 //#if Wpf
 //using System.Windows.Media;
 //#endif
-using PdfSharp;
-using PdfSharp.Internal;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
+using PdfSharp1_32;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Forms
+namespace PdfSharp1_32.Forms
 {
   /* TODOs
    * 
@@ -1029,7 +1029,7 @@ namespace PdfSharp.Forms
     /// <summary>
     /// Real page size in point.
     /// </summary>
-    SizeF pageSize = PageSizeConverter.ToSize(PdfSharp.PageSize.A4).ToSizeF();
+    SizeF pageSize = PageSizeConverter.ToSize(PdfSharp1_32.PageSize.A4).ToSizeF();
 
     /// <summary>
     /// Page in pixel relative to virtual canvas.

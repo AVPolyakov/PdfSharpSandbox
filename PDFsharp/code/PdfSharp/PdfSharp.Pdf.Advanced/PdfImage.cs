@@ -41,12 +41,12 @@ using System.Drawing.Imaging;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 #endif
-using PdfSharp.Drawing;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.Filters;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Filters;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents an image.

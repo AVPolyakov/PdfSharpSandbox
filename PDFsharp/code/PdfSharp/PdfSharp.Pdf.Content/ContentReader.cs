@@ -28,9 +28,9 @@
 #endregion
 
 using System;
-using PdfSharp.Pdf.Content.Objects;
+using PdfSharp1_32.Pdf.Content.Objects;
 
-namespace PdfSharp.Pdf.Content
+namespace PdfSharp1_32.Pdf.Content
 {
   /// <summary>
   /// Represents the functionality for reading PDF content streams.

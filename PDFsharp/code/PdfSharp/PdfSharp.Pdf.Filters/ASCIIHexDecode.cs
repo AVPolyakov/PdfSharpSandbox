@@ -29,10 +29,10 @@
 
 using System;
 using System.Diagnostics;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Pdf.Filters
+namespace PdfSharp1_32.Pdf.Filters
 {
   /// <summary>
   /// Implements the ASCIIHexDecode filter.

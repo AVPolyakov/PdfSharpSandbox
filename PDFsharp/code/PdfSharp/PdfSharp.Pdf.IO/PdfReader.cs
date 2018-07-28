@@ -33,13 +33,14 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Security;
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.Security;
 
-namespace PdfSharp.Pdf.IO
+namespace PdfSharp1_32.Pdf.IO
 {
   /// <summary>
   /// Encapsulates the arguments of the PdfPasswordProvider delegate.
@@ -79,7 +80,7 @@ namespace PdfSharp.Pdf.IO
       try
       {
         int pageNumber;
-        string realPath = PdfSharp.Drawing.XPdfForm.ExtractPageNumber(path, out pageNumber);
+        string realPath = XPdfForm.ExtractPageNumber(path, out pageNumber);
         if (File.Exists(realPath)) // prevent unwanted exceptions during debugging
         {
           stream = new FileStream(realPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);

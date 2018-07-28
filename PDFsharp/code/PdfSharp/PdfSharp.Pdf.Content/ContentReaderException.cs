@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Pdf.Content
+namespace PdfSharp1_32.Pdf.Content
 {
   /// <summary>
   /// Exception thrown by ContentReader.

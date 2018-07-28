@@ -39,7 +39,7 @@ using System.Windows.Forms;
 using System.Windows.Media;
 #endif
 
-namespace PdfSharp.Forms
+namespace PdfSharp1_32.Forms
 {
   /// <summary>
   /// Implements the control that previews the page.

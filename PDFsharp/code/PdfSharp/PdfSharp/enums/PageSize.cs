@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp
+namespace PdfSharp1_32
 {
   /// <summary>
   /// Identifies the most popular predefined page sizes.

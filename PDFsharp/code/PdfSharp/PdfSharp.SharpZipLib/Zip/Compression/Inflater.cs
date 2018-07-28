@@ -38,11 +38,10 @@
 // exception statement from your version.
 
 using System;
+using PdfSharp1_32.SharpZipLib.Checksums;
+using PdfSharp1_32.SharpZipLib.Zip.Compression.Streams;
 
-using PdfSharp.SharpZipLib.Checksums;
-using PdfSharp.SharpZipLib.Zip.Compression.Streams;
-
-namespace PdfSharp.SharpZipLib.Zip.Compression
+namespace PdfSharp1_32.SharpZipLib.Zip.Compression
 {
 
   /// <summary>

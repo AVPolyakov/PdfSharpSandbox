@@ -32,7 +32,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace PdfSharp.Pdf.Content.Objects
+namespace PdfSharp1_32.Pdf.Content.Objects
 {
   /// <summary>
   /// Represents a PDF content stream operator description.

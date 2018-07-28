@@ -32,12 +32,12 @@ using System.Diagnostics;
 using System.Resources;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf;
 
 #pragma warning disable 1591
 
-namespace PdfSharp
+namespace PdfSharp1_32
 {
   /// <summary>
   /// The Pdf-Sharp-String-Resources.

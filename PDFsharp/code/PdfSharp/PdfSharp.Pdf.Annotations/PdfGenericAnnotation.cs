@@ -31,13 +31,13 @@ using System;
 using System.Globalization;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Internal;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.IO;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Pdf.Annotations
+namespace PdfSharp1_32.Pdf.Annotations
 {
   /// <summary>
   /// Represents a generic annotation. Used for annotation dictionaries unknown to PDFsharp.

@@ -29,9 +29,9 @@
 
 using System;
 using System.Diagnostics;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Charting.Renderers
+namespace PdfSharp1_32.Charting.Renderers
 {
   /// <summary>
   /// Represents a plot area renderer for bars.

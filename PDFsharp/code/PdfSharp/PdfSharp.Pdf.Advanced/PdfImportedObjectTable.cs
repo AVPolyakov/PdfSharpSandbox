@@ -33,12 +33,12 @@ using System.Diagnostics;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Drawing;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Internal;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents the imported objects of an external document. Used to cache objects that are

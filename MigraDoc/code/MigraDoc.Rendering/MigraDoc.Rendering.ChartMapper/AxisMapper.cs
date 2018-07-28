@@ -29,7 +29,7 @@
 #endregion
 
 using System;
-using PdfSharp.Charting;
+using PdfSharp1_32.Charting;
 
 namespace MigraDoc.Rendering.ChartMapper
 {

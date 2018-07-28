@@ -30,8 +30,8 @@
 
 using System;
 using MigraDoc.DocumentObjectModel;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.DocumentObjectModel.Shapes.Charts;

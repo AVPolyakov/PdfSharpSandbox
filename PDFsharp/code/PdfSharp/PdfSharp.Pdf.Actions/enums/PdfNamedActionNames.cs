@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Pdf.AcroForms
+namespace PdfSharp1_32.Pdf.AcroForms
 {
   /// <summary>
   /// Specifies the predefined PDF actions.

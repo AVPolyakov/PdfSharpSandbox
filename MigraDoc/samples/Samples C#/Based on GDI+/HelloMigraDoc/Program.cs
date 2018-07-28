@@ -49,7 +49,7 @@ namespace HelloMigraDoc
       //string ddl = MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToString(document);
       MigraDoc.DocumentObjectModel.IO.DdlWriter.WriteToFile(document, "MigraDoc.mdddl");
 
-      PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp.Pdf.PdfFontEmbedding.Always);
+      PdfDocumentRenderer renderer = new PdfDocumentRenderer(true, PdfSharp1_32.Pdf.PdfFontEmbedding.Always);
       renderer.Document = document;
 
       renderer.RenderDocument();

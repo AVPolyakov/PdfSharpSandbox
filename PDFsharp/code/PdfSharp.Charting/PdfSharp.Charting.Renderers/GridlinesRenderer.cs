@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Charting.Renderers
+namespace PdfSharp1_32.Charting.Renderers
 {
   /// <summary>
   /// Base class for all renderers used to draw gridlines.

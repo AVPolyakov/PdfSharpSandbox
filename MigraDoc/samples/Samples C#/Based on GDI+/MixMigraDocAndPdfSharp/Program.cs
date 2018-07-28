@@ -36,8 +36,8 @@ using System.Drawing;
 #endif
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
-using PdfSharp.Pdf;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Drawing;
 
 namespace MixMigraDocAndPdfSharp
 {

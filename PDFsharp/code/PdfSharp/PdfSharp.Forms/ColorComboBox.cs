@@ -32,9 +32,9 @@ using System.Collections;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Forms
+namespace PdfSharp1_32.Forms
 {
   /// <summary>
   /// A combo box control for selection XColor values.

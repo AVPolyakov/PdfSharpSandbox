@@ -36,18 +36,18 @@ using System.Runtime.CompilerServices;
 // associated with an assembly.
 //
 [assembly: AssemblyTitle("PDFsharp Charting")]
-[assembly: AssemblyVersion(PdfSharp.ProductVersionInfo.Version)]
+[assembly: AssemblyVersion(PdfSharp1_32.ProductVersionInfo.Version)]
 [assembly: AssemblyDescription("A .NET charting library based on PDFsharp.")]
-[assembly: AssemblyConfiguration(PdfSharp.ProductVersionInfo.Configuration)]
-[assembly: AssemblyCompany(PdfSharp.ProductVersionInfo.Company)]
+[assembly: AssemblyConfiguration(PdfSharp1_32.ProductVersionInfo.Configuration)]
+[assembly: AssemblyCompany(PdfSharp1_32.ProductVersionInfo.Company)]
 #if DEBUG
-  [assembly: AssemblyProduct(PdfSharp.ProductVersionInfo.Product + " (Debug Build)")]
+  [assembly: AssemblyProduct(PdfSharp1_32.ProductVersionInfo.Product + " (Debug Build)")]
 #else
-  [assembly: AssemblyProduct(PdfSharp.ProductVersionInfo.Product)]
+  [assembly: AssemblyProduct(PdfSharp1_32.ProductVersionInfo.Product)]
 #endif
-[assembly: AssemblyCopyright(PdfSharp.ProductVersionInfo.Copyright)]
-[assembly: AssemblyTrademark(PdfSharp.ProductVersionInfo.Trademark)]
-[assembly: AssemblyCulture(PdfSharp.ProductVersionInfo.Culture)]
+[assembly: AssemblyCopyright(PdfSharp1_32.ProductVersionInfo.Copyright)]
+[assembly: AssemblyTrademark(PdfSharp1_32.ProductVersionInfo.Trademark)]
+[assembly: AssemblyCulture(PdfSharp1_32.ProductVersionInfo.Culture)]
 
 
 [assembly: AssemblyDelaySign(false)]

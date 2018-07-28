@@ -32,12 +32,12 @@ using System.Diagnostics;
 using System.Collections;
 using System.Globalization;
 using System.Text;
-using PdfSharp.Drawing;
 using System.IO;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.Security;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Security;
 
-namespace PdfSharp.Pdf.Internal
+namespace PdfSharp1_32.Pdf.Internal
 {
   /// <summary>
   /// Groups a set of static encoding helper functions.

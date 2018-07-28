@@ -28,7 +28,7 @@
 #endregion
 
 using System.Diagnostics;
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   ///<summary>
   /// Determines whether rendering based on GDI+ or WPF. For internal use only.

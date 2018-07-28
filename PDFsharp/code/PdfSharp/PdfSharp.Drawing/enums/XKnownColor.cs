@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   ///<summary>
   /// Specifies all pre-defined colors. Used to identify the pre-defined colors and to 

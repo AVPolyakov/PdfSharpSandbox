@@ -42,17 +42,17 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 #endif
-using PdfSharp;
-using PdfSharp.Internal;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.IO;
 
 // WPFHACK
 #pragma warning disable 162
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Defines an object used to draw image files (bmp, png, jpeg, gif) and PDF forms.

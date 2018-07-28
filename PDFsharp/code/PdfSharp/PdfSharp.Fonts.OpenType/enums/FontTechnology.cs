@@ -30,7 +30,7 @@
 using System;
 using System.Diagnostics;
 
-namespace PdfSharp.Fonts.OpenType
+namespace PdfSharp1_32.Fonts.OpenType
 {
   /// <summary>
   /// Identifies the technology of an OpenType font file.

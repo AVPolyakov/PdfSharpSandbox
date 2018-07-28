@@ -30,11 +30,11 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Pdf;
-using PdfSharp.Internal;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Pdf.Security
+namespace PdfSharp1_32.Pdf.Security
 {
   /// <summary>
   /// Represents the base of all security handlers.

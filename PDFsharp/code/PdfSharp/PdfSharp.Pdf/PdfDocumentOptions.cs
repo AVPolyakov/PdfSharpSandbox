@@ -32,9 +32,9 @@ using System.Diagnostics;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Holds information how to handle the document when it is saved as PDF stream.

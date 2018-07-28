@@ -29,9 +29,9 @@
 
 using System;
 using System.Collections;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Charting
+namespace PdfSharp1_32.Charting
 {
   /// <summary>
   /// Represents the collection of the values in a data series.

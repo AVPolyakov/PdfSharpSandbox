@@ -41,16 +41,16 @@ using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Fonts;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Fonts;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
 
 // WPFHACK
 #pragma warning disable 162
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Defines an object used to draw text.

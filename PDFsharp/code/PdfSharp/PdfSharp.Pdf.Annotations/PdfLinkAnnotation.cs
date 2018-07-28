@@ -31,12 +31,12 @@ using System;
 using System.Globalization;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf.Annotations
+namespace PdfSharp1_32.Pdf.Annotations
 {
   /// <summary>
   /// Represents a link annotation.

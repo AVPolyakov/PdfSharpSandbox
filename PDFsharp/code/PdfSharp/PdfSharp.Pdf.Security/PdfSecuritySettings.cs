@@ -30,13 +30,13 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Pdf.Security;
-using PdfSharp.Internal;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.Security;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Pdf.Security
+namespace PdfSharp1_32.Pdf.Security
 {
   /// <summary>
   /// Encapsulates access to the security settings of a PDF document.

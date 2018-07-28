@@ -38,7 +38,7 @@
 
 using System;
 
-namespace PdfSharp.SharpZipLib.Zip.Compression.Streams
+namespace PdfSharp1_32.SharpZipLib.Zip.Compression.Streams
 {
 
   /// <summary>

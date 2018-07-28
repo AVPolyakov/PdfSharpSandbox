@@ -33,9 +33,9 @@ using System.Diagnostics;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf;
+using PdfSharp1_32.Pdf;
 
-namespace PdfSharp.Pdf.IO
+namespace PdfSharp1_32.Pdf.IO
 {
   /// <summary>
   /// Represents the stack for the shift-reduce parser. It seems that it is only needed for

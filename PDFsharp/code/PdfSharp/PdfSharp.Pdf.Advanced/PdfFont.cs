@@ -32,14 +32,14 @@ using System.Diagnostics;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Drawing;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Fonts;
-using PdfSharp.Internal;
-using PdfSharp.Pdf.Filters;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf.Filters;
+using PdfSharp1_32.Fonts;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents a PDF font.

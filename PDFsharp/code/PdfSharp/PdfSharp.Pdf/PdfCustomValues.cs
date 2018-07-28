@@ -31,7 +31,7 @@ using System;
 using System.Diagnostics;
 using System.Collections;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// This class is intended for empira internal use only and may change or drop in future releases.

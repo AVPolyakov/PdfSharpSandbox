@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Forms
+namespace PdfSharp1_32.Forms
 {
   /// <summary>
   /// Specifies how to reander the preview.

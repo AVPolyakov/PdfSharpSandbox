@@ -34,12 +34,12 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.IO;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf.Internal
+namespace PdfSharp1_32.Pdf.Internal
 {
   /// <summary>
   /// Provides a thread-local cache for large objects.

@@ -32,10 +32,10 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
-using PdfSharp.Fonts.OpenType;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Fonts.OpenType;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// The PDF font descriptor flags.

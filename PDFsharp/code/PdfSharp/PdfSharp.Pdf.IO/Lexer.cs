@@ -34,9 +34,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Pdf.IO
+namespace PdfSharp1_32.Pdf.IO
 {
   /// <summary>
   /// Lexical analyzer for PDF files. Technically a PDF file is a stream of bytes. Some chunks

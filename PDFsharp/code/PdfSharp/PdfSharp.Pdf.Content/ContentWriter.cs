@@ -34,10 +34,10 @@ using System.Collections;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Pdf.Content.Objects;
+using PdfSharp1_32.Pdf.Content.Objects;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Pdf.Content
+namespace PdfSharp1_32.Pdf.Content
 {
   /// <summary>
   /// Represents a writer for generation of PDF streams. 

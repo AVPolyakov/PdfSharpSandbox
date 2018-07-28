@@ -38,10 +38,10 @@
 
 using System;
 using System.IO;
-using PdfSharp.SharpZipLib.Checksums;
-using PdfSharp.SharpZipLib.Zip.Compression;
+using PdfSharp1_32.SharpZipLib.Zip.Compression;
+using PdfSharp1_32.SharpZipLib.Checksums;
 
-namespace PdfSharp.SharpZipLib.Zip.Compression.Streams 
+namespace PdfSharp1_32.SharpZipLib.Zip.Compression.Streams 
 {
 
 	/// <summary>

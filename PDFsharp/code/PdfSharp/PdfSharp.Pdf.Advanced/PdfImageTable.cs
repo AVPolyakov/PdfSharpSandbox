@@ -33,10 +33,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Contains all used images of a document.

@@ -41,10 +41,10 @@ using System.Drawing.Text;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
-using PdfSharp.Fonts.OpenType;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Fonts.OpenType;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   ///<summary>
   /// Makes fonts that are not installed on the system available within the current application domain.

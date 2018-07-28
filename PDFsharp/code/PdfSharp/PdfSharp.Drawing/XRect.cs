@@ -39,9 +39,9 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Stores a set of four floating-point numbers that represent the location and size of a rectangle.

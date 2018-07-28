@@ -33,14 +33,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Internal;
-using PdfSharp.Fonts;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Filters;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Fonts;
+using PdfSharp1_32.Pdf.Filters;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents a ToUnicode map for composite font.

@@ -32,10 +32,10 @@ using System.Diagnostics;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Fonts
+namespace PdfSharp1_32.Fonts
 {
   /// <summary>
   /// Helper class that determines the characters used in a particular font.

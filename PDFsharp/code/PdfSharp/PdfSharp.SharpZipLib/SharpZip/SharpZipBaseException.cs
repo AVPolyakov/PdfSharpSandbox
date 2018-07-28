@@ -38,7 +38,7 @@
 
 using System;
 
-namespace PdfSharp.SharpZipLib
+namespace PdfSharp1_32.SharpZipLib
 {
 	/// <summary>
 	/// SharpZipBaseException is the base exception class for the SharpZipLibrary.

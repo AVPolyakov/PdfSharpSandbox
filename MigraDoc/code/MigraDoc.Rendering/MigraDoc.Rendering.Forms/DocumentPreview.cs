@@ -35,7 +35,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Data;
 using System.Windows.Forms;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 using MigraDoc.Rendering;
 
 namespace MigraDoc.Rendering.Forms
@@ -50,7 +50,7 @@ namespace MigraDoc.Rendering.Forms
   /// </summary>
   public class DocumentPreview : System.Windows.Forms.UserControl
   {
-    private PdfSharp.Forms.PagePreview preview;
+    private PdfSharp1_32.Forms.PagePreview preview;
     private System.ComponentModel.Container components = null;
 
     /// <summary>
@@ -60,7 +60,7 @@ namespace MigraDoc.Rendering.Forms
     {
       InitializeComponent();
       this.preview.ZoomChanged += new EventHandler(preview_ZoomChanged);
-      this.preview.SetRenderEvent(new PdfSharp.Forms.PagePreview.RenderEvent(RenderPage));
+      this.preview.SetRenderEvent(new PdfSharp1_32.Forms.PagePreview.RenderEvent(RenderPage));
     }
 
     /// <summary> 
@@ -168,7 +168,7 @@ namespace MigraDoc.Rendering.Forms
             {
               this.page = value;
               PageInfo pageInfo = this.renderer.formattedDocument.GetPageInfo(this.page);
-              if (pageInfo.Orientation == PdfSharp.PageOrientation.Portrait)
+              if (pageInfo.Orientation == PdfSharp1_32.PageOrientation.Portrait)
                 this.preview.PageSize = new Size((int)pageInfo.Width, (int)pageInfo.Height);
               else
                 this.preview.PageSize = new Size((int)pageInfo.Height, (int)pageInfo.Width);
@@ -358,9 +358,9 @@ namespace MigraDoc.Rendering.Forms
       get { return (Zoom)this.preview.Zoom; }
       set
       {
-        if (this.preview.Zoom != (PdfSharp.Forms.Zoom)value)
+        if (this.preview.Zoom != (PdfSharp1_32.Forms.Zoom)value)
         {
-          this.preview.Zoom = (PdfSharp.Forms.Zoom)value;
+          this.preview.Zoom = (PdfSharp1_32.Forms.Zoom)value;
           OnZoomChanged(new EventArgs());
         }
       }
@@ -496,7 +496,7 @@ namespace MigraDoc.Rendering.Forms
     /// </summary>
     private void InitializeComponent()
     {
-      this.preview = new PdfSharp.Forms.PagePreview();
+      this.preview = new PdfSharp1_32.Forms.PagePreview();
       this.SuspendLayout();
       // 
       // preview
@@ -510,7 +510,7 @@ namespace MigraDoc.Rendering.Forms
       this.preview.PageSize = new System.Drawing.Size(595, 842);
       this.preview.Size = new System.Drawing.Size(200, 200);
       this.preview.TabIndex = 0;
-      this.preview.Zoom = PdfSharp.Forms.Zoom.FullPage;
+      this.preview.Zoom = PdfSharp1_32.Forms.Zoom.FullPage;
       this.preview.ZoomPercent = 15;
       // 
       // PagePreview

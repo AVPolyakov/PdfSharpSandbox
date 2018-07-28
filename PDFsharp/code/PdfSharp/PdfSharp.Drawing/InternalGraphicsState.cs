@@ -36,7 +36,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Media;
 #endif
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   // In GDI+ the functions Save/Restore, BeginContainer/EndContainer, Transform, SetClip and ResetClip
   // can be combined in any order. E.g. you can set a clip region, save the graphics state, empty the

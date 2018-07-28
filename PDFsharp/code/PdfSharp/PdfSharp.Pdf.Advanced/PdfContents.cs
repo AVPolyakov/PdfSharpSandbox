@@ -32,14 +32,14 @@ using System.Diagnostics;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Drawing;
-using PdfSharp.Drawing.Pdf;
-using PdfSharp.Pdf;
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Pdf.Filters;
-using PdfSharp.Pdf.IO;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Drawing.Pdf;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Pdf.Filters;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents an array of PDF content streams of a page.

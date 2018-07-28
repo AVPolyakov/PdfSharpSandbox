@@ -31,9 +31,9 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Globalization;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Charting
+namespace PdfSharp1_32.Charting
 {
   /// <summary>
   /// Font represents the formatting of characters in a paragraph.

@@ -30,10 +30,10 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using PdfSharp.Drawing;
-using PdfSharp.Fonts.OpenType;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Fonts.OpenType;
 
-namespace PdfSharp.Fonts.OpenType
+namespace PdfSharp1_32.Fonts.OpenType
 {
   /// <summary>
   /// Global table of TrueType font faces.

@@ -29,9 +29,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Internal
+namespace PdfSharp1_32.Internal
 {
   /// <summary>
   /// Some floating point utilities. Partially reflected from WPF, later equalized with original source code.

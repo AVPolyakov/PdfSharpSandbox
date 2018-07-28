@@ -40,10 +40,10 @@ using System.Drawing.Drawing2D;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Pdf.Internal;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Fonts.OpenType
+namespace PdfSharp1_32.Fonts.OpenType
 {
   /// <summary>
   /// The OpenType font descriptor.

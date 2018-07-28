@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 
-namespace PdfSharp.Internal
+namespace PdfSharp1_32.Internal
 {
   // Relected from WPF to ensure compatibility
   // Use netmassdownloader -d "C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\v3.0" -output g:\cachetest -v

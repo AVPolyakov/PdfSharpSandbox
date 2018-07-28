@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace PdfSharp.Fonts
+namespace PdfSharp1_32.Fonts
 {
   /// <summary>
   /// Represents a writer for generation of font file streams. 

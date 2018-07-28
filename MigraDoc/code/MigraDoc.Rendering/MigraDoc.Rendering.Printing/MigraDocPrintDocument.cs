@@ -33,8 +33,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Drawing.Printing;
-using PdfSharp;
-using PdfSharp.Drawing;
+using PdfSharp1_32;
+using PdfSharp1_32.Drawing;
 using MigraDoc.DocumentObjectModel.Internals;
 using MigraDoc.DocumentObjectModel.Visitors;
 using MigraDoc.DocumentObjectModel.IO;
@@ -139,7 +139,7 @@ namespace MigraDoc.Rendering.Printing
         PageInfo pageInfo = this.renderer.FormattedDocument.GetPageInfo(this.pageNumber);
 
         // set portrait/landscape
-        settings.Landscape = pageInfo.Orientation == PdfSharp.PageOrientation.Landscape;
+        settings.Landscape = pageInfo.Orientation == PdfSharp1_32.PageOrientation.Landscape;
       }
     }
 

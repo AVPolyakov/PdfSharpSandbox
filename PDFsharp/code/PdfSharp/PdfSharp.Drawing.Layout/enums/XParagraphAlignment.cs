@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace PdfSharp.Drawing.Layout
+namespace PdfSharp1_32.Drawing.Layout
 {
   /// <summary>
   /// Specifies the alignment of a paragraph.

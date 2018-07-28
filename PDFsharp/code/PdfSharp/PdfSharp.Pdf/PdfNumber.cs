@@ -32,9 +32,9 @@ using System.Globalization;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Base class for direct number values (not yet used, maybe superfluous).

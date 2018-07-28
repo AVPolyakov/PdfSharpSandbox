@@ -29,8 +29,8 @@
 #endregion
 
 using System;
-using PdfSharp.Drawing;
-using PdfSharp.Charting;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Charting;
 
 namespace MigraDoc.Rendering.ChartMapper
 {

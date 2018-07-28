@@ -31,7 +31,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Defines a set of static predefined XFontWeight values.

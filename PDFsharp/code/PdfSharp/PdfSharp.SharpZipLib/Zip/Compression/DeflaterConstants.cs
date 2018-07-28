@@ -39,7 +39,7 @@
 
 using System;
 
-namespace PdfSharp.SharpZipLib.Zip.Compression 
+namespace PdfSharp1_32.SharpZipLib.Zip.Compression 
 {
 	
 	/// <summary>

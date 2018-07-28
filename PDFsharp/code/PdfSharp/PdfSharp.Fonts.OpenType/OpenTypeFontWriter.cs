@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace PdfSharp.Fonts.OpenType
+namespace PdfSharp1_32.Fonts.OpenType
 {
   /// <summary>
   /// Represents a writer for True Type font files. 

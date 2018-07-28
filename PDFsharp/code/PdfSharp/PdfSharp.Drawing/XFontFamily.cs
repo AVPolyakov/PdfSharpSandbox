@@ -37,13 +37,13 @@ using System.Drawing.Drawing2D;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Pdf;
-using PdfSharp.Fonts.OpenType;
+using PdfSharp1_32.Pdf;
+using PdfSharp1_32.Fonts.OpenType;
 
 // WPFHACK
 #pragma warning disable 162
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Defines a group of type faces having a similar basic design and certain variations in styles.

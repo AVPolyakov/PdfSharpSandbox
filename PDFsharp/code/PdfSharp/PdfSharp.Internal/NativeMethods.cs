@@ -32,7 +32,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace PdfSharp.Internal
+namespace PdfSharp1_32.Internal
 {
   /// <summary>
   /// Required native Win32 calls. Don't know what to do under Mono.

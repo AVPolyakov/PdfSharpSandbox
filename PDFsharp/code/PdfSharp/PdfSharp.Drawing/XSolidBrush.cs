@@ -37,9 +37,9 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
 #endif
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Drawing
+namespace PdfSharp1_32.Drawing
 {
   /// <summary>
   /// Defines a single color object used to fill shapes and draw text.

@@ -31,9 +31,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents a PDF resource object.

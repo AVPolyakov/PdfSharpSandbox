@@ -28,10 +28,10 @@
 #endregion
 
 using System;
-using PdfSharp.Drawing;
-using PdfSharp.Charting;
+using PdfSharp1_32.Charting;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Charting.Renderers
+namespace PdfSharp1_32.Charting.Renderers
 {
   /// <summary>
   /// Represents a renderer specialized to draw lines in various styles, colors and widths.

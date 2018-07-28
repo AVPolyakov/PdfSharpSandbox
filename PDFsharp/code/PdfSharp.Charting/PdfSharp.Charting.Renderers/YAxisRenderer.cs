@@ -29,7 +29,7 @@
 
 using System;
 
-namespace PdfSharp.Charting.Renderers
+namespace PdfSharp1_32.Charting.Renderers
 {
   /// <summary>
   /// Represents the base class for all Y axis renderer.

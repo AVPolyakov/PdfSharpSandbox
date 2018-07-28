@@ -29,9 +29,9 @@
 
 using System;
 using System.Diagnostics;
-using PdfSharp.Drawing;
+using PdfSharp1_32.Drawing;
 
-namespace PdfSharp.Drawing.BarCodes
+namespace PdfSharp1_32.Drawing.BarCodes
 {
   /// <summary>
   /// Internal base class for several bar code types.

@@ -31,9 +31,10 @@ using System;
 using System.Collections;
 using System.Text;
 using System.IO;
-using PdfSharp.Internal;
+using PdfSharp1_32.Internal;
+using PdfSharp1_32.Pdf.IO;
 
-namespace PdfSharp.Pdf
+namespace PdfSharp1_32.Pdf
 {
   /// <summary>
   /// Represents a indirect reference that is not in the cross reference table.
@@ -54,7 +55,7 @@ namespace PdfSharp.Pdf
       return "null";
     }
 
-    internal override void WriteObject(PdfSharp.Pdf.IO.PdfWriter writer)
+    internal override void WriteObject(PdfWriter writer)
     {
       // Implementet because it must be overridden.
       writer.WriteRaw(" null ");

@@ -30,9 +30,9 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Pdf.Internal;
 
-namespace PdfSharp.Pdf.AcroForms
+namespace PdfSharp1_32.Pdf.AcroForms
 {
   /// <summary>
   /// Represents a generic field. Used for AcroForm dictionaries unknown to PDFsharp.

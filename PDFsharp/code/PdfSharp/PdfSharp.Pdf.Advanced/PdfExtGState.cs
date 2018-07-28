@@ -39,11 +39,11 @@ using System.Drawing.Imaging;
 #if WPF
 using System.Windows.Media;
 #endif
-using PdfSharp.Drawing;
-using PdfSharp.Fonts.OpenType;
-using PdfSharp.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Fonts.OpenType;
+using PdfSharp1_32.Internal;
 
-namespace PdfSharp.Pdf.Advanced
+namespace PdfSharp1_32.Pdf.Advanced
 {
   /// <summary>
   /// Represents an extended graphics state object.

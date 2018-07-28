@@ -30,12 +30,12 @@
 using System;
 using System.Diagnostics;
 using System.Collections;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf.Advanced;
-using PdfSharp.Pdf.Annotations;
-using PdfSharp.Pdf.Internal;
+using PdfSharp1_32.Pdf.Advanced;
+using PdfSharp1_32.Pdf.Internal;
+using PdfSharp1_32.Drawing;
+using PdfSharp1_32.Pdf.Annotations;
 
-namespace PdfSharp.Pdf.AcroForms
+namespace PdfSharp1_32.Pdf.AcroForms
 {
   /// <summary>
   /// Represents the text field.
