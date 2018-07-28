@@ -96,7 +96,7 @@ namespace MigraDoc
     // Build = days since 2001-07-04  -  change values ONLY here
     public const string VersionMajor = "1"; // Also used for NuGet Version.
     public const string VersionMinor = "32"; // Also used for NuGet Version.
-    public const string VersionBuild = "5631"; // Also used for NuGet Version.
+    public const string VersionBuild = "6233"; // Also used for NuGet Version.
     public const string VersionPatch = "0"; // Also used for NuGet Version.
 
     /// <summary>
