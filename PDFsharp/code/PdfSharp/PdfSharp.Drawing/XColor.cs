@@ -130,12 +130,6 @@ namespace PdfSharp1_32.Drawing
     { }
 #endif
 
-#if GDI
-    XColor(KnownColor knownColor)
-      : this(System.Drawing.Color.FromKnownColor((System.Drawing.KnownColor)knownColor))
-    { }
-#endif
-
     internal XColor(XKnownColor knownColor)
       : this(XKnownColorTable.KnownColorToArgb(knownColor))
     { }
@@ -266,34 +260,6 @@ namespace PdfSharp1_32.Drawing
     public static XColor FromKnownColor(XKnownColor color)
     {
       return new XColor(color);
-    }
-
-#if GDI
-    /// <summary>
-    /// Creates an XColor from the specified pre-defined color.
-    /// </summary>
-    public static XColor FromKnownColor(KnownColor color)
-    {
-      return new XColor(color);
-    }
-#endif
-
-    /// <summary>
-    /// Creates an XColor from the specified name of a pre-defined color.
-    /// </summary>
-    public static XColor FromName(string name)
-    {
-#if GDI
-      // The implementation in System.Drawing.dll is interesting. It uses a ColorConverter
-      // with hash tables, locking mechanisms etc. I'm not sure what problems that solves.
-      // So I don't use the source, but the reflection.
-      try
-      {
-        return new XColor((KnownColor)Enum.Parse(typeof(KnownColor), name, true));
-      }
-      catch { }
-#endif
-      return XColor.Empty;
     }
 
     /// <summary>
