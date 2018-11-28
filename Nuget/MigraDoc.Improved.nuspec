@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>MigraDoc.Improved</id>
+    <version>1.32.6233.0</version>
+    <title>MigraDoc with some improvements.</title>
+    <authors>Alexander Polyakov</authors>
+    <owners>Alexander Polyakov</owners>
+    <licenseUrl>http://www.pdfsharp.net/MigraDoc_License.ashx</licenseUrl>
+    <projectUrl>https://github.com/AVPolyakov/PdfSharpSandbox/tree/TableRenderingPerformancePatch</projectUrl>
+    <iconUrl>http://www.pdfsharp.net/resources/MigraDoc-Logo-32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This package was built from the source at https://github.com/AVPolyakov/PdfSharpSandbox/commit/8d2e710a877a9c5b20d02e794b2d7d85e69a5279</description>
+    <releaseNotes>Rename PdfSharp->PdfSharp1_32</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>PDF MigraDoc PDFsharp word wrap table rendering performance</tags>
+  </metadata>
+  <files>
+      <file src="MigraDoc.DocumentObjectModel.dll" target="lib\net452\MigraDoc.DocumentObjectModel.dll" />
+      <file src="MigraDoc.DocumentObjectModel.xml" target="lib\net452\MigraDoc.DocumentObjectModel.xml" />
+      <file src="MigraDoc.Rendering.dll" target="lib\net452\MigraDoc.Rendering.dll" />
+      <file src="MigraDoc.Rendering.xml" target="lib\net452\MigraDoc.Rendering.xml" />
+      <file src="MigraDoc.RtfRendering.dll" target="lib\net452\MigraDoc.RtfRendering.dll" />
+      <file src="MigraDoc.RtfRendering.xml" target="lib\net452\MigraDoc.RtfRendering.xml" />
+      <file src="PdfSharp1_32.dll" target="lib\net452\PdfSharp1_32.dll" />
+      <file src="PdfSharp1_32.xml" target="lib\net452\PdfSharp1_32.xml" />
+      <file src="PdfSharp1_32.Charting.dll" target="lib\net452\PdfSharp1_32.Charting.dll" />
+      <file src="PdfSharp1_32.Charting.xml" target="lib\net452\PdfSharp1_32.Charting.xml" />
+  </files>    
+</package>
