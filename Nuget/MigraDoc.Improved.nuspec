@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MigraDoc.Improved</id>
-    <version>1.32.6361.0</version>
+    <version>1.32.6372.0</version>
     <title>MigraDoc with some improvements.</title>
     <authors>Alexander Polyakov</authors>
     <owners>Alexander Polyakov</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/AVPolyakov/PdfSharpSandbox/tree/TableRenderingPerformancePatch</projectUrl>
     <iconUrl>http://www.pdfsharp.net/resources/MigraDoc-Logo-32x32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This package was built from the source at https://github.com/AVPolyakov/PdfSharpSandbox/commit/5246aba4424a95e28923436bedfe1dfdf0803f10</description>
+    <description>This package was built from the source at https://github.com/AVPolyakov/PdfSharpSandbox/commit/8ca6f5737fcdd543547d930d2896ce38ef703551</description>
     <releaseNotes>Upgrade to .NET Standard 2.0</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>PDF MigraDoc PDFsharp word wrap table rendering performance</tags>
