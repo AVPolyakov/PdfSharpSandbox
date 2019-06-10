@@ -1865,10 +1865,8 @@ namespace MigraDoc.Rendering
       XUnit width;
       if (formattingArea != null)
       {
-        var rect = formattingArea.GetFittingRect(currentYPosition, CalcCurrentVerticalInfo().height + BottomBorderOffset);
-        var width2 = rect.X + rect.Width - RightIndent - LeftIndent + Tolerance;
         int numFittingCharacters;
-        width = MeasureString(gfx, word, xFont, StringFormat, width2, out numFittingCharacters).Width;
+        width = MeasureString(gfx, word, xFont, StringFormat, formattingArea.Width - RightIndent - LeftIndent + Tolerance, out numFittingCharacters).Width;
         if (numFittingCharacters < word.Length && numFittingCharacters > 0)
           currentLeaf.Current.NumFittingCharacters = numFittingCharacters;
       }
